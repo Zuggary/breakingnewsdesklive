@@ -79,6 +79,8 @@ def size_points(e):
         return min(30, math.log10(s + 1) * 6)
     if t == "weather":
         return min(30, 6 * math.log2(s + 1))
+    if t == "tsunami":
+        return 30
     return 12
 
 
@@ -115,6 +117,8 @@ def summarize(e):
         if d.get("magnitude"):
             return "A wildfire is open in the NASA EONET list. Reported size: %s %s." % (_num(d["magnitude"]), d.get("unit") or "")
         return "A wildfire is open in the NASA EONET list. No size is reported."
+    if t == "tsunami":
+        return "%s issued: %s. Follow the instructions of local officials and read the full bulletin at tsunami.gov." % (d["centre"], d["bulletin"])
     if t == "space":
         return "NOAA reports a planetary Kp index of %s, a G%d geomagnetic storm level. Aurora may be visible farther south than usual." % (_num(d["kp"]), d["g_scale"])
     if t == "volcano" and d.get("volcano"):
@@ -136,7 +140,7 @@ def _num(x):
 _NUM = re.compile(r"\d+(?:\.\d+)?")
 _WORD = re.compile(r"\b[A-Z][a-zA-Z]{2,}\b")
 _COMMON = {"The", "This", "That", "National", "Weather", "Service", "Check", "Depth", "Location", "State", "Hurricane",
-           "Center", "Aurora", "Kp", "NOAA", "Observatory", "Program", "NASA", "EONET", "GDACS", "USGS", "Reported", "Wildfire", "Earthquake", "Listed", "Alert", "Level"}
+           "Center", "Aurora", "Follow", "Tsunami", "Warning", "Watch", "Advisory", "Pacific", "Alaska", "Hawaii", "Bulletin", "Kp", "NOAA", "Observatory", "Program", "NASA", "EONET", "GDACS", "USGS", "Reported", "Wildfire", "Earthquake", "Listed", "Alert", "Level"}
 
 
 def guard_ok(summary, event):

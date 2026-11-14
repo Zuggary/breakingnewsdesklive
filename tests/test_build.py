@@ -49,6 +49,29 @@ class T(unittest.TestCase):
         self.assertTrue(lib.guard_ok(ev[0]["summary"], ev[0]), ev[0]["summary"])
         self.assertEqual(build_data.parse_kp([{"time_tag": "2026-11-14T06:00:00", "Kp": 3.0}], src), [])
 
+    def test_first_seen_and_log(self):
+        import tempfile
+        d = tempfile.mkdtemp()
+        evs = [dict(e) for e in self.events]
+        self.assertEqual(build_data.track_seen(evs, d, NOW), [])
+        self.assertEqual(evs[0]["first_seen"], evs[0]["time"])
+        evs2 = [dict(e) for e in self.events] + [dict(self.events[0], id="new-1")]
+        new = build_data.track_seen(evs2, d, NOW)
+        self.assertEqual(new, ["new-1"])
+        self.assertEqual(evs2[-1]["first_seen"], lib.iso_utc(NOW))
+        self.assertEqual(len(open(os.path.join(d, "log.jsonl")).read().splitlines()), 2)
+
+    def test_tsunami_warning_parsed_information_skipped(self):
+        src = next(s for s in build_data.SOURCES if s["id"] == "tsunami-ak")
+        xml = ('<feed xmlns="http://www.w3.org/2005/Atom"><entry><id>urn:x:1</id><title>Tsunami Warning Number 2</title>'
+               '<updated>2026-11-14T10:00:00Z</updated></entry><entry><id>urn:x:2</id><title>Tsunami Information Statement 1</title>'
+               '<updated>2026-11-14T10:00:00Z</updated></entry></feed>')
+        ev = build_data.parse_tsunami(xml, src)
+        self.assertEqual(len(ev), 1)
+        self.assertEqual(ev[0]["severity"], "extreme")
+        ev[0]["summary"] = lib.summarize(ev[0])
+        self.assertTrue(lib.guard_ok(ev[0]["summary"], ev[0]), ev[0]["summary"])
+
     def test_old_events_dropped(self):
         for e in self.events:
             self.assertLessEqual((NOW - lib.parse_time(e["time"])).total_seconds(), 168 * 3600)

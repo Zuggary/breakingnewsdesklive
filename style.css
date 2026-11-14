@@ -75,3 +75,4 @@ th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-a
 .stats{margin-top:16px;padding:12px;border:1px solid var(--line);background:var(--panel)}
 .chips{display:flex;flex-wrap:wrap;gap:6px 14px;font:13px ui-monospace,Menlo,monospace;color:var(--text)}
 .stat i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.dg{margin:0;padding-left:18px;font-size:14px}.stats[hidden]{display:none}

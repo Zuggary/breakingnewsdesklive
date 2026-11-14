@@ -143,6 +143,14 @@
     });
     box.appendChild(g);
   }
+  function digest() {
+    var recent = state.events.filter(function (e) { return e.first_seen && Date.now() - Date.parse(e.first_seen) < 36e5 && e.first_seen !== e.time; });
+    var w = $('digest-wrap'), box = $('digest'); box.textContent = '';
+    if (!recent.length) { w.hidden = true; return; }
+    w.hidden = false;
+    box.appendChild(el('p', 'sub', recent.length + ' event' + (recent.length === 1 ? '' : 's') + ' appeared in the feeds in the last hour. Top by rank:'));
+    var ul = el('ul', 'dg'); recent.slice(0, 5).forEach(function (e) { ul.appendChild(el('li', '', e.title + ' \u2014 ' + e.place + ' (' + B.ago(e.time) + ')')); }); box.appendChild(ul);
+  }
   function legend() {
     var lg = $('legend'); lg.textContent = '';
     ['extreme', 'severe', 'moderate', 'minor'].forEach(function (t) {
@@ -157,7 +165,7 @@
     $('updated').textContent = 'Data built ' + B.ago(r[0].generated) + '. Weather alerts cover the US only; quakes, storms, floods and fires are global.';
     $('dot').className = 'dot' + (age > 45 ? ' stale' : '');
     if (age > 45) $('updated').textContent += ' Warning: this data is older than 45 minutes.';
-    buildFilters(); legend(); stats(); render();
+    buildFilters(); legend(); stats(); digest(); render();
   }).catch(function () {
     $('count').textContent = 'Data could not be loaded. Try again in a minute.';
   });

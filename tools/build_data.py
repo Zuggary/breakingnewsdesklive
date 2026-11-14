@@ -54,6 +54,12 @@ SOURCES = [
      "page": "https://www.swpc.noaa.gov/",
      "licence": "US Government work, public domain; credit NOAA SWPC",
      "terms": "https://www.weather.gov/disclaimer"},
+    {"id": "tsunami-ak", "name": "NOAA National Tsunami Warning Center (Alaska)", "xml": True,
+     "url": "https://www.tsunami.gov/events/xml/PAAQAtom.xml", "page": "https://www.tsunami.gov/",
+     "licence": "US Government work, public domain; credit NOAA/NWS", "terms": "https://www.weather.gov/disclaimer"},
+    {"id": "tsunami-hi", "name": "NOAA Pacific Tsunami Warning Center (Hawaii)", "xml": True,
+     "url": "https://www.tsunami.gov/events/xml/PHEBAtom.xml", "page": "https://www.tsunami.gov/",
+     "licence": "US Government work, public domain; credit NOAA/NWS", "terms": "https://www.weather.gov/disclaimer"},
     {"id": "gdacs", "name": "GDACS (UN and European Commission)",
      "url": "https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH?eventlist=EQ;TC;FL;VO;DR;WF&alertlevel=Green;Orange;Red",
      "page": "https://www.gdacs.org/",
@@ -64,14 +70,14 @@ SOURCES = [
 
 def fetch_json(src, fixtures):
     if fixtures:
-        with open(os.path.join(fixtures, src["id"] + ".json"), encoding="utf-8") as f:
-            return json.load(f)
+        with open(os.path.join(fixtures, src["id"] + (".xml" if src.get("xml") else ".json")), encoding="utf-8") as f:
+            return f.read() if src.get("xml") else json.load(f)
     req = urllib.request.Request(src["url"], headers={"User-Agent": UA, "Accept": "application/json"})
     last = None
     for attempt in range(3):
         try:
             with urllib.request.urlopen(req, timeout=30) as r:
-                return json.load(r)
+                return r.read().decode("utf-8", "replace") if src.get("xml") else json.load(r)
         except Exception as e:  # noqa: BLE001
             last = e
             time.sleep(2 * (attempt + 1))
@@ -245,7 +251,25 @@ def parse_kp(d, src):
                detail={"kp": kp, "g_scale": g})]
 
 
-PARSERS = {"usgs-volcano": parse_volcano, "swpc-kp": parse_kp, "usgs-quakes": parse_usgs, "nws-alerts": parse_nws, "nhc": parse_nhc, "eonet": parse_eonet, "gdacs": parse_gdacs}
+def parse_tsunami(xml_text, src):
+    import xml.etree.ElementTree as ET
+    ns = {"a": "http://www.w3.org/2005/Atom"}
+    root = ET.fromstring(xml_text)
+    out = []
+    for ent in root.findall("a:entry", ns):
+        title = " ".join((ent.findtext("a:title", "", ns) or "").split())
+        low = title.lower()
+        if not re.search(r"warning|watch|advisory", low) or "information" in low or "cancel" in low:
+            continue
+        when = parse_time(ent.findtext("a:updated", "", ns))
+        sev = "extreme" if "warning" in low else "severe" if "watch" in low else "moderate"
+        out.append(mk("tsunami-" + re.sub(r"\W+", "", ent.findtext("a:id", title, ns))[-24:], "tsunami", title.title(),
+                      src["name"], None, None, when, sev, 0, src, "https://www.tsunami.gov/",
+                      detail={"bulletin": title.title(), "centre": src["name"]}))
+    return out
+
+
+PARSERS = {"tsunami-ak": parse_tsunami, "tsunami-hi": parse_tsunami, "usgs-volcano": parse_volcano, "swpc-kp": parse_kp, "usgs-quakes": parse_usgs, "nws-alerts": parse_nws, "nhc": parse_nhc, "eonet": parse_eonet, "gdacs": parse_gdacs}
 
 
 def dedupe(events):
@@ -300,6 +324,44 @@ def build(fixtures=None, now=None):
     return events, status
 
 
+def track_seen(events, out_dir, now):
+    """Add first_seen to each event, remember it in data/seen.json, and append one line to data/log.jsonl."""
+    path = os.path.join(out_dir, "seen.json")
+    try:
+        with open(path, encoding="utf-8") as f:
+            seen = json.load(f)
+        first_run = False
+    except (OSError, ValueError):
+        seen, first_run = {}, True
+    new_ids = []
+    for e in events:
+        if e["id"] in seen:
+            e["first_seen"] = seen[e["id"]]
+        else:
+            # On the first run there is no history: use the event time, so nothing is falsely called new.
+            e["first_seen"] = e["time"] if first_run else iso_utc(now)
+            seen[e["id"]] = e["first_seen"]
+            if not first_run:
+                new_ids.append(e["id"])
+    keep = {e["id"] for e in events}
+    seen = {k: v for k, v in seen.items() if k in keep}
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(seen, f, separators=(",", ":"))
+    log = os.path.join(out_dir, "log.jsonl")
+    lines = []
+    try:
+        with open(log, encoding="utf-8") as f:
+            lines = f.read().splitlines()
+    except OSError:
+        pass
+    lines.append(json.dumps({"t": iso_utc(now), "count": len(events), "new": new_ids,
+                             "by_type": {t: sum(1 for e in events if e["type"] == t) for t in sorted({e["type"] for e in events})}},
+                            separators=(",", ":")))
+    with open(log, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines[-1100:]) + "\n")  # about 7 days at one run per 10 minutes
+    return new_ids
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="data")
@@ -312,6 +374,7 @@ def main():
     if not events and os.path.exists(prev):
         print("No events from any source; keeping the previous file", file=sys.stderr)
         return 0
+    track_seen(events, a.out, now)
     with open(prev, "w", encoding="utf-8") as f:
         json.dump({"generated": iso_utc(now), "count": len(events), "events": events}, f, separators=(",", ":"))
     with open(os.path.join(a.out, "sources.json"), "w", encoding="utf-8") as f:

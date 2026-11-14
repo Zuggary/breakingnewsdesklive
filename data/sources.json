@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-14T11:43:49Z",
+ "generated": "2026-11-14T11:45:57Z",
  "sources": [
   {
    "id": "usgs-quakes",
@@ -7,7 +7,7 @@
    "page": "https://earthquake.usgs.gov/earthquakes/map/",
    "licence": "US Government work, public domain; credit USGS",
    "terms": "https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits",
-   "checked": "2026-11-14T11:43:49Z",
+   "checked": "2026-11-14T11:45:57Z",
    "ok": true,
    "count": 121
   },
@@ -17,7 +17,7 @@
    "page": "https://www.weather.gov/alerts",
    "licence": "US Government work, public domain; credit NOAA/NWS",
    "terms": "https://www.weather.gov/disclaimer",
-   "checked": "2026-11-14T11:43:49Z",
+   "checked": "2026-11-14T11:45:57Z",
    "ok": true,
    "count": 15
   },
@@ -27,7 +27,7 @@
    "page": "https://www.nhc.noaa.gov/",
    "licence": "US Government work, public domain; credit NOAA/NHC",
    "terms": "https://www.weather.gov/disclaimer",
-   "checked": "2026-11-14T11:43:49Z",
+   "checked": "2026-11-14T11:45:57Z",
    "ok": true,
    "count": 0
   },
@@ -37,7 +37,7 @@
    "page": "https://eonet.gsfc.nasa.gov/",
    "licence": "NASA open data; credit NASA EONET and the original source",
    "terms": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-   "checked": "2026-11-14T11:43:49Z",
+   "checked": "2026-11-14T11:45:57Z",
    "ok": true,
    "count": 198
   },
@@ -47,7 +47,7 @@
    "page": "https://volcanoes.usgs.gov/",
    "licence": "US Government work, public domain; credit USGS",
    "terms": "https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits",
-   "checked": "2026-11-14T11:43:49Z",
+   "checked": "2026-11-14T11:45:57Z",
    "ok": true,
    "count": 3
   },
@@ -57,7 +57,27 @@
    "page": "https://www.swpc.noaa.gov/",
    "licence": "US Government work, public domain; credit NOAA SWPC",
    "terms": "https://www.weather.gov/disclaimer",
-   "checked": "2026-11-14T11:43:49Z",
+   "checked": "2026-11-14T11:45:57Z",
+   "ok": true,
+   "count": 0
+  },
+  {
+   "id": "tsunami-ak",
+   "name": "NOAA National Tsunami Warning Center (Alaska)",
+   "page": "https://www.tsunami.gov/",
+   "licence": "US Government work, public domain; credit NOAA/NWS",
+   "terms": "https://www.weather.gov/disclaimer",
+   "checked": "2026-11-14T11:45:57Z",
+   "ok": true,
+   "count": 0
+  },
+  {
+   "id": "tsunami-hi",
+   "name": "NOAA Pacific Tsunami Warning Center (Hawaii)",
+   "page": "https://www.tsunami.gov/",
+   "licence": "US Government work, public domain; credit NOAA/NWS",
+   "terms": "https://www.weather.gov/disclaimer",
+   "checked": "2026-11-14T11:45:57Z",
    "ok": true,
    "count": 0
   },
@@ -67,7 +87,7 @@
    "page": "https://www.gdacs.org/",
    "licence": "GDACS terms of use; credit GDACS",
    "terms": "https://www.gdacs.org/About/termsofuse.aspx",
-   "checked": "2026-11-14T11:43:49Z",
+   "checked": "2026-11-14T11:45:57Z",
    "ok": true,
    "count": 5
   }

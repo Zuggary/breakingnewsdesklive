@@ -1,3 +1,5 @@
 _site/
 __pycache__/
 *.pyc
+data/seen.json
+data/log.jsonl

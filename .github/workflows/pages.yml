@@ -31,6 +31,14 @@ jobs:
         run: python -m unittest discover -s tests
       - name: JS tests
         run: node tests/test-lib.js
+      - name: Restore history (first-seen times and run log)
+        uses: actions/cache@v4
+        with:
+          path: |
+            data/seen.json
+            data/log.jsonl
+          key: bnd-history-${{ github.run_id }}
+          restore-keys: bnd-history-
       - name: Build event data
         run: python tools/build_data.py --out data
       - name: Prepare _site
@@ -38,6 +46,7 @@ jobs:
           rm -rf _site && mkdir -p _site/data
           for f in index.html tv.html event.html about.html privacy.html app.js lib.js style.css favicon.svg CNAME robots.txt sitemap.xml; do cp "$f" _site/; done
           cp data/events.json data/sources.json data/world.json _site/data/
+          [ -f data/log.jsonl ] && cp data/log.jsonl _site/data/ || true
       - name: Check that every public root file is published
         run: |
           missing=0
