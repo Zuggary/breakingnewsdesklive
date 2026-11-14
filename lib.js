@@ -13,10 +13,10 @@
   var SEV = { extreme: '#ff5c5c', severe: '#ff9340', moderate: '#f2d04b', minor: '#93a1b5' };
   function ago(iso, now) {
     var m = Math.max(1, Math.round(((now || Date.now()) - Date.parse(iso)) / 60000));
-    if (m < 60) return m + ' min ago';
+    if (m < 60) return m + 'm ago';
     var h = Math.round(m / 60);
-    if (h < 48) return h + ' h ago';
-    return Math.round(h / 24) + ' d ago';
+    if (h < 48) return h + 'h ago';
+    return Math.round(h / 24) + 'd ago';
   }
   function filterEvents(events, f, now) {
     now = now || Date.now();

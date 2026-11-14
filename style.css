@@ -65,3 +65,10 @@ th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-a
  ol.list{max-height:calc(100vh - 230px);overflow:auto;padding-right:4px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.jump{color:var(--amber);font-weight:600}
+.when::after{content:" \25B8"}
+.card.sel .when::after{content:" \25BE"}
+.when{letter-spacing:0;word-spacing:0}
+@media (max-width:979px){.brand small{display:none}.notice{font-size:13px}.status{padding:6px 16px}.sub{margin-bottom:8px}}
+.when{white-space:nowrap;font-size:12px}

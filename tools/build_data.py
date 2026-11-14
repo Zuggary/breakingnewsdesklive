@@ -240,6 +240,14 @@ def build(fixtures=None, now=None):
         e["score"] = score_event(e, now)
         e["summary"] = summarize(e)
     events.sort(key=lambda e: -e["score"])
+    # Diversity: repeated US warnings of one kind drop 10 points per earlier copy, so they do not fill the top of the list.
+    seen = {}
+    for e in events:
+        if e["type"] == "weather":
+            n = seen.get(e["title"], 0)
+            seen[e["title"]] = n + 1
+            e["score"] = round(max(0, e["score"] - 10 * n), 1)
+    events.sort(key=lambda e: -e["score"])
     return events, status
 
 

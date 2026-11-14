@@ -2,6 +2,7 @@
   'use strict';
   var B = window.BND, $ = function (id) { return document.getElementById(id); };
   var state = { events: [], world: [], f: { type: 'all', region: 'all', day: false }, sel: null, globe: false, rot: [-40, 20], pts: [] };
+  var SHORT = { 'usgs-quakes': 'USGS', 'nws-alerts': 'NWS', nhc: 'NHC', eonet: 'NASA', gdacs: 'GDACS' };
   var cv = $('map'), ctx = cv.getContext('2d');
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -35,9 +36,10 @@
       var li = el('li', 'card' + (state.sel === e.id ? ' sel' : '')); li.style.setProperty('--c', B.SEV[e.severity] || '#93a1b5'); li.id = 'ev-' + e.id;
       var h = el('button', 'head'); h.type = 'button'; h.setAttribute('aria-expanded', String(state.sel === e.id));
       h.appendChild(el('span', 'rank', String(i + 1)));
+      e.source_short = e.source_short || SHORT[e.source_id] || e.source;
       h.appendChild(el('span', 'title', e.title));
       var b = el('span', 'badge', e.severity); h.appendChild(b);
-      h.appendChild(el('span', 'place', (B.TYPES[e.type] || B.TYPES.other).label + ' · ' + e.place));
+      h.appendChild(el('span', 'place', e.source_short + ' · ' + (B.TYPES[e.type] || B.TYPES.other).label + ' · ' + e.place));
       h.appendChild(el('span', 'when', B.ago(e.time, now)));
       h.onclick = function () { state.sel = state.sel === e.id ? null : e.id; render(); draw(); };
       li.appendChild(h);
@@ -137,7 +139,7 @@
   Promise.all([get('data/events.json'), get('data/world.json')]).then(function (r) {
     state.events = r[0].events; state.world = r[1];
     var age = (Date.now() - Date.parse(r[0].generated)) / 60000;
-    $('updated').textContent = 'Data built ' + B.ago(r[0].generated) + '. Refreshes about every 10 minutes.';
+    $('updated').textContent = 'Data built ' + B.ago(r[0].generated) + '. Weather alerts cover the US only; quakes, storms, floods and fires are global.';
     $('dot').className = 'dot' + (age > 45 ? ' stale' : '');
     if (age > 45) $('updated').textContent += ' Warning: this data is older than 45 minutes.';
     buildFilters(); legend(); render();
