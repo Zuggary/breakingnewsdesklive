@@ -37,6 +37,7 @@ jobs:
           path: |
             data/seen.json
             data/log.jsonl
+            data/gdelt-last.json
           key: bnd-history-${{ github.run_id }}
           restore-keys: bnd-history-
       - name: Build event data

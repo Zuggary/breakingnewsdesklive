@@ -20,6 +20,7 @@ from tools.lib import (REGIONS, region_of, score_event, summarize, STATE_CENTROI
 
 FIXTURE_MODE = False
 FIXTURE_DIR = None
+OUT_DIR = None
 UA = "breakingnewsdesklive/1.0 (+https://breakingnewsdesklive.com; independent alert aggregator)"
 MAX_AGE_H = 72
 MAX_AGE_LONG_H = 168  # open fires, floods and volcanoes stay listed for 7 days
@@ -108,7 +109,7 @@ SOURCES = [
      "page": "https://ec.europa.eu/commission/presscorner/home/en",
      "licence": "Commission Decision 2011/833/EU on reuse of documents; source credited, headline and link only",
      "terms": "https://commission.europa.eu/legal-notice_en"},
-    {"id": "gdelt-doc", "update": "every 15 minutes", "name": "GDELT Project (outlet headlines)",
+    {"id": "gdelt-doc", "slow": True, "update": "every 15 minutes", "name": "GDELT Project (outlet headlines)",
      "url": "https://api.gdeltproject.org/api/v2/doc/doc?query=(election%20OR%20summit%20OR%20ceasefire%20OR%20sanctions%20OR%20talks%20OR%20parliament%20OR%20treaty%20OR%20protest%20OR%20attack%20OR%20strike)%20sourcelang:english&mode=artlist&maxrecords=120&timespan=3h&format=json&sort=datedesc",
      "page": "https://www.gdeltproject.org/",
      "licence": "GDELT allows unrestricted use with credit to GDELT. Outlet headlines are shown as links to the outlet, not as our words.",
@@ -155,7 +156,7 @@ def fetch_json(src, fixtures):
                 return r.read().decode("utf-8", "replace") if src.get("xml") else json.load(r)
         except Exception as e:  # noqa: BLE001
             last = e
-            time.sleep(2 * (attempt + 1))
+            time.sleep(7 if src.get("slow") else 2 * (attempt + 1))
     raise last
 
 
@@ -657,8 +658,22 @@ def build(fixtures=None, now=None):
             evs = PARSERS[src["id"]](fetch_json(src, fixtures), src)
             rec["ok"], rec["count"] = True, len(evs)
             events += evs
+            if src["id"] == "gdelt-doc" and evs and OUT_DIR:
+                with open(os.path.join(OUT_DIR, "gdelt-last.json"), "w", encoding="utf-8") as f:
+                    json.dump({"saved": iso_utc(now), "events": evs}, f, separators=(",", ":"))
         except Exception as e:  # noqa: BLE001
             rec["error"] = type(e).__name__
+            if src["id"] == "gdelt-doc" and OUT_DIR:
+                # GDELT limits requests per address. Keep the last good groups for up to 3 hours, and say so.
+                try:
+                    with open(os.path.join(OUT_DIR, "gdelt-last.json"), encoding="utf-8") as f:
+                        last = json.load(f)
+                    if (now - parse_time(last["saved"])).total_seconds() < 3 * 3600:
+                        events += last["events"]
+                        rec["count"] = len(last["events"])
+                        rec["note"] = "Rate-limited; showing the last good groups from %s" % last["saved"]
+                except (OSError, ValueError, KeyError):
+                    pass
         status.append(rec)
     def fresh_enough(e):
         age = MAX_AGE_LONG_H if e["type"] in ("wildfire", "volcano", "drought", "flood", "recall", "notice") else MAX_AGE_H
@@ -725,6 +740,9 @@ def main():
     ap.add_argument("--out", default="data")
     ap.add_argument("--fixtures")
     a = ap.parse_args()
+    global OUT_DIR
+    OUT_DIR = a.out
+    os.makedirs(a.out, exist_ok=True)
     now = datetime.now(timezone.utc)
     events, status = build(a.fixtures, now)
     os.makedirs(a.out, exist_ok=True)
