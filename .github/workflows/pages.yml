@@ -36,7 +36,7 @@ jobs:
       - name: Prepare _site
         run: |
           rm -rf _site && mkdir -p _site/data
-          for f in index.html about.html privacy.html app.js lib.js style.css favicon.svg CNAME robots.txt sitemap.xml; do cp "$f" _site/; done
+          for f in index.html tv.html about.html privacy.html app.js lib.js style.css favicon.svg CNAME robots.txt sitemap.xml; do cp "$f" _site/; done
           cp data/events.json data/sources.json data/world.json _site/data/
       - name: Check that every public root file is published
         run: |
