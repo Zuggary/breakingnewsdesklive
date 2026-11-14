@@ -54,6 +54,9 @@ SOURCES = [
      "page": "https://www.swpc.noaa.gov/",
      "licence": "US Government work, public domain; credit NOAA SWPC",
      "terms": "https://www.weather.gov/disclaimer"},
+    {"id": "spc-outlook", "name": "NOAA Storm Prediction Center",
+     "url": "https://www.spc.noaa.gov/products/outlook/day1otlk_cat.nolyr.geojson", "page": "https://www.spc.noaa.gov/products/outlook/",
+     "licence": "US Government work, public domain; credit NOAA/NWS SPC", "terms": "https://www.weather.gov/disclaimer"},
     {"id": "tsunami-ak", "name": "NOAA National Tsunami Warning Center (Alaska)", "xml": True,
      "url": "https://www.tsunami.gov/events/xml/PAAQAtom.xml", "page": "https://www.tsunami.gov/",
      "licence": "US Government work, public domain; credit NOAA/NWS", "terms": "https://www.weather.gov/disclaimer"},
@@ -269,7 +272,38 @@ def parse_tsunami(xml_text, src):
     return out
 
 
-PARSERS = {"tsunami-ak": parse_tsunami, "tsunami-hi": parse_tsunami, "usgs-volcano": parse_volcano, "swpc-kp": parse_kp, "usgs-quakes": parse_usgs, "nws-alerts": parse_nws, "nhc": parse_nhc, "eonet": parse_eonet, "gdacs": parse_gdacs}
+SPC_RISK = {"SLGT": ("Slight", "minor"), "ENH": ("Enhanced", "moderate"), "MDT": ("Moderate", "severe"), "HIGH": ("High", "extreme")}
+
+
+def _coords(geom):
+    def walk(c):
+        if c and isinstance(c[0], (int, float)):
+            yield c
+        else:
+            for x in c:
+                yield from walk(x)
+    return list(walk(geom["coordinates"]))
+
+
+def parse_spc(d, src):
+    out = []
+    for f in d.get("features", []):
+        p = f["properties"]
+        if p.get("LABEL") not in SPC_RISK or not f.get("geometry"):
+            continue
+        name, sev = SPC_RISK[p["LABEL"]]
+        pts = _coords(f["geometry"])
+        lon = (min(c[0] for c in pts) + max(c[0] for c in pts)) / 2
+        lat = (min(c[1] for c in pts) + max(c[1] for c in pts)) / 2
+        out.append(mk("spc-day1-" + p["LABEL"].lower(), "weather", "Severe thunderstorm outlook: %s risk" % name,
+                      "United States (outlook area)", lat, lon, parse_time(p["ISSUE_ISO"]), sev, 0, src,
+                      "https://www.spc.noaa.gov/products/outlook/day1otlk.html",
+                      detail={"risk": name, "valid_until": p["EXPIRE_ISO"][:16].replace("T", " ") + " UTC",
+                              "location_note": "Centre of the risk area, not a point forecast"}))
+    return out
+
+
+PARSERS = {"spc-outlook": parse_spc, "tsunami-ak": parse_tsunami, "tsunami-hi": parse_tsunami, "usgs-volcano": parse_volcano, "swpc-kp": parse_kp, "usgs-quakes": parse_usgs, "nws-alerts": parse_nws, "nhc": parse_nhc, "eonet": parse_eonet, "gdacs": parse_gdacs}
 
 
 def dedupe(events):

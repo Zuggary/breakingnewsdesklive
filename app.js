@@ -151,6 +151,29 @@
     box.appendChild(el('p', 'sub', recent.length + ' event' + (recent.length === 1 ? '' : 's') + ' appeared in the feeds in the last hour. Top by rank:'));
     var ul = el('ul', 'dg'); recent.slice(0, 5).forEach(function (e) { ul.appendChild(el('li', '', e.title + ' \u2014 ' + e.place + ' (' + B.ago(e.time) + ')')); }); box.appendChild(ul);
   }
+  var hist = [];
+  function drawHist(hours) {
+    var c = $('hist'), x = c.getContext('2d'), W = c.clientWidth * (window.devicePixelRatio || 1), H = 140 * (window.devicePixelRatio || 1);
+    c.width = W; c.height = H; var d = window.devicePixelRatio || 1;
+    var cut = Date.now() - hours * 36e5, pts = hist.filter(function (r) { return Date.parse(r.t) >= cut; });
+    x.clearRect(0, 0, W, H);
+    if (pts.length < 2) { x.fillStyle = '#93a1b5'; x.font = (13 * d) + 'px system-ui'; x.fillText('Collecting data. The chart fills in over the next hours.', 8 * d, 24 * d); return; }
+    var max = Math.max.apply(null, pts.map(function (r) { return r.count; })) + 2, min = Math.min.apply(null, pts.map(function (r) { return r.count; })) - 2;
+    var t0 = Date.parse(pts[0].t), t1 = Date.parse(pts[pts.length - 1].t) || t0 + 1;
+    x.strokeStyle = '#ffb020'; x.lineWidth = 2 * d; x.beginPath();
+    pts.forEach(function (r, i) { var px = 8 * d + (Date.parse(r.t) - t0) / Math.max(1, t1 - t0) * (W - 16 * d), py = H - 22 * d - (r.count - min) / Math.max(1, max - min) * (H - 40 * d); i ? x.lineTo(px, py) : x.moveTo(px, py); });
+    x.stroke(); x.fillStyle = '#93a1b5'; x.font = (11 * d) + 'px ui-monospace,monospace';
+    x.fillText(max + ' events', 8 * d, 12 * d); x.fillText(min + '', 8 * d, H - 6 * d);
+  }
+  function histInit() {
+    fetch('data/log.jsonl', { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw 0; return r.text(); }).then(function (t) {
+      hist = t.split('\n').filter(Boolean).map(function (l) { try { return JSON.parse(l); } catch (e) { return null; } }).filter(Boolean);
+      $('hist-wrap').hidden = false; drawHist(24);
+      Array.prototype.forEach.call(document.querySelectorAll('[data-h]'), function (b) {
+        b.onclick = function () { Array.prototype.forEach.call(document.querySelectorAll('[data-h]'), function (o) { o.setAttribute('aria-pressed', String(o === b)); }); drawHist(+b.dataset.h); };
+      });
+    }).catch(function () {});
+  }
   function legend() {
     var lg = $('legend'); lg.textContent = '';
     ['extreme', 'severe', 'moderate', 'minor'].forEach(function (t) {
@@ -165,7 +188,7 @@
     $('updated').textContent = 'Data built ' + B.ago(r[0].generated) + '. Weather alerts cover the US only; quakes, storms, floods and fires are global.';
     $('dot').className = 'dot' + (age > 45 ? ' stale' : '');
     if (age > 45) $('updated').textContent += ' Warning: this data is older than 45 minutes.';
-    buildFilters(); legend(); stats(); digest(); render();
+    buildFilters(); legend(); stats(); digest(); render(); histInit();
   }).catch(function () {
     $('count').textContent = 'Data could not be loaded. Try again in a minute.';
   });

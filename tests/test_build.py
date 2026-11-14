@@ -72,6 +72,16 @@ class T(unittest.TestCase):
         ev[0]["summary"] = lib.summarize(ev[0])
         self.assertTrue(lib.guard_ok(ev[0]["summary"], ev[0]), ev[0]["summary"])
 
+    def test_spc_outlook(self):
+        src = next(s for s in build_data.SOURCES if s["id"] == "spc-outlook")
+        feat = lambda lab: {"properties": {"LABEL": lab, "ISSUE_ISO": "2026-11-14T05:15:00+00:00", "EXPIRE_ISO": "2026-11-15T12:00:00+00:00"},
+                            "geometry": {"type": "Polygon", "coordinates": [[[-100, 30], [-90, 30], [-90, 40], [-100, 40], [-100, 30]]]}}
+        ev = build_data.parse_spc({"features": [feat("TSTM"), feat("ENH"), feat("HIGH")]}, src)
+        self.assertEqual([e["severity"] for e in ev], ["moderate", "extreme"])
+        self.assertEqual(ev[0]["lat"], 35.0)
+        ev[0]["summary"] = lib.summarize(ev[0])
+        self.assertTrue(lib.guard_ok(ev[0]["summary"], ev[0]), ev[0]["summary"])
+
     def test_old_events_dropped(self):
         for e in self.events:
             self.assertLessEqual((NOW - lib.parse_time(e["time"])).total_seconds(), 168 * 3600)

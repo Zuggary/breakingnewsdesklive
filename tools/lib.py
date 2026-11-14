@@ -78,7 +78,7 @@ def size_points(e):
     if t == "wildfire":
         return min(30, math.log10(s + 1) * 6)
     if t == "weather":
-        return min(30, 6 * math.log2(s + 1))
+        return min(30, 6 * math.log2(s + 1)) if s else 12
     if t == "tsunami":
         return 30
     return 12
@@ -106,6 +106,8 @@ def summarize(e):
         if d.get("tsunami_flag"):
             s += " The USGS tsunami flag is set. Check tsunami.gov for official messages."
         return s
+    if t == "weather" and d.get("risk"):
+        return "The Storm Prediction Center rates today's severe thunderstorm risk as %s in part of the United States. This outlook is valid until %s. The map point is the centre of the risk area." % (d["risk"], d["valid_until"])
     if t == "weather":
         return "The National Weather Service has %d active %s alert%s in %s. Location shown is the state centre." % (
             d["alerts"], e["title"].lower(), "" if d["alerts"] == 1 else "s", place.split(",")[0])
@@ -140,7 +142,7 @@ def _num(x):
 _NUM = re.compile(r"\d+(?:\.\d+)?")
 _WORD = re.compile(r"\b[A-Z][a-zA-Z]{2,}\b")
 _COMMON = {"The", "This", "That", "National", "Weather", "Service", "Check", "Depth", "Location", "State", "Hurricane",
-           "Center", "Aurora", "Follow", "Tsunami", "Warning", "Watch", "Advisory", "Pacific", "Alaska", "Hawaii", "Bulletin", "Kp", "NOAA", "Observatory", "Program", "NASA", "EONET", "GDACS", "USGS", "Reported", "Wildfire", "Earthquake", "Listed", "Alert", "Level"}
+           "Center", "Storm", "Prediction", "Aurora", "Follow", "Tsunami", "Warning", "Watch", "Advisory", "Pacific", "Alaska", "Hawaii", "Bulletin", "Kp", "NOAA", "Observatory", "Program", "NASA", "EONET", "GDACS", "USGS", "Reported", "Wildfire", "Earthquake", "Listed", "Alert", "Level"}
 
 
 def guard_ok(summary, event):
