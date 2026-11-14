@@ -90,6 +90,24 @@ class T(unittest.TestCase):
             self.assertTrue(lib.guard_ok(lib.summarize(e), e), lib.summarize(e))
             self.assertIn(e["detail"]["density"], ("Medium", "Heavy"))
 
+    def test_faa_and_ms365(self):
+        sf = next(x for x in build_data.SOURCES if x["id"] == "atd-faa")
+        d = {"updated_utc": "2026-11-14T11:54:22Z", "events": [
+            {"code": "ATL", "name": "ATL", "kind": "ground_stop", "reason": "thunderstorms", "avg": None, "max": None, "end_time": "Nov 14 at 14:15 UTC.", "status": "OFFICIAL"},
+            {"code": "ORD", "name": "ORD", "kind": "delay", "reason": "volume", "avg": 45, "max": 60, "end_time": None, "status": "OFFICIAL"}]}
+        build_data.FIXTURE_MODE, build_data.FIXTURE_DIR = True, FIX
+        ev = build_data.parse_faa(d, sf)
+        self.assertEqual([e["severity"] for e in ev], ["severe", "moderate"])
+        self.assertEqual(ev[0]["lat"], 33.64)
+        for e in ev:
+            e["summary"] = lib.summarize(e)
+            self.assertTrue(lib.guard_ok(e["summary"], e), e["summary"])
+        sm = next(x for x in build_data.SOURCES if x["id"] == "ms365")
+        o = build_data.parse_ms365({"status": "Service degradation", "current": {"id": "2026-11-14", "start": "2026-11-14T08:00:00Z"}, "incidents": []}, sm)
+        self.assertEqual(o[0]["type"], "outage")
+        o[0]["summary"] = lib.summarize(o[0])
+        self.assertTrue(lib.guard_ok(o[0]["summary"], o[0]), o[0]["summary"])
+
     def test_old_events_dropped(self):
         for e in self.events:
             self.assertLessEqual((NOW - lib.parse_time(e["time"])).total_seconds(), 168 * 3600)

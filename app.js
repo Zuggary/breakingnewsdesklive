@@ -12,9 +12,16 @@
   /* ---------- filters ---------- */
   function buildFilters() {
     var box = $('filters'); box.textContent = '';
-    var types = ['all'].concat(Object.keys(B.TYPES).filter(function (t) { return state.events.some(function (e) { return e.type === t; }); }));
     var sel = el('select', 'chip'); sel.setAttribute('aria-label', 'Event type');
-    types.forEach(function (t) { var o = el('option', '', t === 'all' ? 'All types' : B.TYPES[t].label); o.value = t; sel.appendChild(o); });
+    var all = el('option', '', 'All categories'); all.value = 'all'; sel.appendChild(all);
+    Object.keys(B.GROUPS).forEach(function (g) {
+      var present = B.GROUPS[g][1].filter(function (t) { return state.events.some(function (e) { return e.type === t; }); });
+      if (!present.length) return;
+      var og = document.createElement('optgroup'); og.label = B.GROUPS[g][0];
+      var ga = el('option', '', 'All ' + B.GROUPS[g][0].toLowerCase()); ga.value = 'g:' + g; og.appendChild(ga);
+      present.forEach(function (t) { var o = el('option', '', (B.TYPES[t] || B.TYPES.other).label); o.value = t; og.appendChild(o); });
+      sel.appendChild(og);
+    });
     sel.onchange = function () { state.f.type = sel.value; render(); };
     var regs = ['all'].concat(Array.from(new Set(state.events.map(function (e) { return e.region; }))).sort());
     var rs = el('select', 'chip'); rs.setAttribute('aria-label', 'Region');

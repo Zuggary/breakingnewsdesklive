@@ -19,6 +19,7 @@ from tools.lib import (REGIONS, region_of, score_event, summarize, STATE_CENTROI
                        iso_utc, parse_time, haversine_km)
 
 FIXTURE_MODE = False
+FIXTURE_DIR = None
 UA = "breakingnewsdesklive/1.0 (+https://breakingnewsdesklive.com; independent alert aggregator)"
 MAX_AGE_H = 72
 MAX_AGE_LONG_H = 168  # open fires, floods and volcanoes stay listed for 7 days
@@ -61,6 +62,14 @@ SOURCES = [
      "url": "https://satepsanone.nesdis.noaa.gov/pub/FIRE/web/HMS/Smoke_Polygons/KML/{y}/{m}/hms_smoke{ymd}.kml",
      "page": "https://www.ospo.noaa.gov/Products/land/hms.html",
      "licence": "US Government work, public domain; credit NOAA/NESDIS HMS", "terms": "https://www.ospo.noaa.gov/Products/land/hms.html"},
+    {"id": "atd-faa", "update": "every 5 minutes (via Air Travel Desk)", "name": "FAA airport status, via Air Travel Desk",
+     "url": "https://www.airtraveldesklive.com/data/status.json", "page": "https://nasstatus.faa.gov/",
+     "licence": "FAA data is US Government work, public domain. Read from the public JSON of our sister site Air Travel Desk, with credit.",
+     "terms": "https://www.airtraveldesklive.com/about.html"},
+    {"id": "ms365", "update": "every 10 minutes (via Is it 364 yet)", "name": "Microsoft 365 public status, via Is it 364 yet",
+     "url": "https://www.isit364yet.com/status.json", "page": "https://status.cloud.microsoft/",
+     "licence": "Public status feed of the provider, read by our sister project Is it 364 yet, with credit.",
+     "terms": "https://www.isit364yet.com/privacy.html"},
     {"id": "tsunami-ak", "update": "when a bulletin is issued", "name": "NOAA National Tsunami Warning Center (Alaska)", "xml": True,
      "url": "https://www.tsunami.gov/events/xml/PAAQAtom.xml", "page": "https://www.tsunami.gov/",
      "licence": "US Government work, public domain; credit NOAA/NWS", "terms": "https://www.weather.gov/disclaimer"},
@@ -353,7 +362,58 @@ def parse_hms(kml, src):
     return out
 
 
-PARSERS = {"hms-smoke": parse_hms, "spc-outlook": parse_spc, "tsunami-ak": parse_tsunami, "tsunami-hi": parse_tsunami, "usgs-volcano": parse_volcano, "swpc-kp": parse_kp, "usgs-quakes": parse_usgs, "nws-alerts": parse_nws, "nhc": parse_nhc, "eonet": parse_eonet, "gdacs": parse_gdacs}
+FAA_KIND = {"ground_stop": ("Ground stop", "severe"), "closure": ("Airport closed", "severe"),
+            "ground_delay": ("Ground delay program", "moderate"), "delay": ("Delays", "moderate")}
+
+
+def parse_faa(d, src):
+    airports = {}
+    try:
+        if FIXTURE_MODE:
+            with open(os.path.join(FIXTURE_DIR, "atd-airports.json"), encoding="utf-8") as f:
+                airports = json.load(f)
+        else:
+            airports = fetch_json({"id": "x", "url": "https://www.airtraveldesklive.com/data/airports.json"}, None)
+        airports = airports.get("airports", airports)
+    except Exception:  # noqa: BLE001
+        airports = {}
+    when = parse_time(d["updated_utc"])
+    out = []
+    for ev in d.get("events", []):
+        label, sev = FAA_KIND.get(ev.get("kind"), (None, None))
+        if not label:
+            continue
+        ap = airports.get(ev["code"]) or {}
+        name = ap.get("name") or ev.get("name") or ev["code"]
+        mins = ev.get("avg") or ev.get("max") or 0
+        detail = {"kind": label, "airport_code": ev["code"], "reason": ev.get("reason") or "",
+                  "avg_delay_min": ev.get("avg"), "max_delay_min": ev.get("max"), "until": ev.get("end_time") or "",
+                  "faa_status": ev.get("status") or ""}
+        out.append(mk("faa-%s-%s" % (ev["kind"], ev["code"]), "transport", "%s at %s" % (label, ev["code"]),
+                      name if name != ev["code"] else "Airport " + ev["code"], ap.get("lat"), ap.get("lon"), when, sev, mins, src,
+                      "https://nasstatus.faa.gov/", detail=detail))
+    return out
+
+
+def parse_ms365(d, src):
+    out = []
+    cur = d.get("current")
+    if cur:
+        out.append(mk("ms365-" + cur["id"], "outage", "Microsoft 365 service incident", "Microsoft 365 (consumer services)", None, None,
+                      parse_time(cur["start"]), "severe", 0, src, "https://status.cloud.microsoft/",
+                      detail={"status": d.get("status") or "", "since": cur["start"][:16].replace("T", " ") + " UTC", "open": True}))
+    else:
+        for inc in d.get("incidents", [])[:1]:
+            end = parse_time(inc["end"]) if inc.get("end") else None
+            if end:
+                out.append(mk("ms365-" + inc["id"], "outage", "Microsoft 365 incident ended", "Microsoft 365 (consumer services)", None, None,
+                              end, "minor", inc.get("hours") or 0, src, "https://status.cloud.microsoft/",
+                              detail={"status": "Service restored", "hours": inc.get("hours"), "open": False,
+                                      "started": inc["start"][:16].replace("T", " ") + " UTC"}))
+    return out
+
+
+PARSERS = {"atd-faa": parse_faa, "ms365": parse_ms365, "hms-smoke": parse_hms, "spc-outlook": parse_spc, "tsunami-ak": parse_tsunami, "tsunami-hi": parse_tsunami, "usgs-volcano": parse_volcano, "swpc-kp": parse_kp, "usgs-quakes": parse_usgs, "nws-alerts": parse_nws, "nhc": parse_nhc, "eonet": parse_eonet, "gdacs": parse_gdacs}
 
 
 def dedupe(events):
@@ -373,8 +433,9 @@ def dedupe(events):
 
 
 def build(fixtures=None, now=None):
-    global FIXTURE_MODE
+    global FIXTURE_MODE, FIXTURE_DIR
     FIXTURE_MODE = bool(fixtures)
+    FIXTURE_DIR = fixtures
     now = now or datetime.now(timezone.utc)
     events, status = [], []
     for src in SOURCES:

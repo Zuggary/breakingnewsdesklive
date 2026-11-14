@@ -81,6 +81,10 @@ def size_points(e):
         return min(30, 6 * math.log2(s + 1)) if s else 12
     if t == "tsunami":
         return 30
+    if t == "transport":
+        return min(30, 8 + s / 3)
+    if t == "outage":
+        return 20 if (e.get("detail") or {}).get("open") else 4
     if t == "smoke":
         return min(10, 3 * math.log2(s + 1))
     return 12
@@ -123,6 +127,19 @@ def summarize(e):
         if d.get("magnitude"):
             return "A wildfire is open in the NASA EONET list. Reported size: %s %s." % (_num(d["magnitude"]), d.get("unit") or "")
         return "A wildfire is open in the NASA EONET list. No size is reported."
+    if t == "transport":
+        s = "FAA status for %s (%s): %s." % (e["place"], d["airport_code"], d["kind"].lower())
+        if d.get("reason") and d["reason"].lower().rstrip(".") != d["kind"].lower():
+            s += " Reason given: %s." % d["reason"].rstrip(".")
+        if d.get("avg_delay_min"):
+            s += " Average delay reported: %d minutes." % d["avg_delay_min"]
+        if d.get("until"):
+            s += " Expected until: %s" % d["until"]
+        return s
+    if t == "outage":
+        if d.get("open"):
+            return "Microsoft's public status page shows an open incident since %s. Current status: %s." % (d["since"], d["status"])
+        return "Microsoft's public status page shows the last incident ended. It ran about %s hours from %s." % (_num(d["hours"]), d["started"])
     if t == "smoke":
         return "NOAA satellite analysis shows %d %s-density smoke plumes. The map point marks the largest plume. Smoke can affect air quality far from the fire." % (d["plumes"], d["density"].lower())
     if t == "tsunami":
@@ -148,7 +165,7 @@ def _num(x):
 _NUM = re.compile(r"\d+(?:\.\d+)?")
 _WORD = re.compile(r"\b[A-Z][a-zA-Z]{2,}\b")
 _COMMON = {"The", "This", "That", "National", "Weather", "Service", "Check", "Depth", "Location", "State", "Hurricane",
-           "Center", "PAGER", "Smoke", "NOAA", "Storm", "Prediction", "Aurora", "Follow", "Tsunami", "Warning", "Watch", "Advisory", "Pacific", "Alaska", "Hawaii", "Bulletin", "Kp", "NOAA", "Observatory", "Program", "NASA", "EONET", "GDACS", "USGS", "Reported", "Wildfire", "Earthquake", "Listed", "Alert", "Level"}
+           "Center", "Airport", "Microsoft", "Microsoft's", "Reason", "Expected", "Average", "Current", "FAA", "Delays", "Ground", "Stop", "Closed", "PAGER", "Smoke", "NOAA", "Storm", "Prediction", "Aurora", "Follow", "Tsunami", "Warning", "Watch", "Advisory", "Pacific", "Alaska", "Hawaii", "Bulletin", "Kp", "NOAA", "Observatory", "Program", "NASA", "EONET", "GDACS", "USGS", "Reported", "Wildfire", "Earthquake", "Listed", "Alert", "Level"}
 
 
 def guard_ok(summary, event):

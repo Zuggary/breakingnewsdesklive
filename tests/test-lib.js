@@ -8,4 +8,6 @@ assert.strictEqual(B.ago('2026-11-14T11:30:00Z',now),'30m ago');
 assert.strictEqual(B.safeUrl('javascript:alert(1)'),null);
 assert.ok(B.safeUrl('https://usgs.gov/x'));
 assert.strictEqual(B.filterEvents(ev,{hours:6},now).length,1);
+assert.strictEqual(B.filterEvents(ev,{type:'g:hazards'},now).length,2);
+assert.strictEqual(B.filterEvents(ev,{type:'g:transport'},now).length,0);
 console.log('lib.js ok');
