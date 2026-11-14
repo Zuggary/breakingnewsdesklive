@@ -188,6 +188,7 @@ class T(unittest.TestCase):
             self.assertTrue(os.path.exists(p), e["file"])
             self.assertLessEqual(os.path.getsize(p), 150 * 1024, e["file"])
             self.assertIn("no text", e["prompt"])
+            self.assertIn("corner", e.get("corner_check", ""), "%s: add a corner_check note after zooming its corners for lettering or a signature" % e["file"])
         # every illustration the page can pick must exist in the library
         js = open(os.path.join(root, "lib.js")).read()
         import re
