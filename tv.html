@@ -52,7 +52,7 @@ function clocks(){var box=$('clocks');if(!box.children.length)ZONES.forEach(func
 var V={lon:0,lat:0,z:1},VT={lon:0,lat:0,z:1},FLOOR=40,DWELL=20000;
 function proj(lon,lat,W,H){var k=Math.min(W/360,H/180)*V.z;return{x:W/2+(lon-V.lon)*k,y:H/2-(lat-V.lat)*k,k:k}}
 function aim(){var e=top()[S.i];if(e&&e.lat!=null&&e.score>=FLOOR&&CTL.zoom){VT={lon:e.lon,lat:e.lat,z:3}}else{VT={lon:0,lat:0,z:1}}}
-function ease(){['lon','lat','z'].forEach(function(k){V[k]+=(VT[k]-V[k])*0.04})}
+function ease(){['lon','lat','z'].forEach(function(k){V[k]+=(VT[k]-V[k])*0.07})}
 function floorList(){return S.ev.slice(0,8).filter(function(e){return e.score>=FLOOR})}
 function top(){return S.ev.slice(0,8)}
 function reason(e){var d=e.detail||{},r=[(e.score>=FLOOR?'Above the show threshold of '+FLOOR:'Below the show threshold of '+FLOOR+', no camera move'),'score '+e.score+' of 100','severity '+e.severity];if(e.type==='earthquake')r.push('magnitude '+d.magnitude);if(e.type==='weather')r.push(d.alerts+' active alert'+(d.alerts===1?'':'s'));r.push('reported '+B.ago(e.time));return r.join(' · ')}
@@ -62,13 +62,18 @@ function lower(){var e=top()[S.i];if(!e)return;var L=$('lower');L.textContent=''
  L.appendChild(el('b',null,e.title+' — '+e.place));L.appendChild(el('span',null,e.summary+' Source: '+e.source+'.'));L.appendChild(el('em',null,'Why it is on screen: '+reason(e)))}
 function crawl(){var items=S.ev.filter(function(e){return e.severity==='extreme'||e.severity==='severe'||e.score>=45}).slice(0,12).map(function(e){return e.title+', '+e.place+' ('+(e.source_short||e.source)+', '+B.ago(e.time)+')'});
  if(!items.length)items=['No severe events in the feeds right now'];items=CTL.extra.concat(items);var c=$('crawl');c.textContent=items.join('   ●   ')+'   ●   Automated from public sources. Check official sources.';c.style.setProperty('--d',Math.max(60,c.textContent.length*0.18)+'s')}
+var WL=document.createElement('canvas'),WK='';
+function worldLayer(W,H){var k=[W,H,V.lon.toFixed(3),V.lat.toFixed(3),V.z.toFixed(3)].join();if(k===WK)return WL;WK=k;WL.width=W;WL.height=H;var c=WL.getContext('2d'),d=W/(cv.getBoundingClientRect().width||W);
+ c.fillStyle='#070b10';c.fillRect(0,0,W,H);c.fillStyle='#142033';c.strokeStyle='#243650';c.lineWidth=d;
+ S.world.forEach(function(poly){var ring=poly[0],on=false,lx=null;c.beginPath();for(var i=0;i<ring.length;i++){var p=proj(ring[i][0],ring[i][1],W,H);if(lx!==null&&Math.abs(p.x-lx)>180*p.k)on=false;if(!on){c.moveTo(p.x,p.y);on=true}else c.lineTo(p.x,p.y);lx=p.x}c.fill();c.stroke()});
+ return WL}
 function draw(t){ease();var r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1,W=Math.round(r.width*d),H=Math.round(r.height*d);if(cv.width!==W||cv.height!==H){cv.width=W;cv.height=H}
- ctx.fillStyle='#070b10';ctx.fillRect(0,0,W,H);ctx.fillStyle='#142033';ctx.strokeStyle='#243650';ctx.lineWidth=d;
- S.world.forEach(function(poly){var ring=poly[0],on=false,lx=null;ctx.beginPath();for(var i=0;i<ring.length;i++){var p=proj(ring[i][0],ring[i][1],W,H);if(lx!==null&&Math.abs(p.x-lx)>180*p.k)on=false;if(!on){ctx.moveTo(p.x,p.y);on=true}else ctx.lineTo(p.x,p.y);lx=p.x}ctx.fill();ctx.stroke()});
+ ctx.drawImage(worldLayer(W,H),0,0);
  var ph=(t||0)/1000;S.ev.slice(0,60).forEach(function(e,idx){if(e.lat==null)return;var p=proj(e.lon,e.lat,W,H),col=B.SEV[e.severity]||'#93a1b5',base=(3+e.score/16)*d,foc=idx===S.i&&idx<8;
   var pulse=(ph*0.6+idx*0.17)%1;ctx.beginPath();ctx.arc(p.x,p.y,base+pulse*base*4,0,7);ctx.strokeStyle=col;ctx.globalAlpha=(1-pulse)*(foc?.9:.35);ctx.lineWidth=(foc?3:1.5)*d;ctx.stroke();ctx.globalAlpha=1;
-  ctx.beginPath();ctx.arc(p.x,p.y,foc?base*1.5:base,0,7);ctx.fillStyle=col;ctx.fill();if(foc){ctx.strokeStyle='#fff';ctx.lineWidth=2*d;ctx.stroke()}});
- if(!matchMedia('(prefers-reduced-motion: reduce)').matches)requestAnimationFrame(draw)}
+  ctx.beginPath();ctx.arc(p.x,p.y,foc?base*1.5:base,0,7);ctx.fillStyle=col;ctx.fill();if(foc){ctx.strokeStyle='#fff';ctx.lineWidth=2*d;ctx.stroke()}})}
+/* Cap the page at 30 drawn frames a second. Unthrottled headless Chromium draws far more, which starves the encoder (stream fell to 7 fps). */
+var LASTF=0;function frame(t){if(!matchMedia('(prefers-reduced-motion: reduce)').matches)requestAnimationFrame(frame);if(t-LASTF<30)return;LASTF=t;draw(t)}
 function load(){Promise.all([fetch('data/events.json',{cache:'no-cache'}).then(function(r){return r.json()}),S.world.length?0:fetch('data/world.json').then(function(r){return r.json()})]).then(function(r){
   var SH={'usgs-quakes':'USGS','nws-alerts':'NWS',nhc:'NHC',eonet:'NASA',gdacs:'GDACS'};S.ev=r[0].events.filter(function(e){return e.type!=='statement'&&e.type!=='headline'});/* world-events headlines are kept off the stream until Zach decides (CoS, GD4) */S.ev.forEach(function(e){e.source_short=SH[e.source_id]||e.source});if(r[1])S.world=r[1];S.i=0;aim();board();lower();crawl();if(matchMedia('(prefers-reduced-motion: reduce)').matches)draw(0)}).catch(function(){})}
 /* Control surface for the Showrunner kit (GD2). Every call is validated; nothing here reaches outside the page. */
@@ -89,7 +94,7 @@ window.BNDTV={
  return_to_wide:function(){CTL.banner='';S.i=0;VT={lon:0,lat:0,z:1};board();lower();return true}
 };
 if(new URLSearchParams(location.search).get('tilt')==='1')document.body.classList.add('tilt');
-clocks();setInterval(clocks,1000);load();setInterval(load,300000);requestAnimationFrame(draw);
+clocks();setInterval(clocks,1000);load();setInterval(load,300000);requestAnimationFrame(frame);
 setInterval(function(){if(!CTL.auto)return;var n=floorList().length;if(!n){S.i=0;aim();board();lower();return}S.i=(S.i+1)%n;aim();board();lower()},DWELL);
 })();
 </script></body></html>
