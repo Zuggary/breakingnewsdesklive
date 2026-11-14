@@ -83,6 +83,10 @@ def size_points(e):
         return 30
     if t == "transport":
         return min(30, 8 + s / 3)
+    if t == "recall":
+        return 10
+    if t == "cyber":
+        return min(20, 8 + s)
     if t == "outage":
         return 20 if (e.get("detail") or {}).get("open") else 4
     if t == "smoke":
@@ -136,6 +140,14 @@ def summarize(e):
         if d.get("until"):
             s += " Expected until: %s" % d["until"]
         return s
+    if t == "recall":
+        if d.get("class"):
+            return "FDA lists a %s recall by %s. Product: %s. Reason given: %s." % (d["class"], d["firm"], d["product"], d["reason"].rstrip("."))
+        return "The US Consumer Product Safety Commission lists this recall: %s." % d["headline"]
+    if t == "cyber":
+        return "CISA added %d vulnerabilities to its known exploited catalog on %s. Vendors named: %s. Read the catalog for details." % (d["count"], d["date_added"], d["vendors"])
+    if t == "outage" and d.get("provider"):
+        return "%s's public status page lists an open incident: %s. Status: %s. Impact level: %s." % (d["provider"], d["incident"], d["status"], d["impact"] or "not given")
     if t == "outage":
         if d.get("open"):
             return "Microsoft's public status page shows an open incident since %s. Current status: %s." % (d["since"], d["status"])
@@ -165,7 +177,7 @@ def _num(x):
 _NUM = re.compile(r"\d+(?:\.\d+)?")
 _WORD = re.compile(r"\b[A-Z][a-zA-Z]{2,}\b")
 _COMMON = {"The", "This", "That", "National", "Weather", "Service", "Check", "Depth", "Location", "State", "Hurricane",
-           "Center", "Airport", "Microsoft", "Microsoft's", "Reason", "Expected", "Average", "Current", "FAA", "Delays", "Ground", "Stop", "Closed", "PAGER", "Smoke", "NOAA", "Storm", "Prediction", "Aurora", "Follow", "Tsunami", "Warning", "Watch", "Advisory", "Pacific", "Alaska", "Hawaii", "Bulletin", "Kp", "NOAA", "Observatory", "Program", "NASA", "EONET", "GDACS", "USGS", "Reported", "Wildfire", "Earthquake", "Listed", "Alert", "Level"}
+           "Center", "FDA", "CISA", "Consumer", "Product", "Safety", "Commission", "Vendors", "Software", "Read", "Class", "Impact", "Status", "Airport", "Microsoft", "Microsoft's", "Reason", "Expected", "Average", "Current", "FAA", "Delays", "Ground", "Stop", "Closed", "PAGER", "Smoke", "NOAA", "Storm", "Prediction", "Aurora", "Follow", "Tsunami", "Warning", "Watch", "Advisory", "Pacific", "Alaska", "Hawaii", "Bulletin", "Kp", "NOAA", "Observatory", "Program", "NASA", "EONET", "GDACS", "USGS", "Reported", "Wildfire", "Earthquake", "Listed", "Alert", "Level"}
 
 
 def guard_ok(summary, event):

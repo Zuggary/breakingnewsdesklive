@@ -13,7 +13,7 @@
 <li>No names of private people.</li>
 </ol>
 <p class="warn">Check official sources. This site is not an emergency service. In an emergency, follow your local authorities.</p>
-<h2>How items are ranked</h2>
+<h2 id="rank">How items are ranked</h2>
 <p>The ranking rule is public and the same for every item.</p>
 <p>Each event gets a score from 0 to 100. The score adds severity (up to 50), size (up to 30) and freshness (up to 20, fading over about a day). Routine US weather warnings are capped so they do not push out large global events. The summary line is built from a fixed template and uses only values from the source data.</p>
 <h2>Sources, licences and last check</h2>
@@ -26,7 +26,7 @@
 <h2>Related projects</h2>
 <p><a href="https://www.airtraveldesklive.com/">Air Travel Desk</a> tracks US airport delays. <a href="https://www.isit364yet.com/">Is it 364 yet</a> is a separate project.</p>
 <h2>Credits</h2>
-<p>Data: USGS, NOAA National Weather Service, NOAA National Hurricane Center, NASA EONET, USGS Volcano Hazards Program, NOAA Space Weather Prediction Center, NOAA Storm Prediction Center, NOAA tsunami warning centers, GDACS (UN and European Commission). Thank you to the people who run these free services.</p>
+<p>Data: USGS, NOAA National Weather Service, NOAA National Hurricane Center, NASA EONET, USGS Volcano Hazards Program, NOAA Space Weather Prediction Center, NOAA Storm Prediction Center, FDA (openFDA), US Consumer Product Safety Commission, CISA, provider status pages (GitHub, Cloudflare, OpenAI, Atlassian), the FAA via Air Travel Desk, Microsoft 365 status via Is it 364 yet, NOAA tsunami warning centers, GDACS (UN and European Commission). Thank you to the people who run these free services.</p>
 </main>
 <script>
 fetch('data/sources.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){

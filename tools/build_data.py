@@ -70,6 +70,30 @@ SOURCES = [
      "url": "https://www.isit364yet.com/status.json", "page": "https://status.cloud.microsoft/",
      "licence": "Public status feed of the provider, read by our sister project Is it 364 yet, with credit.",
      "terms": "https://www.isit364yet.com/privacy.html"},
+    {"id": "openfda-food", "update": "weekly", "name": "FDA food recalls (openFDA)",
+     "url": "https://api.fda.gov/food/enforcement.json?search=report_date:[{d30}%20TO%20{d0}]&limit=100&sort=report_date:desc",
+     "page": "https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts",
+     "licence": "openFDA data is CC0 (public domain)", "terms": "https://open.fda.gov/terms/"},
+    {"id": "cpsc", "update": "daily", "name": "US Consumer Product Safety Commission recalls",
+     "url": "https://www.saferproducts.gov/RestWebServices/Recall?format=json&RecallDateStart={dd14}",
+     "page": "https://www.cpsc.gov/Recalls", "licence": "US Government work; headlines and links only",
+     "terms": "https://www.cpsc.gov/About-CPSC/Agency-Information/Website-Policies"},
+    {"id": "cisa-kev", "update": "several times a week", "name": "CISA Known Exploited Vulnerabilities catalog",
+     "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+     "page": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog", "licence": "CC0 (public domain)",
+     "terms": "https://www.cisa.gov/license"},
+    {"id": "status-github", "update": "live (provider status page)", "name": "GitHub public status page", "provider": "GitHub",
+     "url": "https://www.githubstatus.com/api/v2/summary.json", "page": "https://www.githubstatus.com/",
+     "licence": "Provider's public status page; headline and link only", "terms": "https://www.githubstatus.com/"},
+    {"id": "status-cloudflare", "update": "live (provider status page)", "name": "Cloudflare public status page", "provider": "Cloudflare",
+     "url": "https://www.cloudflarestatus.com/api/v2/summary.json", "page": "https://www.cloudflarestatus.com/",
+     "licence": "Provider's public status page; headline and link only", "terms": "https://www.cloudflarestatus.com/"},
+    {"id": "status-openai", "update": "live (provider status page)", "name": "OpenAI public status page", "provider": "OpenAI",
+     "url": "https://status.openai.com/api/v2/summary.json", "page": "https://status.openai.com/",
+     "licence": "Provider's public status page; headline and link only", "terms": "https://status.openai.com/"},
+    {"id": "status-atlassian", "update": "live (provider status page)", "name": "Atlassian public status page", "provider": "Atlassian",
+     "url": "https://status.atlassian.com/api/v2/summary.json", "page": "https://status.atlassian.com/",
+     "licence": "Provider's public status page; headline and link only", "terms": "https://status.atlassian.com/"},
     {"id": "tsunami-ak", "update": "when a bulletin is issued", "name": "NOAA National Tsunami Warning Center (Alaska)", "xml": True,
      "url": "https://www.tsunami.gov/events/xml/PAAQAtom.xml", "page": "https://www.tsunami.gov/",
      "licence": "US Government work, public domain; credit NOAA/NWS", "terms": "https://www.weather.gov/disclaimer"},
@@ -88,6 +112,10 @@ def fetch_json(src, fixtures):
     if fixtures:
         with open(os.path.join(fixtures, src["id"] + (src.get("ext", ".xml") if src.get("xml") else ".json")), encoding="utf-8") as f:
             return f.read() if src.get("xml") else json.load(f)
+    if "{d0}" in src["url"] or "{dd14}" in src["url"]:
+        n = datetime.now(timezone.utc)
+        src = dict(src, url=src["url"].format(d0=n.strftime("%Y%m%d"), d30=(n - timedelta(days=30)).strftime("%Y%m%d"),
+                                                dd14=(n - timedelta(days=14)).strftime("%Y-%m-%d")))
     if "{ymd}" in src["url"]:
         # HMS publishes one file per day; use today's, and yesterday's when today's is still empty.
         for back in (0, 1):
@@ -413,7 +441,65 @@ def parse_ms365(d, src):
     return out
 
 
-PARSERS = {"atd-faa": parse_faa, "ms365": parse_ms365, "hms-smoke": parse_hms, "spc-outlook": parse_spc, "tsunami-ak": parse_tsunami, "tsunami-hi": parse_tsunami, "usgs-volcano": parse_volcano, "swpc-kp": parse_kp, "usgs-quakes": parse_usgs, "nws-alerts": parse_nws, "nhc": parse_nhc, "eonet": parse_eonet, "gdacs": parse_gdacs}
+def parse_openfda(d, src):
+    out = []
+    for r in d.get("results", []):
+        cls = r.get("classification") or ""
+        sev = {"Class I": "severe", "Class II": "moderate"}.get(cls, "minor")
+        if cls == "Class III":
+            continue
+        prod = " ".join((r.get("product_description") or "").split())[:110]
+        when = datetime.strptime(r["report_date"], "%Y%m%d").replace(tzinfo=timezone.utc)
+        out.append(mk("fda-" + re.sub(r"\W+", "", r.get("recall_number", "x")), "recall", "FDA %s food recall" % cls, r.get("recalling_firm") or "",
+                      None, None, when, sev, 0, src, "https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts",
+                      detail={"class": cls, "product": prod, "firm": r.get("recalling_firm") or "", "reason": " ".join((r.get("reason_for_recall") or "").split())[:160],
+                              "recall_number": r.get("recall_number") or "", "distribution": " ".join((r.get("distribution_pattern") or "").split())[:100]}))
+    return out
+
+
+def parse_cpsc(d, src):
+    out = []
+    for r in d:
+        title = " ".join((r.get("Title") or "").split())[:140]
+        when = parse_time(r["RecallDate"])
+        out.append(mk("cpsc-" + str(r["RecallNumber"]), "recall", "CPSC recall: " + title, "United States", None, None, when, "moderate", 0, src,
+                      r.get("URL"), detail={"recall_number": str(r["RecallNumber"]), "headline": title}))
+    return out
+
+
+def parse_kev(d, src):
+    now_d = datetime.now(timezone.utc) if not FIXTURE_MODE else datetime(2026, 11, 14, tzinfo=timezone.utc)
+    recent = [v for v in d.get("vulnerabilities", []) if (now_d - datetime.strptime(v["dateAdded"], "%Y-%m-%d").replace(tzinfo=timezone.utc)).days <= 3]
+    if not recent:
+        return []
+    last = max(v["dateAdded"] for v in recent)
+    names = ", ".join(sorted({v["vendorProject"] for v in recent}))[:140]
+    return [mk("cisa-kev-" + last, "cyber", "CISA added %d known exploited vulnerabilities" % len(recent), "Software vendors: " + names, None, None,
+               datetime.strptime(last, "%Y-%m-%d").replace(tzinfo=timezone.utc), "moderate", len(recent), src,
+               "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+               detail={"count": len(recent), "date_added": last, "vendors": names, "catalog_total": d.get("count")})]
+
+
+IMPACT = {"critical": "extreme", "major": "severe", "minor": "moderate"}
+
+
+def parse_statuspage(d, src):
+    out = []
+    for inc in d.get("incidents", []):
+        if inc.get("status") == "resolved":
+            continue
+        sev = IMPACT.get(inc.get("impact"), "minor")
+        name = " ".join((inc.get("name") or "").split())[:120]
+        out.append(mk("status-%s-%s" % (src["id"].split("-")[1], inc["id"]), "outage", "%s: %s" % (src["provider"], name), src["provider"] + " status page",
+                      None, None, parse_time(inc.get("created_at") or inc.get("started_at")), sev, 0, src,
+                      inc.get("shortlink") or src["page"],
+                      detail={"provider": src["provider"], "incident": name, "status": (inc.get("status") or "").replace("_", " "),
+                              "impact": inc.get("impact") or "", "open": True}))
+    return out
+
+
+PARSERS = {"openfda-food": parse_openfda, "cpsc": parse_cpsc, "cisa-kev": parse_kev,
+           "status-github": parse_statuspage, "status-cloudflare": parse_statuspage, "status-openai": parse_statuspage, "status-atlassian": parse_statuspage, "atd-faa": parse_faa, "ms365": parse_ms365, "hms-smoke": parse_hms, "spc-outlook": parse_spc, "tsunami-ak": parse_tsunami, "tsunami-hi": parse_tsunami, "usgs-volcano": parse_volcano, "swpc-kp": parse_kp, "usgs-quakes": parse_usgs, "nws-alerts": parse_nws, "nhc": parse_nhc, "eonet": parse_eonet, "gdacs": parse_gdacs}
 
 
 def dedupe(events):
@@ -439,7 +525,7 @@ def build(fixtures=None, now=None):
     now = now or datetime.now(timezone.utc)
     events, status = [], []
     for src in SOURCES:
-        rec = {"id": src["id"], "update": src.get("update", ""), "url": src["url"].split("{")[0] if "{" in src["url"] else src["url"], "name": src["name"], "page": src["page"], "licence": src["licence"], "terms": src["terms"],
+        rec = {"id": src["id"], "update": src.get("update", ""), "url": src["url"].split("{")[0].split("?")[0], "name": src["name"], "page": src["page"], "licence": src["licence"], "terms": src["terms"],
                "checked": iso_utc(now), "ok": False, "count": 0}
         try:
             evs = PARSERS[src["id"]](fetch_json(src, fixtures), src)
@@ -449,7 +535,7 @@ def build(fixtures=None, now=None):
             rec["error"] = type(e).__name__
         status.append(rec)
     def fresh_enough(e):
-        age = MAX_AGE_LONG_H if e["type"] in ("wildfire", "volcano", "drought", "flood") else MAX_AGE_H
+        age = MAX_AGE_LONG_H if e["type"] in ("wildfire", "volcano", "drought", "flood", "recall") else MAX_AGE_H
         t = parse_time(e["time"])
         return now - timedelta(hours=age) <= t <= now + timedelta(hours=1)
     events = [e for e in events if fresh_enough(e)]
@@ -461,10 +547,11 @@ def build(fixtures=None, now=None):
     # Diversity: repeated US warnings of one kind drop 10 points per earlier copy, so they do not fill the top of the list.
     seen = {}
     for e in events:
-        if e["type"] == "weather":
-            n = seen.get(e["title"], 0)
-            seen[e["title"]] = n + 1
-            e["score"] = round(max(0, e["score"] - 10 * n), 1)
+        if e["type"] in ("weather", "recall"):
+            key = e["title"] if e["type"] == "weather" else "recall"
+            n = seen.get(key, 0)
+            seen[key] = n + 1
+            e["score"] = round(max(0, e["score"] - (10 if e["type"] == "weather" else 3) * n), 1)
     events.sort(key=lambda e: -e["score"])
     return events, status
 

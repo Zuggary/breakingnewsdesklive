@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-14T11:56:32Z",
+ "generated": "2026-11-14T11:59:29Z",
  "sources": [
   {
    "id": "usgs-quakes",
@@ -9,19 +9,19 @@
    "page": "https://earthquake.usgs.gov/earthquakes/map/",
    "licence": "US Government work, public domain; credit USGS",
    "terms": "https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits",
-   "checked": "2026-11-14T11:56:32Z",
+   "checked": "2026-11-14T11:59:29Z",
    "ok": true,
    "count": 121
   },
   {
    "id": "nws-alerts",
    "update": "about every minute",
-   "url": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
+   "url": "https://api.weather.gov/alerts/active",
    "name": "US National Weather Service",
    "page": "https://www.weather.gov/alerts",
    "licence": "US Government work, public domain; credit NOAA/NWS",
    "terms": "https://www.weather.gov/disclaimer",
-   "checked": "2026-11-14T11:56:32Z",
+   "checked": "2026-11-14T11:59:29Z",
    "ok": true,
    "count": 15
   },
@@ -33,19 +33,19 @@
    "page": "https://www.nhc.noaa.gov/",
    "licence": "US Government work, public domain; credit NOAA/NHC",
    "terms": "https://www.weather.gov/disclaimer",
-   "checked": "2026-11-14T11:56:32Z",
+   "checked": "2026-11-14T11:59:29Z",
    "ok": true,
    "count": 0
   },
   {
    "id": "eonet",
    "update": "several times a day",
-   "url": "https://eonet.gsfc.nasa.gov/api/v3/events?status=open&limit=200",
+   "url": "https://eonet.gsfc.nasa.gov/api/v3/events",
    "name": "NASA EONET",
    "page": "https://eonet.gsfc.nasa.gov/",
    "licence": "NASA open data; credit NASA EONET and the original source",
    "terms": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-   "checked": "2026-11-14T11:56:32Z",
+   "checked": "2026-11-14T11:59:29Z",
    "ok": true,
    "count": 198
   },
@@ -57,7 +57,7 @@
    "page": "https://volcanoes.usgs.gov/",
    "licence": "US Government work, public domain; credit USGS",
    "terms": "https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits",
-   "checked": "2026-11-14T11:56:32Z",
+   "checked": "2026-11-14T11:59:29Z",
    "ok": true,
    "count": 3
   },
@@ -69,7 +69,7 @@
    "page": "https://www.swpc.noaa.gov/",
    "licence": "US Government work, public domain; credit NOAA SWPC",
    "terms": "https://www.weather.gov/disclaimer",
-   "checked": "2026-11-14T11:56:32Z",
+   "checked": "2026-11-14T11:59:29Z",
    "ok": true,
    "count": 0
   },
@@ -81,7 +81,7 @@
    "page": "https://www.spc.noaa.gov/products/outlook/",
    "licence": "US Government work, public domain; credit NOAA/NWS SPC",
    "terms": "https://www.weather.gov/disclaimer",
-   "checked": "2026-11-14T11:56:32Z",
+   "checked": "2026-11-14T11:59:29Z",
    "ok": true,
    "count": 0
   },
@@ -93,7 +93,7 @@
    "page": "https://www.ospo.noaa.gov/Products/land/hms.html",
    "licence": "US Government work, public domain; credit NOAA/NESDIS HMS",
    "terms": "https://www.ospo.noaa.gov/Products/land/hms.html",
-   "checked": "2026-11-14T11:56:32Z",
+   "checked": "2026-11-14T11:59:29Z",
    "ok": true,
    "count": 2
   },
@@ -105,7 +105,7 @@
    "page": "https://nasstatus.faa.gov/",
    "licence": "FAA data is US Government work, public domain. Read from the public JSON of our sister site Air Travel Desk, with credit.",
    "terms": "https://www.airtraveldesklive.com/about.html",
-   "checked": "2026-11-14T11:56:32Z",
+   "checked": "2026-11-14T11:59:29Z",
    "ok": true,
    "count": 1
   },
@@ -117,9 +117,93 @@
    "page": "https://status.cloud.microsoft/",
    "licence": "Public status feed of the provider, read by our sister project Is it 364 yet, with credit.",
    "terms": "https://www.isit364yet.com/privacy.html",
-   "checked": "2026-11-14T11:56:32Z",
+   "checked": "2026-11-14T11:59:29Z",
    "ok": true,
    "count": 1
+  },
+  {
+   "id": "openfda-food",
+   "update": "weekly",
+   "url": "https://api.fda.gov/food/enforcement.json",
+   "name": "FDA food recalls (openFDA)",
+   "page": "https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts",
+   "licence": "openFDA data is CC0 (public domain)",
+   "terms": "https://open.fda.gov/terms/",
+   "checked": "2026-11-14T11:59:29Z",
+   "ok": true,
+   "count": 63
+  },
+  {
+   "id": "cpsc",
+   "update": "daily",
+   "url": "https://www.saferproducts.gov/RestWebServices/Recall",
+   "name": "US Consumer Product Safety Commission recalls",
+   "page": "https://www.cpsc.gov/Recalls",
+   "licence": "US Government work; headlines and links only",
+   "terms": "https://www.cpsc.gov/About-CPSC/Agency-Information/Website-Policies",
+   "checked": "2026-11-14T11:59:29Z",
+   "ok": true,
+   "count": 19
+  },
+  {
+   "id": "cisa-kev",
+   "update": "several times a week",
+   "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+   "name": "CISA Known Exploited Vulnerabilities catalog",
+   "page": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+   "licence": "CC0 (public domain)",
+   "terms": "https://www.cisa.gov/license",
+   "checked": "2026-11-14T11:59:29Z",
+   "ok": true,
+   "count": 1
+  },
+  {
+   "id": "status-github",
+   "update": "live (provider status page)",
+   "url": "https://www.githubstatus.com/api/v2/summary.json",
+   "name": "GitHub public status page",
+   "page": "https://www.githubstatus.com/",
+   "licence": "Provider's public status page; headline and link only",
+   "terms": "https://www.githubstatus.com/",
+   "checked": "2026-11-14T11:59:29Z",
+   "ok": true,
+   "count": 0
+  },
+  {
+   "id": "status-cloudflare",
+   "update": "live (provider status page)",
+   "url": "https://www.cloudflarestatus.com/api/v2/summary.json",
+   "name": "Cloudflare public status page",
+   "page": "https://www.cloudflarestatus.com/",
+   "licence": "Provider's public status page; headline and link only",
+   "terms": "https://www.cloudflarestatus.com/",
+   "checked": "2026-11-14T11:59:29Z",
+   "ok": true,
+   "count": 2
+  },
+  {
+   "id": "status-openai",
+   "update": "live (provider status page)",
+   "url": "https://status.openai.com/api/v2/summary.json",
+   "name": "OpenAI public status page",
+   "page": "https://status.openai.com/",
+   "licence": "Provider's public status page; headline and link only",
+   "terms": "https://status.openai.com/",
+   "checked": "2026-11-14T11:59:29Z",
+   "ok": true,
+   "count": 1
+  },
+  {
+   "id": "status-atlassian",
+   "update": "live (provider status page)",
+   "url": "https://status.atlassian.com/api/v2/summary.json",
+   "name": "Atlassian public status page",
+   "page": "https://status.atlassian.com/",
+   "licence": "Provider's public status page; headline and link only",
+   "terms": "https://status.atlassian.com/",
+   "checked": "2026-11-14T11:59:29Z",
+   "ok": true,
+   "count": 0
   },
   {
    "id": "tsunami-ak",
@@ -129,7 +213,7 @@
    "page": "https://www.tsunami.gov/",
    "licence": "US Government work, public domain; credit NOAA/NWS",
    "terms": "https://www.weather.gov/disclaimer",
-   "checked": "2026-11-14T11:56:32Z",
+   "checked": "2026-11-14T11:59:29Z",
    "ok": true,
    "count": 0
   },
@@ -141,19 +225,19 @@
    "page": "https://www.tsunami.gov/",
    "licence": "US Government work, public domain; credit NOAA/NWS",
    "terms": "https://www.weather.gov/disclaimer",
-   "checked": "2026-11-14T11:56:32Z",
+   "checked": "2026-11-14T11:59:29Z",
    "ok": true,
    "count": 0
   },
   {
    "id": "gdacs",
    "update": "every few minutes",
-   "url": "https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH?eventlist=EQ;TC;FL;VO;DR;WF&alertlevel=Green;Orange;Red",
+   "url": "https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH",
    "name": "GDACS (UN and European Commission)",
    "page": "https://www.gdacs.org/",
    "licence": "GDACS terms of use; credit GDACS",
    "terms": "https://www.gdacs.org/About/termsofuse.aspx",
-   "checked": "2026-11-14T11:56:32Z",
+   "checked": "2026-11-14T11:59:29Z",
    "ok": true,
    "count": 5
   }
