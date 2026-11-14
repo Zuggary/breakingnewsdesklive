@@ -85,6 +85,8 @@ def size_points(e):
         return min(30, 8 + s / 3)
     if t == "recall":
         return 10
+    if t == "notice":
+        return 8
     if t == "cyber":
         return min(20, 8 + s)
     if t == "outage":
@@ -140,6 +142,8 @@ def summarize(e):
         if d.get("until"):
             s += " Expected until: %s" % d["until"]
         return s
+    if t == "notice":
+        return "The Federal Register lists this presidential document, published %s: %s." % (d["published"], d["title"])
     if t == "recall":
         if d.get("class"):
             return "FDA lists a %s recall by %s. Product: %s. Reason given: %s." % (d["class"], d["firm"], d["product"], d["reason"].rstrip("."))
@@ -177,7 +181,7 @@ def _num(x):
 _NUM = re.compile(r"\d+(?:\.\d+)?")
 _WORD = re.compile(r"\b[A-Z][a-zA-Z]{2,}\b")
 _COMMON = {"The", "This", "That", "National", "Weather", "Service", "Check", "Depth", "Location", "State", "Hurricane",
-           "Center", "FDA", "CISA", "Consumer", "Product", "Safety", "Commission", "Vendors", "Software", "Read", "Class", "Impact", "Status", "Airport", "Microsoft", "Microsoft's", "Reason", "Expected", "Average", "Current", "FAA", "Delays", "Ground", "Stop", "Closed", "PAGER", "Smoke", "NOAA", "Storm", "Prediction", "Aurora", "Follow", "Tsunami", "Warning", "Watch", "Advisory", "Pacific", "Alaska", "Hawaii", "Bulletin", "Kp", "NOAA", "Observatory", "Program", "NASA", "EONET", "GDACS", "USGS", "Reported", "Wildfire", "Earthquake", "Listed", "Alert", "Level"}
+           "Center", "Federal", "Register", "FDA", "CISA", "Consumer", "Product", "Safety", "Commission", "Vendors", "Software", "Read", "Class", "Impact", "Status", "Airport", "Microsoft", "Microsoft's", "Reason", "Expected", "Average", "Current", "FAA", "Delays", "Ground", "Stop", "Closed", "PAGER", "Smoke", "NOAA", "Storm", "Prediction", "Aurora", "Follow", "Tsunami", "Warning", "Watch", "Advisory", "Pacific", "Alaska", "Hawaii", "Bulletin", "Kp", "NOAA", "Observatory", "Program", "NASA", "EONET", "GDACS", "USGS", "Reported", "Wildfire", "Earthquake", "Listed", "Alert", "Level"}
 
 
 def guard_ok(summary, event):

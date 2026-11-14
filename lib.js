@@ -8,6 +8,7 @@
     wildfire: { label: 'Wildfire', color: '#ff5c5c' },
     volcano: { label: 'Volcano', color: '#f2d04b' },
     transport: { label: 'Air travel', color: '#6fd6a8' },
+    notice: { label: 'Official notice', color: '#9fb4d9' },
     recall: { label: 'Recall', color: '#e6c14a' },
     cyber: { label: 'Cyber', color: '#ff5fd0' },
     outage: { label: 'Outage', color: '#ff7ab8' },

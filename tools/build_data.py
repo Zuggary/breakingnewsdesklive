@@ -94,6 +94,10 @@ SOURCES = [
     {"id": "status-atlassian", "update": "live (provider status page)", "name": "Atlassian public status page", "provider": "Atlassian",
      "url": "https://status.atlassian.com/api/v2/summary.json", "page": "https://status.atlassian.com/",
      "licence": "Provider's public status page; headline and link only", "terms": "https://status.atlassian.com/"},
+    {"id": "fedreg-presidential", "update": "daily (business days)", "name": "Federal Register: presidential documents",
+     "url": "https://www.federalregister.gov/api/v1/documents.json?per_page=15&order=newest&conditions%5Btype%5D%5B%5D=PRESDOCU",
+     "page": "https://www.federalregister.gov/presidential-documents", "licence": "US Government work, public domain; headline and link only",
+     "terms": "https://www.federalregister.gov/reader-aids/policy"},
     {"id": "tsunami-ak", "update": "when a bulletin is issued", "name": "NOAA National Tsunami Warning Center (Alaska)", "xml": True,
      "url": "https://www.tsunami.gov/events/xml/PAAQAtom.xml", "page": "https://www.tsunami.gov/",
      "licence": "US Government work, public domain; credit NOAA/NWS", "terms": "https://www.weather.gov/disclaimer"},
@@ -498,7 +502,19 @@ def parse_statuspage(d, src):
     return out
 
 
-PARSERS = {"openfda-food": parse_openfda, "cpsc": parse_cpsc, "cisa-kev": parse_kev,
+def parse_fedreg(d, src):
+    out = []
+    for r in d.get("results", []):
+        title = " ".join((r.get("title") or "").split())[:150]
+        when = datetime.strptime(r["publication_date"], "%Y-%m-%d").replace(tzinfo=timezone.utc)
+        out.append(mk("fr-" + r["document_number"], "notice", title, "Federal Register, presidential documents", None, None, when,
+                      "moderate", 0, src, r.get("html_url"),
+                      detail={"title": title, "document_number": r["document_number"], "published": r["publication_date"],
+                              "kind": r.get("type") or "Presidential Document"}))
+    return out
+
+
+PARSERS = {"fedreg-presidential": parse_fedreg, "openfda-food": parse_openfda, "cpsc": parse_cpsc, "cisa-kev": parse_kev,
            "status-github": parse_statuspage, "status-cloudflare": parse_statuspage, "status-openai": parse_statuspage, "status-atlassian": parse_statuspage, "atd-faa": parse_faa, "ms365": parse_ms365, "hms-smoke": parse_hms, "spc-outlook": parse_spc, "tsunami-ak": parse_tsunami, "tsunami-hi": parse_tsunami, "usgs-volcano": parse_volcano, "swpc-kp": parse_kp, "usgs-quakes": parse_usgs, "nws-alerts": parse_nws, "nhc": parse_nhc, "eonet": parse_eonet, "gdacs": parse_gdacs}
 
 
@@ -535,7 +551,7 @@ def build(fixtures=None, now=None):
             rec["error"] = type(e).__name__
         status.append(rec)
     def fresh_enough(e):
-        age = MAX_AGE_LONG_H if e["type"] in ("wildfire", "volcano", "drought", "flood", "recall") else MAX_AGE_H
+        age = MAX_AGE_LONG_H if e["type"] in ("wildfire", "volcano", "drought", "flood", "recall", "notice") else MAX_AGE_H
         t = parse_time(e["time"])
         return now - timedelta(hours=age) <= t <= now + timedelta(hours=1)
     events = [e for e in events if fresh_enough(e)]
