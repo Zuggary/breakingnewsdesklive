@@ -109,8 +109,8 @@ SOURCES = [
      "page": "https://ec.europa.eu/commission/presscorner/home/en",
      "licence": "Commission Decision 2011/833/EU on reuse of documents; source credited, headline and link only",
      "terms": "https://commission.europa.eu/legal-notice_en"},
-    {"id": "gdelt-doc", "slow": True, "update": "every 15 minutes", "name": "GDELT Project (outlet headlines)",
-     "url": "https://api.gdeltproject.org/api/v2/doc/doc?query=(election%20OR%20summit%20OR%20ceasefire%20OR%20sanctions%20OR%20talks%20OR%20parliament%20OR%20treaty%20OR%20protest%20OR%20attack%20OR%20strike)%20sourcelang:english&mode=artlist&maxrecords=120&timespan=3h&format=json&sort=datedesc",
+    {"id": "gdelt-doc", "gkg": True, "update": "every 15 minutes", "name": "GDELT Project (outlet headlines)",
+     "url": "https://data.gdeltproject.org/gdeltv2/lastupdate.txt",
      "page": "https://www.gdeltproject.org/",
      "licence": "GDELT allows unrestricted use with credit to GDELT. Outlet headlines are shown as links to the outlet, not as our words.",
      "terms": "https://www.gdeltproject.org/about.html#termsofuse"},
@@ -128,7 +128,48 @@ SOURCES = [
 ]
 
 
+GKG_THEMES = {"ARMEDCONFLICT", "ELECTION", "PROTEST", "TERROR", "LEGISLATION", "EPU_CATS_NATIONAL_SECURITY", "GENERAL_GOVERNMENT"}
+
+
+def fetch_gkg(files=4):
+    """Read the newest GDELT 2.0 GKG files (static, 15 minute batches) and return articles with a page title and a matching theme."""
+    import io
+    import zipfile
+    req = urllib.request.Request("https://data.gdeltproject.org/gdeltv2/lastupdate.txt", headers={"User-Agent": UA})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        txt = r.read().decode("utf-8", "replace")
+    m = re.search(r"/gdeltv2/(\d{14})\.gkg\.csv\.zip", txt)
+    if not m:
+        raise ValueError("no gkg file listed")
+    t0 = datetime.strptime(m.group(1), "%Y%m%d%H%M%S")
+    arts, seen = [], set()
+    for k in range(files):
+        ts = (t0 - timedelta(minutes=15 * k)).strftime("%Y%m%d%H%M%S")
+        try:
+            rq = urllib.request.Request("https://data.gdeltproject.org/gdeltv2/%s.gkg.csv.zip" % ts, headers={"User-Agent": UA})
+            with urllib.request.urlopen(rq, timeout=60) as r:
+                z = zipfile.ZipFile(io.BytesIO(r.read()))
+        except Exception:  # noqa: BLE001
+            continue
+        for line in z.read(z.namelist()[0]).decode("utf-8", "replace").splitlines():
+            f = line.split("\t")
+            if len(f) < 27 or f[25]:  # skip machine-translated items
+                continue
+            tm = re.search(r"<PAGE_TITLE>(.*?)</PAGE_TITLE>", f[26], re.S)
+            if not tm or not f[4].startswith("http"):
+                continue
+            themes = {x.split(",")[0] for x in f[7].split(";") if x}
+            if not (themes & GKG_THEMES) or f[4] in seen:
+                continue
+            seen.add(f[4])
+            arts.append({"url": f[4], "title": " ".join(tm.group(1).split()), "seendate": f[1][:8] + "T" + f[1][8:] + "Z",
+                         "domain": f[3], "sourcecountry": ""})
+    return {"articles": arts}
+
+
 def fetch_json(src, fixtures):
+    if src.get("gkg") and not fixtures:
+        return fetch_gkg()
     if fixtures:
         with open(os.path.join(fixtures, src["id"] + (src.get("ext", ".xml") if src.get("xml") else ".json")), encoding="utf-8") as f:
             return f.read() if src.get("xml") else json.load(f)

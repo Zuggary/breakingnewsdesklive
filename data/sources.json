@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-14T12:14:27Z",
+ "generated": "2026-11-14T12:21:45Z",
  "sources": [
   {
    "id": "usgs-quakes",
@@ -9,7 +9,7 @@
    "page": "https://earthquake.usgs.gov/earthquakes/map/",
    "licence": "US Government work, public domain; credit USGS",
    "terms": "https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 121
   },
@@ -21,7 +21,7 @@
    "page": "https://www.weather.gov/alerts",
    "licence": "US Government work, public domain; credit NOAA/NWS",
    "terms": "https://www.weather.gov/disclaimer",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 15
   },
@@ -33,7 +33,7 @@
    "page": "https://www.nhc.noaa.gov/",
    "licence": "US Government work, public domain; credit NOAA/NHC",
    "terms": "https://www.weather.gov/disclaimer",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 0
   },
@@ -45,7 +45,7 @@
    "page": "https://eonet.gsfc.nasa.gov/",
    "licence": "NASA open data; credit NASA EONET and the original source",
    "terms": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 198
   },
@@ -57,7 +57,7 @@
    "page": "https://volcanoes.usgs.gov/",
    "licence": "US Government work, public domain; credit USGS",
    "terms": "https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 3
   },
@@ -69,7 +69,7 @@
    "page": "https://www.swpc.noaa.gov/",
    "licence": "US Government work, public domain; credit NOAA SWPC",
    "terms": "https://www.weather.gov/disclaimer",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 0
   },
@@ -81,7 +81,7 @@
    "page": "https://www.spc.noaa.gov/products/outlook/",
    "licence": "US Government work, public domain; credit NOAA/NWS SPC",
    "terms": "https://www.weather.gov/disclaimer",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 0
   },
@@ -93,7 +93,7 @@
    "page": "https://www.ospo.noaa.gov/Products/land/hms.html",
    "licence": "US Government work, public domain; credit NOAA/NESDIS HMS",
    "terms": "https://www.ospo.noaa.gov/Products/land/hms.html",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 2
   },
@@ -105,7 +105,7 @@
    "page": "https://nasstatus.faa.gov/",
    "licence": "FAA data is US Government work, public domain. Read from the public JSON of our sister site Air Travel Desk, with credit.",
    "terms": "https://www.airtraveldesklive.com/about.html",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 1
   },
@@ -117,7 +117,7 @@
    "page": "https://status.cloud.microsoft/",
    "licence": "Public status feed of the provider, read by our sister project Is it 364 yet, with credit.",
    "terms": "https://www.isit364yet.com/privacy.html",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 1
   },
@@ -129,7 +129,7 @@
    "page": "https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts",
    "licence": "openFDA data is CC0 (public domain)",
    "terms": "https://open.fda.gov/terms/",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 63
   },
@@ -141,7 +141,7 @@
    "page": "https://www.cpsc.gov/Recalls",
    "licence": "US Government work; headlines and links only",
    "terms": "https://www.cpsc.gov/About-CPSC/Agency-Information/Website-Policies",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 19
   },
@@ -153,7 +153,7 @@
    "page": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
    "licence": "CC0 (public domain)",
    "terms": "https://www.cisa.gov/license",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 1
   },
@@ -165,7 +165,7 @@
    "page": "https://www.githubstatus.com/",
    "licence": "Provider's public status page; headline and link only",
    "terms": "https://www.githubstatus.com/",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 0
   },
@@ -177,7 +177,7 @@
    "page": "https://www.cloudflarestatus.com/",
    "licence": "Provider's public status page; headline and link only",
    "terms": "https://www.cloudflarestatus.com/",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 2
   },
@@ -189,7 +189,7 @@
    "page": "https://status.openai.com/",
    "licence": "Provider's public status page; headline and link only",
    "terms": "https://status.openai.com/",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 1
   },
@@ -201,7 +201,7 @@
    "page": "https://status.atlassian.com/",
    "licence": "Provider's public status page; headline and link only",
    "terms": "https://status.atlassian.com/",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 0
   },
@@ -213,7 +213,7 @@
    "page": "https://www.federalregister.gov/presidential-documents",
    "licence": "US Government work, public domain; headline and link only",
    "terms": "https://www.federalregister.gov/reader-aids/policy",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 15
   },
@@ -225,7 +225,7 @@
    "page": "https://www.gov.uk/government/organisations/foreign-commonwealth-development-office",
    "licence": "Open Government Licence v3.0; contains public sector information licensed under the OGL",
    "terms": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 6
   },
@@ -237,21 +237,21 @@
    "page": "https://ec.europa.eu/commission/presscorner/home/en",
    "licence": "Commission Decision 2011/833/EU on reuse of documents; source credited, headline and link only",
    "terms": "https://commission.europa.eu/legal-notice_en",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 6
   },
   {
    "id": "gdelt-doc",
    "update": "every 15 minutes",
-   "url": "https://api.gdeltproject.org/api/v2/doc/doc",
+   "url": "https://data.gdeltproject.org/gdeltv2/lastupdate.txt",
    "name": "GDELT Project (outlet headlines)",
    "page": "https://www.gdeltproject.org/",
    "licence": "GDELT allows unrestricted use with credit to GDELT. Outlet headlines are shown as links to the outlet, not as our words.",
    "terms": "https://www.gdeltproject.org/about.html#termsofuse",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
-   "count": 0
+   "count": 12
   },
   {
    "id": "tsunami-ak",
@@ -261,7 +261,7 @@
    "page": "https://www.tsunami.gov/",
    "licence": "US Government work, public domain; credit NOAA/NWS",
    "terms": "https://www.weather.gov/disclaimer",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 0
   },
@@ -273,7 +273,7 @@
    "page": "https://www.tsunami.gov/",
    "licence": "US Government work, public domain; credit NOAA/NWS",
    "terms": "https://www.weather.gov/disclaimer",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 0
   },
@@ -285,7 +285,7 @@
    "page": "https://www.gdacs.org/",
    "licence": "GDACS terms of use; credit GDACS",
    "terms": "https://www.gdacs.org/About/termsofuse.aspx",
-   "checked": "2026-11-14T12:14:27Z",
+   "checked": "2026-11-14T12:21:45Z",
    "ok": true,
    "count": 5
   }
