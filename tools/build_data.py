@@ -352,7 +352,7 @@ def parse_volcano(d, src):
             except Exception:  # noqa: BLE001
                 pass
         sev = {"RED": "extreme", "ORANGE": "severe", "YELLOW": "moderate"}[color]
-        out.append(mk("volcano-" + v["vnum"], "volcano", "%s volcano" % v["volcano_name"], v["obs_fullname"], lat, lon,
+        out.append(mk("volcano-" + v["vnum"], "volcano", "%s volcano: alert level %s (%s)" % (v["volcano_name"], (v.get("alert_level") or "").title(), color.title()), v["obs_fullname"], lat, lon,
                       parse_time(v["sent_utc"]), sev, 0, src, v.get("notice_url"),
                       detail={"color_code": color.title(), "alert_level": (v.get("alert_level") or "").title(),
                               "observatory": v["obs_fullname"], "volcano": v["volcano_name"]}))
@@ -552,7 +552,8 @@ def parse_statuspage(d, src):
             continue
         sev = IMPACT.get(inc.get("impact"), "minor")
         name = " ".join((inc.get("name") or "").split())[:120]
-        out.append(mk("status-%s-%s" % (src["id"].split("-")[1], inc["id"]), "outage", "%s: %s" % (src["provider"], name), src["provider"] + " status page",
+        title = name if name.lower().startswith(src["provider"].lower()) else "%s: %s" % (src["provider"], name)
+        out.append(mk("status-%s-%s" % (src["id"].split("-")[1], inc["id"]), "outage", title, src["provider"] + " status page",
                       None, None, parse_time(inc.get("created_at") or inc.get("started_at")), sev, 0, src,
                       inc.get("shortlink") or src["page"],
                       detail={"provider": src["provider"], "incident": name, "status": (inc.get("status") or "").replace("_", " "),

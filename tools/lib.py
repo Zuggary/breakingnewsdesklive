@@ -94,7 +94,10 @@ def size_points(e):
     if t == "cyber":
         return min(20, 8 + s)
     if t == "outage":
-        return 20 if (e.get("detail") or {}).get("open") else 4
+        d = e.get("detail") or {}
+        if not d.get("open"):
+            return 4
+        return 10 if d.get("impact") in ("minor", "") and d.get("provider") else 20
     if t == "smoke":
         return min(10, 3 * math.log2(s + 1))
     return 12

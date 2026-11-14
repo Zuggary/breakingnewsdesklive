@@ -174,7 +174,7 @@
     box.appendChild(g);
   }
   function digest() {
-    var recent = state.events.filter(function (e) { return e.first_seen && Date.now() - Date.parse(e.first_seen) < 36e5 && e.first_seen !== e.time; });
+    var recent = state.events.filter(function (e) { return e.first_seen && Date.now() - Date.parse(e.first_seen) < 36e5 && e.first_seen !== e.time && Date.now() - Date.parse(e.time) < 6 * 36e5; });
     var w = $('digest-wrap'), box = $('digest'); box.textContent = '';
     if (!recent.length) { w.hidden = true; return; }
     w.hidden = false;
