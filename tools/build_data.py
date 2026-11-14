@@ -452,6 +452,9 @@ def parse_hms(kml, src):
     return out
 
 
+AIRPORT_NAMES = {'ATL': 'Atlanta, GA', 'LAX': 'Los Angeles, CA', 'ORD': "Chicago O'Hare, IL", 'DFW': 'Dallas-Fort Worth, TX', 'DEN': 'Denver, CO', 'JFK': 'New York JFK, NY', 'SFO': 'San Francisco, CA', 'SEA': 'Seattle-Tacoma, WA', 'LAS': 'Las Vegas, NV', 'MCO': 'Orlando, FL', 'EWR': 'Newark, NJ', 'CLT': 'Charlotte, NC', 'PHX': 'Phoenix, AZ', 'IAH': 'Houston Bush, TX', 'MIA': 'Miami, FL', 'BOS': 'Boston, MA', 'MSP': 'Minneapolis-St. Paul, MN', 'FLL': 'Fort Lauderdale, FL', 'DTW': 'Detroit, MI', 'PHL': 'Philadelphia, PA', 'LGA': 'New York LaGuardia, NY', 'BWI': 'Baltimore-Washington, MD', 'SLC': 'Salt Lake City, UT', 'SAN': 'San Diego, CA', 'IAD': 'Washington Dulles, VA', 'DCA': 'Washington National, VA', 'MDW': 'Chicago Midway, IL', 'TPA': 'Tampa, FL', 'HNL': 'Honolulu, HI', 'PDX': 'Portland, OR', 'STL': 'St. Louis, MO', 'BNA': 'Nashville, TN', 'AUS': 'Austin, TX', 'MSY': 'New Orleans, LA', 'RDU': 'Raleigh-Durham, NC', 'SMF': 'Sacramento, CA', 'SJC': 'San Jose, CA', 'OAK': 'Oakland, CA', 'SNA': 'Santa Ana (Orange County), CA', 'HOU': 'Houston Hobby, TX', 'DAL': 'Dallas Love Field, TX', 'MCI': 'Kansas City, MO', 'CLE': 'Cleveland, OH', 'PIT': 'Pittsburgh, PA', 'IND': 'Indianapolis, IN', 'CMH': 'Columbus, OH', 'CVG': 'Cincinnati, OH', 'SAT': 'San Antonio, TX', 'SJU': 'San Juan, PR', 'ANC': 'Anchorage, AK', 'BUR': 'Burbank, CA', 'ONT': 'Ontario, CA', 'PBI': 'West Palm Beach, FL', 'RSW': 'Fort Myers, FL', 'JAX': 'Jacksonville, FL', 'BDL': 'Hartford, CT', 'MKE': 'Milwaukee, WI', 'ABQ': 'Albuquerque, NM', 'OMA': 'Omaha, NE', 'BUF': 'Buffalo, NY', 'RIC': 'Richmond, VA', 'OKC': 'Oklahoma City, OK', 'MEM': 'Memphis, TN', 'SDF': 'Louisville, KY', 'TUS': 'Tucson, AZ', 'ELP': 'El Paso, TX', 'BOI': 'Boise, ID', 'GEG': 'Spokane, WA', 'PVD': 'Providence, RI', 'CHS': 'Charleston, SC', 'ORF': 'Norfolk, VA', 'DSM': 'Des Moines, IA', 'GRR': 'Grand Rapids, MI', 'LIT': 'Little Rock, AR', 'ALB': 'Albany, NY', 'SYR': 'Syracuse, NY', 'ROC': 'Rochester, NY', 'MHT': 'Manchester, NH', 'PWM': 'Portland, ME', 'BTV': 'Burlington, VT', 'ICT': 'Wichita, KS', 'TUL': 'Tulsa, OK', 'COS': 'Colorado Springs, CO', 'RNO': 'Reno, NV', 'PSP': 'Palm Springs, CA', 'SBA': 'Santa Barbara, CA', 'MSN': 'Madison, WI', 'FAT': 'Fresno, CA', 'OGG': 'Maui, HI', 'KOA': 'Kona, HI', 'LIH': 'Kauai, HI', 'GUM': 'Guam'}
+
+
 FAA_KIND = {"ground_stop": ("Ground stop", "severe"), "closure": ("Airport closed", "severe"),
             "ground_delay": ("Ground delay program", "moderate"), "delay": ("Delays", "moderate")}
 
@@ -474,7 +477,7 @@ def parse_faa(d, src):
         if not label:
             continue
         ap = airports.get(ev["code"]) or {}
-        name = ap.get("name") or ev.get("name") or ev["code"]
+        name = ap.get("name") or AIRPORT_NAMES.get(ev["code"]) or ev.get("name") or ev["code"]
         mins = ev.get("avg") or ev.get("max") or 0
         detail = {"kind": label, "airport_code": ev["code"], "reason": ev.get("reason") or "",
                   "avg_delay_min": ev.get("avg"), "max_delay_min": ev.get("max"), "until": ev.get("end_time") or "",
