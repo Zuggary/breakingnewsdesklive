@@ -108,6 +108,13 @@ class T(unittest.TestCase):
         o[0]["summary"] = lib.summarize(o[0])
         self.assertTrue(lib.guard_ok(o[0]["summary"], o[0]), o[0]["summary"])
 
+    def test_service_worker_scope(self):
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        sw = open(os.path.join(root, "sw.js")).read()
+        self.assertIn("url.origin !== self.location.origin", sw)
+        self.assertNotIn("http://", sw.replace("http://www", ""))
+        self.assertIn("cache sentence", "cache sentence" if "caches its own files" in open(os.path.join(root, "privacy.html")).read() else "")
+
     def test_old_events_dropped(self):
         for e in self.events:
             self.assertLessEqual((NOW - lib.parse_time(e["time"])).total_seconds(), 168 * 3600)
