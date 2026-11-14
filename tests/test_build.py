@@ -115,6 +115,23 @@ class T(unittest.TestCase):
         self.assertNotIn("http://", sw.replace("http://www", ""))
         self.assertIn("cache sentence", "cache sentence" if "caches its own files" in open(os.path.join(root, "privacy.html")).read() else "")
 
+    def test_gdelt_clusters_and_statements(self):
+        src = next(s for s in build_data.SOURCES if s["id"] == "gdelt-doc")
+        ev = build_data.parse_gdelt(json.load(open(os.path.join(FIX, "gdelt-doc.json"))), src)
+        self.assertEqual(len(ev), 2)
+        top = ev[0]
+        self.assertEqual(top["detail"]["outlets"], 4)
+        self.assertEqual(len(top["links"]), 3)
+        self.assertEqual(len({l["label"] for l in top["links"]}), 3)
+        for e in ev:
+            e["summary"] = lib.summarize(e)
+            self.assertTrue(lib.guard_ok(e["summary"], e), e["summary"])
+            self.assertTrue(all(l["url"].startswith("https://") for l in e["links"]))
+        sf = next(s for s in build_data.SOURCES if s["id"] == "fcdo")
+        st = build_data.parse_fcdo(open(os.path.join(FIX, "fcdo.xml")).read(), sf)
+        self.assertTrue(0 < len(st) <= 6)
+        self.assertTrue(all(e["title"].startswith("UK Foreign Office: ") and e["source_url"].startswith("https://") for e in st))
+
     def test_old_events_dropped(self):
         for e in self.events:
             self.assertLessEqual((NOW - lib.parse_time(e["time"])).total_seconds(), 168 * 3600)

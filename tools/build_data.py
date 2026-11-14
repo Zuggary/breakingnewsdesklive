@@ -98,6 +98,21 @@ SOURCES = [
      "url": "https://www.federalregister.gov/api/v1/documents.json?per_page=15&order=newest&conditions%5Btype%5D%5B%5D=PRESDOCU",
      "page": "https://www.federalregister.gov/presidential-documents", "licence": "US Government work, public domain; headline and link only",
      "terms": "https://www.federalregister.gov/reader-aids/policy"},
+    {"id": "fcdo", "update": "as published", "name": "UK Foreign, Commonwealth & Development Office (GOV.UK)", "xml": True,
+     "url": "https://www.gov.uk/government/organisations/foreign-commonwealth-development-office.atom",
+     "page": "https://www.gov.uk/government/organisations/foreign-commonwealth-development-office",
+     "licence": "Open Government Licence v3.0; contains public sector information licensed under the OGL",
+     "terms": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"},
+    {"id": "eu-press", "update": "as published", "name": "European Commission press corner", "xml": True,
+     "url": "https://ec.europa.eu/commission/presscorner/api/rss?language=en",
+     "page": "https://ec.europa.eu/commission/presscorner/home/en",
+     "licence": "Commission Decision 2011/833/EU on reuse of documents; source credited, headline and link only",
+     "terms": "https://commission.europa.eu/legal-notice_en"},
+    {"id": "gdelt-doc", "update": "every 15 minutes", "name": "GDELT Project (outlet headlines)",
+     "url": "https://api.gdeltproject.org/api/v2/doc/doc?query=(election%20OR%20summit%20OR%20ceasefire%20OR%20sanctions%20OR%20talks%20OR%20parliament%20OR%20treaty%20OR%20protest%20OR%20attack%20OR%20strike)%20sourcelang:english&mode=artlist&maxrecords=120&timespan=3h&format=json&sort=datedesc",
+     "page": "https://www.gdeltproject.org/",
+     "licence": "GDELT allows unrestricted use with credit to GDELT. Outlet headlines are shown as links to the outlet, not as our words.",
+     "terms": "https://www.gdeltproject.org/about.html#termsofuse"},
     {"id": "tsunami-ak", "update": "when a bulletin is issued", "name": "NOAA National Tsunami Warning Center (Alaska)", "xml": True,
      "url": "https://www.tsunami.gov/events/xml/PAAQAtom.xml", "page": "https://www.tsunami.gov/",
      "licence": "US Government work, public domain; credit NOAA/NWS", "terms": "https://www.weather.gov/disclaimer"},
@@ -132,7 +147,7 @@ def fetch_json(src, fixtures):
             if "<Placemark" in txt:
                 return txt
         raise ValueError("no HMS file with data")
-    req = urllib.request.Request(src["url"], headers={"User-Agent": UA, "Accept": "application/json"})
+    req = urllib.request.Request(src["url"], headers={"User-Agent": UA, "Accept": "application/xml, text/xml, */*" if src.get("xml") else "application/json"})
     last = None
     for attempt in range(3):
         try:
@@ -149,8 +164,9 @@ def mk(id_, type_, title, place, lat, lon, when, sev, size, src, url, **extra):
          "lat": None if lat is None else round(lat, 2), "lon": None if lon is None else round(lon, 2),
          "time": iso_utc(when), "severity": sev, "size": size,
          "source": src["name"], "source_id": src["id"], "source_url": url or src["page"]}
+    region = extra.pop("region", None)
     e.update(extra)
-    e["region"] = region_of(lat, lon, place)
+    e["region"] = region or region_of(lat, lon, place)
     return e
 
 
@@ -514,7 +530,101 @@ def parse_fedreg(d, src):
     return out
 
 
-PARSERS = {"fedreg-presidential": parse_fedreg, "openfda-food": parse_openfda, "cpsc": parse_cpsc, "cisa-kev": parse_kev,
+def _entries(xml_text):
+    import xml.etree.ElementTree as ET
+    root = ET.fromstring(xml_text)
+    a = "{http://www.w3.org/2005/Atom}"
+    out = []
+    for ent in root.iter(a + "entry"):
+        link = ent.find(a + "link")
+        out.append({"title": " ".join((ent.findtext(a + "title") or "").split()), "url": link.get("href") if link is not None else None,
+                    "time": ent.findtext(a + "updated"), "id": ent.findtext(a + "id") or ""})
+    for it in root.iter("item"):
+        out.append({"title": " ".join((it.findtext("title") or "").split()), "url": it.findtext("link"),
+                    "time": it.findtext("pubDate"), "id": it.findtext("guid") or it.findtext("link") or ""})
+    return out
+
+
+def _parse_any_time(t):
+    from email.utils import parsedate_to_datetime
+    try:
+        return parse_time(t)
+    except ValueError:
+        return parsedate_to_datetime(t).astimezone(timezone.utc)
+
+
+def parse_statements(xml_text, src, party, place):
+    out = []
+    for e in _entries(xml_text)[:6]:
+        if not e["title"] or not (e["url"] or "").startswith("https://"):
+            continue
+        out.append(mk("stmt-%s-%s" % (src["id"], re.sub(r"\W+", "", e["id"])[-30:]), "statement", "%s: %s" % (party, e["title"][:150]), place,
+                      None, None, _parse_any_time(e["time"]), "minor", 0, src, e["url"], region="World",
+                      detail={"party": party, "headline": e["title"][:150], "published": iso_utc(_parse_any_time(e["time"]))[:16].replace("T", " ") + " UTC"}))
+    return out
+
+
+def parse_fcdo(x, src):
+    return parse_statements(x, src, "UK Foreign Office", "United Kingdom (government)")
+
+
+def parse_eu(x, src):
+    return parse_statements(x, src, "European Commission", "European Union (institution)")
+
+
+STOP = set("with from that this over after have will been were what into about their they them than says said news live amid more most year week today".split())
+
+
+def _toks(title):
+    t = re.split(r" [-|\u2013\u2014] ", title)[0].lower()
+    return {w for w in re.findall(r"[a-z]{4,}", t) if w not in STOP}
+
+
+def parse_gdelt(d, src):
+    arts = d.get("articles", []) if isinstance(d, dict) else []
+    clusters = []
+    for a in arts:
+        tk = _toks(a.get("title", ""))
+        if len(tk) < 3 or not (a.get("url") or "").startswith("http"):
+            continue
+        for c in clusters:
+            if len(tk & c["tk"]) / float(len(tk | c["tk"])) >= 0.45:
+                c["arts"].append(a)
+                c["tk"] |= tk
+                break
+        else:
+            clusters.append({"tk": set(tk), "arts": [a]})
+    out = []
+    for c in clusters:
+        by_domain = {}
+        for a in c["arts"]:
+            by_domain.setdefault(a["domain"], a)
+        if len(by_domain) < 2:
+            continue
+        picked, seen_c = [], set()
+        for a in sorted(by_domain.values(), key=lambda x: x["seendate"]):
+            if a.get("sourcecountry") not in seen_c:
+                picked.append(a)
+                seen_c.add(a.get("sourcecountry"))
+        for a in sorted(by_domain.values(), key=lambda x: x["seendate"]):
+            if a not in picked:
+                picked.append(a)
+        picked = picked[:3]
+        first = min(by_domain.values(), key=lambda x: x["seendate"])
+        when = datetime.strptime(first["seendate"], "%Y%m%dT%H%M%SZ").replace(tzinfo=timezone.utc)
+        title = " ".join(picked[0]["title"].split())[:140]
+        names = ", ".join(a["domain"] for a in picked)
+        e = mk("gdelt-" + re.sub(r"\W+", "", sorted(c["tk"])[0] + sorted(c["tk"])[-1] + first["seendate"])[:40], "headline",
+               "Headline: \u201c%s\u201d" % title, "Reported by %d outlets" % len(by_domain), None, None, when, "minor", len(by_domain), src,
+               picked[0]["url"], region="World",
+               detail={"outlets": len(by_domain), "outlet_names": names, "headline": title, "first_seen": iso_utc(when)[:16].replace("T", " ") + " UTC"})
+        e["links"] = [{"label": a["domain"], "title": " ".join(a["title"].split())[:140], "url": a["url"]} for a in picked]
+        out.append(e)
+    out.sort(key=lambda e: -e["size"])
+    return out[:12]
+
+
+PARSERS = {"fcdo": parse_fcdo, "eu-press": parse_eu, "gdelt-doc": parse_gdelt, "fedreg-presidential": parse_fedreg, "openfda-food": parse_openfda, "cpsc": parse_cpsc, "cisa-kev": parse_kev,
            "status-github": parse_statuspage, "status-cloudflare": parse_statuspage, "status-openai": parse_statuspage, "status-atlassian": parse_statuspage, "atd-faa": parse_faa, "ms365": parse_ms365, "hms-smoke": parse_hms, "spc-outlook": parse_spc, "tsunami-ak": parse_tsunami, "tsunami-hi": parse_tsunami, "usgs-volcano": parse_volcano, "swpc-kp": parse_kp, "usgs-quakes": parse_usgs, "nws-alerts": parse_nws, "nhc": parse_nhc, "eonet": parse_eonet, "gdacs": parse_gdacs}
 
 

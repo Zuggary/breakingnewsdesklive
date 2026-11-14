@@ -83,6 +83,10 @@ def size_points(e):
         return 30
     if t == "transport":
         return min(30, 8 + s / 3)
+    if t == "statement":
+        return 6
+    if t == "headline":
+        return min(30, 4 * s)
     if t == "recall":
         return 10
     if t == "notice":
@@ -142,6 +146,10 @@ def summarize(e):
         if d.get("until"):
             s += " Expected until: %s" % d["until"]
         return s
+    if t == "statement":
+        return "%s published this on %s: %s. The desk shows the title and links to the source. It does not summarise or check the text." % (d["party"], d["published"], d["headline"])
+    if t == "headline":
+        return "%d outlets published headlines about the same event. First seen %s. Outlets: %s. These are the outlets' headlines. The desk has not checked them." % (d["outlets"], d["first_seen"], d["outlet_names"])
     if t == "notice":
         return "The Federal Register lists this presidential document, published %s: %s." % (d["published"], d["title"])
     if t == "recall":
@@ -181,7 +189,7 @@ def _num(x):
 _NUM = re.compile(r"\d+(?:\.\d+)?")
 _WORD = re.compile(r"\b[A-Z][a-zA-Z]{2,}\b")
 _COMMON = {"The", "This", "That", "National", "Weather", "Service", "Check", "Depth", "Location", "State", "Hurricane",
-           "Center", "Federal", "Register", "FDA", "CISA", "Consumer", "Product", "Safety", "Commission", "Vendors", "Software", "Read", "Class", "Impact", "Status", "Airport", "Microsoft", "Microsoft's", "Reason", "Expected", "Average", "Current", "FAA", "Delays", "Ground", "Stop", "Closed", "PAGER", "Smoke", "NOAA", "Storm", "Prediction", "Aurora", "Follow", "Tsunami", "Warning", "Watch", "Advisory", "Pacific", "Alaska", "Hawaii", "Bulletin", "Kp", "NOAA", "Observatory", "Program", "NASA", "EONET", "GDACS", "USGS", "Reported", "Wildfire", "Earthquake", "Listed", "Alert", "Level"}
+           "Center", "Outlets", "First", "These", "Headline", "Foreign", "Office", "Commission", "European", "Federal", "Register", "FDA", "CISA", "Consumer", "Product", "Safety", "Commission", "Vendors", "Software", "Read", "Class", "Impact", "Status", "Airport", "Microsoft", "Microsoft's", "Reason", "Expected", "Average", "Current", "FAA", "Delays", "Ground", "Stop", "Closed", "PAGER", "Smoke", "NOAA", "Storm", "Prediction", "Aurora", "Follow", "Tsunami", "Warning", "Watch", "Advisory", "Pacific", "Alaska", "Hawaii", "Bulletin", "Kp", "NOAA", "Observatory", "Program", "NASA", "EONET", "GDACS", "USGS", "Reported", "Wildfire", "Earthquake", "Listed", "Alert", "Level"}
 
 
 def guard_ok(summary, event):

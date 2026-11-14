@@ -54,13 +54,19 @@
       if (state.sel === e.id) {
         var m = el('div', 'more');
         m.appendChild(el('p', '', e.summary));
+        if (e.links && e.links.length) {
+          var lk = el('p', 'src', 'Also reported by (the outlet\u2019s own headline, as a link): ');
+          var ul = el('ul', 'dg'); e.links.forEach(function (x) { var li2 = el('li'); var a2 = el('a', '', x.label + ': ' + x.title); a2.href = B.safeUrl(x.url) || '#'; a2.rel = 'noopener nofollow'; li2.appendChild(a2); ul.appendChild(li2); });
+          m.appendChild(lk); m.appendChild(ul);
+        }
         var u = B.safeUrl(e.source_url), s = el('p', 'src');
         s.appendChild(document.createTextNode('Source: ' + e.source + '. Event time: ' + e.time.replace('T', ' ').replace('Z', ' UTC') + '. '));
         if (u) { var a = el('a', '', 'Open the official page'); a.href = u; a.rel = 'noopener'; s.appendChild(a); }
         if (u) s.appendChild(document.createTextNode(' '));
         var pl = el('a', '', 'Permalink'); pl.href = 'event.html?id=' + encodeURIComponent(e.id); s.appendChild(pl);
         m.appendChild(s);
-        m.appendChild(el('p', 'warn', 'Check official sources. This site is automated and may be wrong or late.'));
+        m.appendChild(el('p', 'warn', (e.type === 'headline' || e.type === 'statement') ? 'Headlines and statements are claims by the named outlet or party. This site does not verify them. It is automated and may be wrong. Check official sources.' : 'Check official sources. This site is automated and may be wrong or late.'));
+        var cr = el('p', 'src'); var ca = el('a', '', 'Report an error or ask for a correction'); ca.href = 'about.html#corrections'; cr.appendChild(ca); m.appendChild(cr);
         li.appendChild(m);
       }
       ol.appendChild(li);

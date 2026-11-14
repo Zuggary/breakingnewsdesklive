@@ -8,6 +8,8 @@
     wildfire: { label: 'Wildfire', color: '#ff5c5c' },
     volcano: { label: 'Volcano', color: '#f2d04b' },
     transport: { label: 'Air travel', color: '#6fd6a8' },
+    statement: { label: 'Official statement', color: '#7fa6ff' },
+    headline: { label: 'Outlet headlines', color: '#c8b8a0' },
     notice: { label: 'Official notice', color: '#9fb4d9' },
     recall: { label: 'Recall', color: '#e6c14a' },
     cyber: { label: 'Cyber', color: '#ff5fd0' },
@@ -20,6 +22,7 @@
   };
   var GROUPS = { hazards: ['Hazards', ['earthquake', 'weather', 'storm', 'flood', 'wildfire', 'volcano', 'drought', 'tsunami', 'smoke']],
     transport: ['Transport', ['transport']], outages: ['Outages and cyber', ['outage', 'cyber']], recalls: ['Recalls and safety', ['recall']],
+    world: ['World events', ['statement', 'headline']],
     notices: ['Official notices', ['notice']], space: ['Space', ['space', 'launch']] };
   var SEV = { extreme: '#ff5c5c', severe: '#ff9340', moderate: '#f2d04b', minor: '#93a1b5' };
   function ago(iso, now) {

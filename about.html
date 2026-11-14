@@ -1,6 +1,8 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>About: Breaking News Desk</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css"><meta name="theme-color" content="#0b0f14"></head><body><header class="top"><a class="brand" href="./"><span>Breaking News Desk<small>Global alert desk</small></span></a><nav><a href="./">Map</a><a href="about.html">About</a><a href="privacy.html">Privacy</a></nav></header><main class="page" style="display:block">
 <h1>About</h1>
 <p>Breaking News Desk is an independent, automated project. It shows facts as they come in from official and public sources: natural hazards, air travel disruption, service outages and more. A script collects the data about every 10 minutes. No person reviews each item before it appears.</p>
+<h2>World events</h2>
+<p>World events items are claims by a named party or outlet. We show "Party says" statements from official feeds and the headlines of outlets as links. We do not copy articles, we do not verify the claims, and we show no outlet text beyond its headline. Headlines come from the GDELT Project, grouped by similar wording. The grouping can be wrong.</p>
 <h2>Our rules</h2>
 <ol>
 <li>Facts only. We say what happened, where, when, and who reported it. No opinion, no blame, no prediction.</li>
@@ -21,12 +23,13 @@
 <p>Map outlines: <a href="https://www.naturalearthdata.com/">Natural Earth</a>, public domain. Official health-agency notices (WHO, CDC) are links only; this site does not copy their text.</p>
 <p>We do not copy news articles. Every item links to its official source page.</p>
 <p>The full list with update rates is on the <a href="data.html">Data and sources</a> page.</p>
-<h2>Report an error</h2>
+<h2 id="corrections">Report an error or ask for a correction</h2>
+<p>Corrections are public. When we fix an item, we say what changed and when.</p>
 <p>Write to <a href="mailto:contact@breakingnewsdesklive.com">contact@breakingnewsdesklive.com</a>. Include the event title and the time shown. For the fastest fix, tell the source agency too.</p>
 <h2>Related projects</h2>
 <p><a href="https://www.airtraveldesklive.com/">Air Travel Desk</a> tracks US airport delays. <a href="https://www.isit364yet.com/">Is it 364 yet</a> is a separate project.</p>
 <h2>Credits</h2>
-<p>Data: USGS, NOAA National Weather Service, NOAA National Hurricane Center, NASA EONET, USGS Volcano Hazards Program, NOAA Space Weather Prediction Center, NOAA Storm Prediction Center, FDA (openFDA), Federal Register (presidential documents), US Consumer Product Safety Commission, CISA, provider status pages (GitHub, Cloudflare, OpenAI, Atlassian), the FAA via Air Travel Desk, Microsoft 365 status via Is it 364 yet, NOAA tsunami warning centers, GDACS (UN and European Commission). Thank you to the people who run these free services.</p>
+<p>Data: USGS, NOAA National Weather Service, NOAA National Hurricane Center, NASA EONET, USGS Volcano Hazards Program, NOAA Space Weather Prediction Center, UK Foreign Office and European Commission press feeds, the GDELT Project, NOAA Storm Prediction Center, FDA (openFDA), Federal Register (presidential documents), US Consumer Product Safety Commission, CISA, provider status pages (GitHub, Cloudflare, OpenAI, Atlassian), the FAA via Air Travel Desk, Microsoft 365 status via Is it 364 yet, NOAA tsunami warning centers, GDACS (UN and European Commission). Thank you to the people who run these free services.</p>
 </main>
 <script>
 fetch('data/sources.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){
