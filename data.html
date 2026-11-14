@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Data and sources: Breaking News Desk</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css"><meta name="theme-color" content="#0b0f14"></head><body>
+<header class="top"><a class="brand" href="./"><span>Breaking News Desk<small>Automated hazard alerts, public sources</small></span></a><nav><a href="./">Map</a><a href="about.html">About</a><a href="privacy.html">Privacy</a></nav></header>
+<main class="page" style="display:block">
+<h1>Data and sources</h1>
+<p>Every feed this site reads, with its licence, how often the source updates, and the result of the last check. The site reads each feed about every 10 minutes. A failed check keeps the last good data and is shown below.</p>
+<p class="warn">Check official sources. This site is automated and may be wrong or late.</p>
+<table id="t"><thead><tr><th>Feed</th><th>Licence</th><th>Source updates</th><th>Last checked (UTC)</th><th>Events now</th><th>Status</th></tr></thead><tbody></tbody></table>
+<h2>Not used</h2>
+<ul>
+<li>News articles: never copied. Only links to official pages.</li>
+<li>WHO Disease Outbreak News and CDC outbreak pages: linked, not read, because of their terms.</li>
+<li>Smithsonian weekly volcano report: its terms do not allow commercial use.</li>
+<li>Power outage maps: no open feed.</li>
+</ul>
+<h2>How a score is made</h2>
+<p>Severity gives up to 50 points: the source's own level, or our reading of a magnitude or wind speed. Size gives up to 30. Freshness gives up to 20 and fades over about a day. Repeated US warnings of one kind lose 10 points each. The score only orders the list. It says nothing about danger to you.</p>
+<h2>Map outlines</h2><p>Natural Earth, public domain.</p>
+</main>
+<script>
+fetch('data/sources.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){
+ var tb=document.querySelector('#t tbody');
+ function td(t){var c=document.createElement('td');c.textContent=t;return c}
+ d.sources.forEach(function(s){var tr=document.createElement('tr'),c=document.createElement('td'),a=document.createElement('a');
+  a.href=s.page;a.textContent=s.name;a.rel='noopener';c.appendChild(a);tr.appendChild(c);
+  var l=td(s.licence+' '),ta=document.createElement('a');ta.href=s.terms;ta.textContent='(terms)';ta.rel='noopener';l.appendChild(ta);tr.appendChild(l);
+  tr.appendChild(td(s.update||''));tr.appendChild(td(s.checked.replace('T',' ').replace('Z','')));tr.appendChild(td(String(s.count)));tr.appendChild(td(s.ok?'OK':'Last check failed'));tb.appendChild(tr)});
+}).catch(function(){document.querySelector('#t tbody').textContent='Could not load the source list.'});
+</script></body></html>

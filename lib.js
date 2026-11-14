@@ -7,6 +7,7 @@
     flood: { label: 'Flood', color: '#3fd0d0' },
     wildfire: { label: 'Wildfire', color: '#ff5c5c' },
     volcano: { label: 'Volcano', color: '#f2d04b' },
+    smoke: { label: 'Smoke', color: '#b0a090' },
     tsunami: { label: 'Tsunami', color: '#27c2ff' },
     space: { label: 'Space weather', color: '#d58cff' },
     drought: { label: 'Drought', color: '#c9a06b' },

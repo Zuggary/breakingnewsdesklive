@@ -51,10 +51,10 @@ function top(){return S.ev.slice(0,8)}
 function reason(e){var d=e.detail||{},r=['Score '+e.score+' of 100','severity '+e.severity];if(e.type==='earthquake')r.push('magnitude '+d.magnitude);if(e.type==='weather')r.push(d.alerts+' active alert'+(d.alerts===1?'':'s'));r.push('reported '+B.ago(e.time));return r.join(' · ')}
 function board(){var box=$('rows');box.textContent='';top().forEach(function(e,i){var r=el('div','row'+(i===S.i?' on':''));r.style.setProperty('--c',B.SEV[e.severity]);
  r.appendChild(el('span','n',String(i+1)));r.appendChild(el('span','t',e.title));r.appendChild(el('span','s',e.severity));r.appendChild(el('span','p',e.place));r.appendChild(el('span','w',B.ago(e.time)));box.appendChild(r)})}
-function lower(){var e=top()[S.i];if(!e)return;var L=$('lower');L.textContent='';L.style.setProperty('--c',B.SEV[e.severity]);
+function lower(){var e=top()[S.i];if(!e)return;var L=$('lower');L.textContent='';if(CTL.banner){L.style.setProperty('--c','#ffb020');L.appendChild(el('b',null,CTL.banner));L.appendChild(el('span',null,'Source data: '+e.source+'.'));return}L.style.setProperty('--c',B.SEV[e.severity]);
  L.appendChild(el('b',null,e.title+' — '+e.place));L.appendChild(el('span',null,e.summary+' Source: '+e.source+'.'));L.appendChild(el('em',null,'Why it is on screen: '+reason(e)))}
 function crawl(){var items=S.ev.filter(function(e){return e.severity==='extreme'||e.severity==='severe'||e.score>=45}).slice(0,12).map(function(e){return e.title+', '+e.place+' ('+(e.source_short||e.source)+', '+B.ago(e.time)+')'});
- if(!items.length)items=['No severe events in the feeds right now'];var c=$('crawl');c.textContent=items.join('   ●   ')+'   ●   Automated from public sources. Check official sources.';c.style.setProperty('--d',Math.max(60,c.textContent.length*0.18)+'s')}
+ if(!items.length)items=['No severe events in the feeds right now'];items=CTL.extra.concat(items);var c=$('crawl');c.textContent=items.join('   ●   ')+'   ●   Automated from public sources. Check official sources.';c.style.setProperty('--d',Math.max(60,c.textContent.length*0.18)+'s')}
 function draw(t){var r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1,W=Math.round(r.width*d),H=Math.round(r.height*d);if(cv.width!==W||cv.height!==H){cv.width=W;cv.height=H}
  ctx.fillStyle='#070b10';ctx.fillRect(0,0,W,H);ctx.fillStyle='#142033';ctx.strokeStyle='#243650';ctx.lineWidth=d;
  S.world.forEach(function(poly){var ring=poly[0],on=false,lx=null;ctx.beginPath();for(var i=0;i<ring.length;i++){var p=proj(ring[i][0],ring[i][1],W,H);if(lx!==null&&Math.abs(p.x-lx)>W/2)on=false;if(!on){ctx.moveTo(p.x,p.y);on=true}else ctx.lineTo(p.x,p.y);lx=p.x}ctx.fill();ctx.stroke()});
@@ -64,7 +64,23 @@ function draw(t){var r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1,W
  if(!matchMedia('(prefers-reduced-motion: reduce)').matches)requestAnimationFrame(draw)}
 function load(){Promise.all([fetch('data/events.json',{cache:'no-cache'}).then(function(r){return r.json()}),S.world.length?0:fetch('data/world.json').then(function(r){return r.json()})]).then(function(r){
   var SH={'usgs-quakes':'USGS','nws-alerts':'NWS',nhc:'NHC',eonet:'NASA',gdacs:'GDACS'};S.ev=r[0].events;S.ev.forEach(function(e){e.source_short=SH[e.source_id]||e.source});if(r[1])S.world=r[1];S.i=0;board();lower();crawl();if(matchMedia('(prefers-reduced-motion: reduce)').matches)draw(0)}).catch(function(){})}
+/* Control surface for the Showrunner kit (GD2). Every call is validated; nothing here reaches outside the page. */
+var CTL={auto:new URLSearchParams(location.search).get('auto')!=='0',last:0,banner:'',extra:[]};
+function blob(){return S.ev.map(function(e){return [e.title,e.place,e.score,e.summary,JSON.stringify(e.detail||{})].join(' ')}).join(' ').toLowerCase()}
+function textOk(t){if(typeof t!=='string'||t.length>240)return false;var have={};(blob().match(/\d+(?:\.\d+)?/g)||[]).forEach(function(n){have[n]=1});return (t.match(/\d+(?:\.\d+)?/g)||[]).every(function(n){return have[n]})}
+function cool(){var n=Date.now();if(n-CTL.last<20000)return false;CTL.last=n;return true}
+window.BNDTV={
+ version:1,
+ state:function(){return{events:S.ev.slice(0,20).map(function(e){return{id:e.id,title:e.title,place:e.place,score:e.score,severity:e.severity,time:e.time}}),focus:(top()[S.i]||{}).id||null,auto:CTL.auto,generated:S.gen}},
+ set_auto:function(on){CTL.auto=!!on;return true},
+ focus_map:function(id){var i=top().findIndex(function(e){return e.id===id});if(i<0||!cool())return false;S.i=i;board();lower();return true},
+ show_card:function(id){return window.BNDTV.focus_map(id)},
+ show_board_pass:function(){S.i=0;board();lower();return true},
+ push_ticker:function(t){if(!textOk(t))return false;CTL.extra.unshift(t);CTL.extra=CTL.extra.slice(0,5);crawl();return true},
+ set_banner:function(t){if(t!==''&&!textOk(t))return false;CTL.banner=t;lower();return true},
+ return_to_wide:function(){CTL.banner='';S.i=0;board();lower();return true}
+};
 clocks();setInterval(clocks,1000);load();setInterval(load,300000);requestAnimationFrame(draw);
-setInterval(function(){var n=Math.min(8,S.ev.length);if(!n)return;S.i=(S.i+1)%n;board();lower()},12000);
+setInterval(function(){var n=Math.min(8,S.ev.length);if(!n||!CTL.auto)return;S.i=(S.i+1)%n;board();lower()},12000);
 })();
 </script></body></html>

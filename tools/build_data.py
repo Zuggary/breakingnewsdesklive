@@ -24,46 +24,50 @@ MAX_AGE_H = 72
 MAX_AGE_LONG_H = 168  # open fires, floods and volcanoes stay listed for 7 days
 
 SOURCES = [
-    {"id": "usgs-quakes", "name": "USGS Earthquake Hazards Program",
+    {"id": "usgs-quakes", "update": "about every minute", "name": "USGS Earthquake Hazards Program",
      "url": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson",
      "page": "https://earthquake.usgs.gov/earthquakes/map/",
      "licence": "US Government work, public domain; credit USGS",
      "terms": "https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits"},
-    {"id": "nws-alerts", "name": "US National Weather Service",
+    {"id": "nws-alerts", "update": "about every minute", "name": "US National Weather Service",
      "url": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
      "page": "https://www.weather.gov/alerts",
      "licence": "US Government work, public domain; credit NOAA/NWS",
      "terms": "https://www.weather.gov/disclaimer"},
-    {"id": "nhc", "name": "NOAA National Hurricane Center",
+    {"id": "nhc", "update": "every few hours while storms are active", "name": "NOAA National Hurricane Center",
      "url": "https://www.nhc.noaa.gov/CurrentStorms.json",
      "page": "https://www.nhc.noaa.gov/",
      "licence": "US Government work, public domain; credit NOAA/NHC",
      "terms": "https://www.weather.gov/disclaimer"},
-    {"id": "eonet", "name": "NASA EONET",
+    {"id": "eonet", "update": "several times a day", "name": "NASA EONET",
      "url": "https://eonet.gsfc.nasa.gov/api/v3/events?status=open&limit=200",
      "page": "https://eonet.gsfc.nasa.gov/",
      "licence": "NASA open data; credit NASA EONET and the original source",
      "terms": "https://www.nasa.gov/nasa-brand-center/images-and-media/"},
-    {"id": "usgs-volcano", "name": "USGS Volcano Hazards Program",
+    {"id": "usgs-volcano", "update": "when an observatory changes a level", "name": "USGS Volcano Hazards Program",
      "url": "https://volcanoes.usgs.gov/hans-public/api/volcano/getElevatedVolcanoes",
      "page": "https://volcanoes.usgs.gov/",
      "licence": "US Government work, public domain; credit USGS",
      "terms": "https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits"},
-    {"id": "swpc-kp", "name": "NOAA Space Weather Prediction Center",
+    {"id": "swpc-kp", "update": "every 3 hours", "name": "NOAA Space Weather Prediction Center",
      "url": "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json",
      "page": "https://www.swpc.noaa.gov/",
      "licence": "US Government work, public domain; credit NOAA SWPC",
      "terms": "https://www.weather.gov/disclaimer"},
-    {"id": "spc-outlook", "name": "NOAA Storm Prediction Center",
+    {"id": "spc-outlook", "update": "several times a day", "name": "NOAA Storm Prediction Center",
      "url": "https://www.spc.noaa.gov/products/outlook/day1otlk_cat.nolyr.geojson", "page": "https://www.spc.noaa.gov/products/outlook/",
      "licence": "US Government work, public domain; credit NOAA/NWS SPC", "terms": "https://www.weather.gov/disclaimer"},
-    {"id": "tsunami-ak", "name": "NOAA National Tsunami Warning Center (Alaska)", "xml": True,
+    {"id": "hms-smoke", "update": "daily, updated through the day", "name": "NOAA Hazard Mapping System (smoke)", "xml": True, "ext": ".kml",
+     "url": "https://satepsanone.nesdis.noaa.gov/pub/FIRE/web/HMS/Smoke_Polygons/KML/{y}/{m}/hms_smoke{ymd}.kml",
+     "page": "https://www.ospo.noaa.gov/Products/land/hms.html",
+     "licence": "US Government work, public domain; credit NOAA/NESDIS HMS", "terms": "https://www.ospo.noaa.gov/Products/land/hms.html"},
+    {"id": "tsunami-ak", "update": "when a bulletin is issued", "name": "NOAA National Tsunami Warning Center (Alaska)", "xml": True,
      "url": "https://www.tsunami.gov/events/xml/PAAQAtom.xml", "page": "https://www.tsunami.gov/",
      "licence": "US Government work, public domain; credit NOAA/NWS", "terms": "https://www.weather.gov/disclaimer"},
-    {"id": "tsunami-hi", "name": "NOAA Pacific Tsunami Warning Center (Hawaii)", "xml": True,
+    {"id": "tsunami-hi", "update": "when a bulletin is issued", "name": "NOAA Pacific Tsunami Warning Center (Hawaii)", "xml": True,
      "url": "https://www.tsunami.gov/events/xml/PHEBAtom.xml", "page": "https://www.tsunami.gov/",
      "licence": "US Government work, public domain; credit NOAA/NWS", "terms": "https://www.weather.gov/disclaimer"},
-    {"id": "gdacs", "name": "GDACS (UN and European Commission)",
+    {"id": "gdacs", "update": "every few minutes", "name": "GDACS (UN and European Commission)",
      "url": "https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH?eventlist=EQ;TC;FL;VO;DR;WF&alertlevel=Green;Orange;Red",
      "page": "https://www.gdacs.org/",
      "licence": "GDACS terms of use; credit GDACS",
@@ -73,8 +77,20 @@ SOURCES = [
 
 def fetch_json(src, fixtures):
     if fixtures:
-        with open(os.path.join(fixtures, src["id"] + (".xml" if src.get("xml") else ".json")), encoding="utf-8") as f:
+        with open(os.path.join(fixtures, src["id"] + (src.get("ext", ".xml") if src.get("xml") else ".json")), encoding="utf-8") as f:
             return f.read() if src.get("xml") else json.load(f)
+    if "{ymd}" in src["url"]:
+        # HMS publishes one file per day; use today's, and yesterday's when today's is still empty.
+        for back in (0, 1):
+            d = datetime.now(timezone.utc) - timedelta(days=back)
+            u = src["url"].format(y=d.strftime("%Y"), m=d.strftime("%m"), ymd=d.strftime("%Y%m%d"))
+            try:
+                txt = fetch_json(dict(src, url=u), None)
+            except Exception:  # noqa: BLE001
+                continue
+            if "<Placemark" in txt:
+                return txt
+        raise ValueError("no HMS file with data")
     req = urllib.request.Request(src["url"], headers={"User-Agent": UA, "Accept": "application/json"})
     last = None
     for attempt in range(3):
@@ -108,6 +124,11 @@ def parse_usgs(d, src):
         lon, lat, depth = f["geometry"]["coordinates"][:3]
         mag = float(p["mag"])
         sev = "extreme" if mag >= 7 else "severe" if mag >= 6 else "moderate" if mag >= 5 else "minor"
+        pager = p.get("alert")
+        if pager == "red":
+            sev = "extreme"
+        elif pager == "orange" and sev in ("minor", "moderate"):
+            sev = "severe"
         when = datetime.fromtimestamp(p["time"] / 1000, timezone.utc)
         e = mk("usgs-" + f["id"], "earthquake", "M %.1f earthquake" % mag, p.get("place") or "Unknown place",
                lat, lon, when, sev, mag, src, p.get("url"),
@@ -303,7 +324,36 @@ def parse_spc(d, src):
     return out
 
 
-PARSERS = {"spc-outlook": parse_spc, "tsunami-ak": parse_tsunami, "tsunami-hi": parse_tsunami, "usgs-volcano": parse_volcano, "swpc-kp": parse_kp, "usgs-quakes": parse_usgs, "nws-alerts": parse_nws, "nhc": parse_nhc, "eonet": parse_eonet, "gdacs": parse_gdacs}
+def parse_hms(kml, src):
+    import xml.etree.ElementTree as ET
+    ns = {"k": "http://www.opengis.net/kml/2.2"}
+    groups = {}
+    for pm in ET.fromstring(kml).iter("{http://www.opengis.net/kml/2.2}Placemark"):
+        desc = pm.findtext("k:description", "", ns)
+        dm = re.search(r"Density: (\w+)", desc)
+        em = re.search(r"End Time: (\d{4})(\d{3}) (\d{2})(\d{2})UTC", desc)
+        co = pm.findtext(".//k:coordinates", "", ns).split()
+        if not dm or not em or not co or dm.group(1) not in ("Medium", "Heavy"):
+            continue
+        pts = [tuple(float(v) for v in c.split(",")[:2]) for c in co]
+        end = datetime(int(em.group(1)), 1, 1, int(em.group(3)), int(em.group(4)), tzinfo=timezone.utc) + timedelta(days=int(em.group(2)) - 1)
+        box = (min(p[0] for p in pts), max(p[0] for p in pts), min(p[1] for p in pts), max(p[1] for p in pts))
+        g = groups.setdefault(dm.group(1), {"n": 0, "end": end, "area": -1, "c": None})
+        g["n"] += 1
+        g["end"] = max(g["end"], end)
+        area = (box[1] - box[0]) * (box[3] - box[2])
+        if area > g["area"]:
+            g["area"], g["c"] = area, ((box[2] + box[3]) / 2, (box[0] + box[1]) / 2)
+    out = []
+    for dens, g in groups.items():
+        out.append(mk("hms-smoke-" + dens.lower(), "smoke", "%s smoke plumes seen by satellite" % dens, "North America (largest plume shown)",
+                      g["c"][0], g["c"][1], g["end"], "moderate" if dens == "Heavy" else "minor", g["n"], src,
+                      "https://www.ospo.noaa.gov/Products/land/hms.html",
+                      detail={"density": dens, "plumes": g["n"], "location_note": "Centre of the largest plume, not every plume"}))
+    return out
+
+
+PARSERS = {"hms-smoke": parse_hms, "spc-outlook": parse_spc, "tsunami-ak": parse_tsunami, "tsunami-hi": parse_tsunami, "usgs-volcano": parse_volcano, "swpc-kp": parse_kp, "usgs-quakes": parse_usgs, "nws-alerts": parse_nws, "nhc": parse_nhc, "eonet": parse_eonet, "gdacs": parse_gdacs}
 
 
 def dedupe(events):
@@ -328,7 +378,7 @@ def build(fixtures=None, now=None):
     now = now or datetime.now(timezone.utc)
     events, status = [], []
     for src in SOURCES:
-        rec = {"id": src["id"], "name": src["name"], "page": src["page"], "licence": src["licence"], "terms": src["terms"],
+        rec = {"id": src["id"], "update": src.get("update", ""), "url": src["url"].split("{")[0] if "{" in src["url"] else src["url"], "name": src["name"], "page": src["page"], "licence": src["licence"], "terms": src["terms"],
                "checked": iso_utc(now), "ok": False, "count": 0}
         try:
             evs = PARSERS[src["id"]](fetch_json(src, fixtures), src)

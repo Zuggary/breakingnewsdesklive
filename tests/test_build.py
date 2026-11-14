@@ -82,6 +82,14 @@ class T(unittest.TestCase):
         ev[0]["summary"] = lib.summarize(ev[0])
         self.assertTrue(lib.guard_ok(ev[0]["summary"], ev[0]), ev[0]["summary"])
 
+    def test_hms_smoke(self):
+        src = next(s for s in build_data.SOURCES if s["id"] == "hms-smoke")
+        ev = build_data.parse_hms(open(os.path.join(FIX, "hms-smoke.kml")).read(), src)
+        self.assertTrue(ev)
+        for e in ev:
+            self.assertTrue(lib.guard_ok(lib.summarize(e), e), lib.summarize(e))
+            self.assertIn(e["detail"]["density"], ("Medium", "Heavy"))
+
     def test_old_events_dropped(self):
         for e in self.events:
             self.assertLessEqual((NOW - lib.parse_time(e["time"])).total_seconds(), 168 * 3600)

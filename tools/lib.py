@@ -81,6 +81,8 @@ def size_points(e):
         return min(30, 6 * math.log2(s + 1)) if s else 12
     if t == "tsunami":
         return 30
+    if t == "smoke":
+        return min(10, 3 * math.log2(s + 1))
     return 12
 
 
@@ -103,6 +105,8 @@ def summarize(e):
     d, t, place = e.get("detail") or {}, e["type"], e["place"]
     if t == "earthquake":
         s = "A magnitude %.1f earthquake was recorded. Location: %s. Depth was about %d km." % (d["magnitude"], place, d["depth_km"])
+        if d.get("pager") in ("yellow", "orange", "red"):
+            s += " USGS PAGER impact level: %s." % d["pager"]
         if d.get("tsunami_flag"):
             s += " The USGS tsunami flag is set. Check tsunami.gov for official messages."
         return s
@@ -119,6 +123,8 @@ def summarize(e):
         if d.get("magnitude"):
             return "A wildfire is open in the NASA EONET list. Reported size: %s %s." % (_num(d["magnitude"]), d.get("unit") or "")
         return "A wildfire is open in the NASA EONET list. No size is reported."
+    if t == "smoke":
+        return "NOAA satellite analysis shows %d %s-density smoke plumes. The map point marks the largest plume. Smoke can affect air quality far from the fire." % (d["plumes"], d["density"].lower())
     if t == "tsunami":
         return "%s issued: %s. Follow the instructions of local officials and read the full bulletin at tsunami.gov." % (d["centre"], d["bulletin"])
     if t == "space":
@@ -142,7 +148,7 @@ def _num(x):
 _NUM = re.compile(r"\d+(?:\.\d+)?")
 _WORD = re.compile(r"\b[A-Z][a-zA-Z]{2,}\b")
 _COMMON = {"The", "This", "That", "National", "Weather", "Service", "Check", "Depth", "Location", "State", "Hurricane",
-           "Center", "Storm", "Prediction", "Aurora", "Follow", "Tsunami", "Warning", "Watch", "Advisory", "Pacific", "Alaska", "Hawaii", "Bulletin", "Kp", "NOAA", "Observatory", "Program", "NASA", "EONET", "GDACS", "USGS", "Reported", "Wildfire", "Earthquake", "Listed", "Alert", "Level"}
+           "Center", "PAGER", "Smoke", "NOAA", "Storm", "Prediction", "Aurora", "Follow", "Tsunami", "Warning", "Watch", "Advisory", "Pacific", "Alaska", "Hawaii", "Bulletin", "Kp", "NOAA", "Observatory", "Program", "NASA", "EONET", "GDACS", "USGS", "Reported", "Wildfire", "Earthquake", "Listed", "Alert", "Level"}
 
 
 def guard_ok(summary, event):

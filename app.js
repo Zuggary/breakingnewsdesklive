@@ -100,7 +100,7 @@
       if (e.lat == null) return;
       var p = project(e.lon, e.lat, W, H); if (!p.v) return;
       var col = B.SEV[e.severity] || '#93a1b5', r = (3 + e.score / 14) * dpr, on = state.sel === e.id;
-      ctx.beginPath(); ctx.arc(p.x, p.y, r * 1.9, 0, 7); ctx.fillStyle = col + '33'; ctx.fill();
+      ctx.beginPath(); ctx.arc(p.x, p.y, r * 1.5, 0, 7); ctx.fillStyle = col + "22"; ctx.fill();
       ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 7); ctx.fillStyle = col; ctx.fill();
       ctx.lineWidth = (on ? 3 : 1) * dpr; ctx.strokeStyle = on ? '#ffb020' : '#0b0f14'; ctx.stroke();
       var rk = evs.indexOf(e);
