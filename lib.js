@@ -46,7 +46,23 @@
     });
   }
   function safeUrl(u) { return /^https:\/\/[^\s]+$/.test(u || '') ? u : null; }
-  function renderContext(c) {
+  var ILLUS = { earthquake: ['earthquake-1', 'earthquake-2', 'earthquake-3'], storm: ['storm-1', 'storm-2', 'storm-3'], wildfire: ['wildfire-1'],
+    smoke: ['wildfire-1'], flood: ['flood-1', 'flood-2', 'flood-3'], volcano: ['volcano-1', 'volcano-2', 'volcano-3'], outage: ['outage-2', 'outage-3'],
+    cyber: ['outage-2', 'outage-3'], transport: ['flight-1', 'flight-2', 'flight-3'], recall: ['recall-1', 'recall-2', 'recall-3'], space: ['space-1', 'space-2', 'space-3'] };
+  function illustrationFor(e) {
+    var list = ILLUS[e.type]; if (!list) return null;
+    var h = 0, s = e.id || ''; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+    return 'assets/illustrations/' + list[h % list.length] + '.webp';
+  }
+  function renderIllustration(src) {
+    var d = document, f = d.createElement('figure'); f.className = 'ctx-fig illus';
+    var wrap = d.createElement('div'); wrap.className = 'illus-wrap';
+    var im = d.createElement('img'); im.loading = 'lazy'; im.src = src; im.width = 320; im.alt = 'Illustration of the kind of event. It is not a photo of this event.'; wrap.appendChild(im);
+    var tag = d.createElement('span'); tag.className = 'illus-tag'; tag.textContent = 'Illustration'; wrap.appendChild(tag); f.appendChild(wrap);
+    var fc = d.createElement('figcaption'); fc.className = 'src'; fc.textContent = 'Illustration made for this site. It does not show the actual scene.'; f.appendChild(fc);
+    return f;
+  }
+  function renderContext(c, e) {
     var d = document, box = d.createElement('div'); box.className = 'ctx';
     function el(t, cls, x) { var n = d.createElement(t); if (cls) n.className = cls; if (x != null) n.textContent = x; return n; }
     function link(href, text) { var a = el('a', '', text); a.href = safeUrl(href) || '#'; a.rel = 'noopener'; return a; }
@@ -66,8 +82,9 @@
       var f2 = el('figure', 'ctx-fig'); var im2 = d.createElement('img'); im2.loading = 'lazy'; im2.alt = 'Satellite view of the wider area'; im2.src = safeUrl(c.satellite.src) || ''; im2.width = 320; f2.appendChild(im2);
       var fc2 = el('figcaption', 'src'); fc2.appendChild(d.createTextNode(c.satellite.note + ' Credit: ')); fc2.appendChild(link(c.satellite.credit_url, c.satellite.credit)); f2.appendChild(fc2); box.appendChild(f2);
     }
+    if (!c.image && e) { var il = illustrationFor(e); if (il) box.appendChild(renderIllustration(il)); }
     return box;
   }
-  var api = { renderContext: renderContext, GROUPS: GROUPS, TYPES: TYPES, SEV: SEV, ago: ago, filterEvents: filterEvents, safeUrl: safeUrl };
+  var api = { ILLUS: ILLUS, illustrationFor: illustrationFor, renderContext: renderContext, GROUPS: GROUPS, TYPES: TYPES, SEV: SEV, ago: ago, filterEvents: filterEvents, safeUrl: safeUrl };
   if (typeof module !== 'undefined') module.exports = api; else root.BND = api;
 })(this);

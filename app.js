@@ -70,7 +70,7 @@
       if (state.sel === e.id) {
         var m = el('div', 'more');
         m.appendChild(el('p', '', e.summary));
-        if (e.context) m.appendChild(B.renderContext(e.context));
+        var ctxBox = B.renderContext(e.context || {}, e); if (e.context || ctxBox.querySelector('figure')) m.appendChild(ctxBox);
         if (e.links && e.links.length) {
           var lk = el('p', 'src', 'Also reported by (the outlet\u2019s own headline, as a link): ');
           var ul = el('ul', 'dg'); e.links.forEach(function (x) { var li2 = el('li'); var a2 = el('a', '', x.label + ': ' + x.title); a2.href = B.safeUrl(x.url) || '#'; a2.rel = 'noopener nofollow'; li2.appendChild(a2); ul.appendChild(li2); });

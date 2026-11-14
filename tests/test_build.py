@@ -175,6 +175,29 @@ class T(unittest.TestCase):
         c2 = cx.build_one(wrong, now, fake2, {})
         self.assertNotIn("summary", c2)  # a non-volcano page is never used for a volcano
 
+    def test_illustration_library_rules(self):
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        d = os.path.join(root, "assets", "illustrations")
+        lib = json.load(open(os.path.join(d, "library.json")))
+        self.assertGreaterEqual(len(lib), 20)
+        for e in lib:
+            self.assertEqual(e["label"], "Illustration", e["file"])
+            for k in ("prompt", "model", "date", "category"):
+                self.assertTrue(e.get(k), (k, e["file"]))
+            p = os.path.join(d, e["file"])
+            self.assertTrue(os.path.exists(p), e["file"])
+            self.assertLessEqual(os.path.getsize(p), 150 * 1024, e["file"])
+            self.assertIn("no text", e["prompt"])
+        # every illustration the page can pick must exist in the library
+        js = open(os.path.join(root, "lib.js")).read()
+        import re
+        names = set(re.findall(r"'([a-z]+-\d)'", js))
+        have = {e["file"][:-5] for e in lib}
+        self.assertTrue(names and names <= have, names - have)
+        # the page always shows the visible tag and the caption
+        self.assertIn("illus-tag", js)
+        self.assertIn("It does not show the actual scene", js)
+
     def test_old_events_dropped(self):
         for e in self.events:
             self.assertLessEqual((NOW - lib.parse_time(e["time"])).total_seconds(), 168 * 3600)
