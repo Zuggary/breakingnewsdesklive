@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   var B = window.BND, $ = function (id) { return document.getElementById(id); };
-  var state = { events: [], world: [], f: { type: 'all', region: 'all', day: false }, sel: null, globe: false, rot: [-40, 20], pts: [] };
+  var state = { events: [], world: [], f: { type: 'all', region: 'all', hours: 0 }, sel: null, globe: false, rot: [-40, 20], pts: [] };
   var SHORT = { 'usgs-quakes': 'USGS', 'nws-alerts': 'NWS', nhc: 'NHC', eonet: 'NASA', gdacs: 'GDACS' };
   var cv = $('map'), ctx = cv.getContext('2d');
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -20,9 +20,10 @@
     var rs = el('select', 'chip'); rs.setAttribute('aria-label', 'Region');
     regs.forEach(function (r) { var o = el('option', '', r === 'all' ? 'All regions' : r); o.value = r; rs.appendChild(o); });
     rs.onchange = function () { state.f.region = rs.value; render(); };
-    var d = el('button', 'chip', 'Last 24 hours'); d.setAttribute('aria-pressed', 'false');
-    d.onclick = function () { state.f.day = !state.f.day; d.setAttribute('aria-pressed', String(state.f.day)); d.textContent = state.f.day ? 'Last 24 hours \u2713' : 'Last 24 hours'; render(); };
-    box.appendChild(sel); box.appendChild(rs); box.appendChild(d);
+    var ts = el('select', 'chip'); ts.setAttribute('aria-label', 'Event age');
+    [['0', 'Any age'], ['24', 'Last 24 hours'], ['6', 'Last 6 hours'], ['1', 'Last hour']].forEach(function (o) { var op = el('option', '', o[1]); op.value = o[0]; ts.appendChild(op); });
+    ts.onchange = function () { state.f.hours = +ts.value; render(); };
+    box.appendChild(sel); box.appendChild(rs); box.appendChild(ts);
   }
 
   /* ---------- list ---------- */
@@ -135,10 +136,10 @@
     var by = {}; state.events.forEach(function (e) { by[e.type] = (by[e.type] || 0) + 1; });
     var day = state.events.filter(function (e) { return Date.now() - Date.parse(e.time) < 864e5; }).length;
     var ext = state.events.filter(function (e) { return e.severity === 'extreme' || e.severity === 'severe'; }).length;
-    var line = el('p', 'sub', day + ' events in the last 24 hours. ' + ext + ' rated severe or extreme by their sources.'); box.appendChild(line);
+    var line = el('p', 'sub', state.events.length + ' events in the list: ' + day + ' from the last 24 hours, ' + ext + ' rated severe or extreme by their sources. Counts by type:'); box.appendChild(line);
     var g = el('div', 'chips');
     Object.keys(by).sort(function (x, y) { return by[y] - by[x]; }).forEach(function (t) {
-      var c = el('span', 'stat'); var i = el('i'); i.style.background = (B.TYPES[t] || B.TYPES.other).color; c.appendChild(i);
+      var c = el('span', 'stat');
       c.appendChild(document.createTextNode((B.TYPES[t] || B.TYPES.other).label + ' ' + by[t])); g.appendChild(c);
     });
     box.appendChild(g);
@@ -185,7 +186,7 @@
   Promise.all([get('data/events.json'), get('data/world.json')]).then(function (r) {
     state.events = r[0].events; state.world = r[1];
     var age = (Date.now() - Date.parse(r[0].generated)) / 60000;
-    $('updated').textContent = 'Data built ' + B.ago(r[0].generated) + '. Weather alerts cover the US only; quakes, storms, floods and fires are global.';
+    $('updated').textContent = 'Data built ' + B.ago(r[0].generated) + '. Weather alerts and volcano levels come from US agencies and cover the US; earthquakes, cyclones, floods and fires are global.';
     $('dot').className = 'dot' + (age > 45 ? ' stale' : '');
     if (age > 45) $('updated').textContent += ' Warning: this data is older than 45 minutes.';
     buildFilters(); legend(); stats(); digest(); render(); histInit();

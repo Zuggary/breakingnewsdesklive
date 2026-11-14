@@ -26,7 +26,8 @@
     return events.filter(function (e) {
       if (f.type && f.type !== 'all' && e.type !== f.type) return false;
       if (f.region && f.region !== 'all' && e.region !== f.region) return false;
-      if (f.day && now - Date.parse(e.time) > 864e5) return false;
+      var hrs = f.hours || (f.day ? 24 : 0);
+      if (hrs && now - Date.parse(e.time) > hrs * 36e5) return false;
       return true;
     });
   }

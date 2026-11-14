@@ -7,4 +7,5 @@ assert.strictEqual(B.filterEvents(ev,{region:'Asia'},now).length,1);
 assert.strictEqual(B.ago('2026-11-14T11:30:00Z',now),'30m ago');
 assert.strictEqual(B.safeUrl('javascript:alert(1)'),null);
 assert.ok(B.safeUrl('https://usgs.gov/x'));
+assert.strictEqual(B.filterEvents(ev,{hours:6},now).length,1);
 console.log('lib.js ok');
