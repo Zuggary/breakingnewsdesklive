@@ -1,0 +1,55 @@
+{
+ "generated": "2026-11-14T11:27:22Z",
+ "sources": [
+  {
+   "id": "usgs-quakes",
+   "name": "USGS Earthquake Hazards Program",
+   "page": "https://earthquake.usgs.gov/earthquakes/map/",
+   "licence": "US Government work, public domain; credit USGS",
+   "terms": "https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits",
+   "checked": "2026-11-14T11:27:22Z",
+   "ok": true,
+   "count": 122
+  },
+  {
+   "id": "nws-alerts",
+   "name": "US National Weather Service",
+   "page": "https://www.weather.gov/alerts",
+   "licence": "US Government work, public domain; credit NOAA/NWS",
+   "terms": "https://www.weather.gov/disclaimer",
+   "checked": "2026-11-14T11:27:22Z",
+   "ok": true,
+   "count": 15
+  },
+  {
+   "id": "nhc",
+   "name": "NOAA National Hurricane Center",
+   "page": "https://www.nhc.noaa.gov/",
+   "licence": "US Government work, public domain; credit NOAA/NHC",
+   "terms": "https://www.weather.gov/disclaimer",
+   "checked": "2026-11-14T11:27:22Z",
+   "ok": true,
+   "count": 0
+  },
+  {
+   "id": "eonet",
+   "name": "NASA EONET",
+   "page": "https://eonet.gsfc.nasa.gov/",
+   "licence": "NASA open data; credit NASA EONET and the original source",
+   "terms": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+   "checked": "2026-11-14T11:27:22Z",
+   "ok": true,
+   "count": 198
+  },
+  {
+   "id": "gdacs",
+   "name": "GDACS (UN and European Commission)",
+   "page": "https://www.gdacs.org/",
+   "licence": "GDACS terms of use; credit GDACS",
+   "terms": "https://www.gdacs.org/About/termsofuse.aspx",
+   "checked": "2026-11-14T11:27:22Z",
+   "ok": true,
+   "count": 5
+  }
+ ]
+}

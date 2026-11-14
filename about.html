@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>About: Breaking News Desk</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css"><meta name="theme-color" content="#0b0f14"></head><body><header class="top"><a class="brand" href="./"><span>Breaking News Desk<small>Global alert desk</small></span></a><nav><a href="./">Map</a><a href="about.html">About</a><a href="privacy.html">Privacy</a></nav></header><main class="page" style="display:block">
+<h1>About</h1>
+<p>Breaking News Desk is an independent, automated project. It shows current earthquakes, storms, floods, fires and weather alerts from public and government sources. A script collects the data about every 10 minutes. No person reviews each item before it appears.</p>
+<p class="warn">Check official sources. This site is not an emergency service. In an emergency, follow your local authorities.</p>
+<h2>How items are ranked</h2>
+<p>Each event gets a score from 0 to 100. The score adds severity (up to 50), size (up to 30) and freshness (up to 20, fading over about a day). Routine US weather warnings are capped so they do not push out large global events. The summary line is built from a fixed template and uses only values from the source data.</p>
+<h2>Sources, licences and last check</h2>
+<table id="src"><thead><tr><th>Source</th><th>Licence or terms</th><th>Last checked (UTC)</th></tr></thead><tbody></tbody></table>
+<p>Map outlines: <a href="https://www.naturalearthdata.com/">Natural Earth</a>, public domain. Official health-agency notices (WHO, CDC) are links only; this site does not copy their text.</p>
+<p>We do not copy news articles. Every item links to its official source page.</p>
+<h2>Report an error</h2>
+<p>Write to <a href="mailto:contact@breakingnewsdesklive.com">contact@breakingnewsdesklive.com</a>. Include the event title and the time shown. For the fastest fix, tell the source agency too.</p>
+<h2>Related projects</h2>
+<p><a href="https://www.airtraveldesklive.com/">Air Travel Desk</a> tracks US airport delays. <a href="https://isit364yet.com/">Is it 364 yet</a> is a separate project.</p>
+<h2>Credits</h2>
+<p>Data: USGS, NOAA National Weather Service, NOAA National Hurricane Center, NASA EONET, GDACS (UN and European Commission). Thank you to the people who run these free services.</p>
+</main>
+<script>
+fetch('data/sources.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){
+ var tb=document.querySelector('#src tbody');
+ d.sources.forEach(function(s){var tr=document.createElement('tr');
+  var a=document.createElement('a');a.href=s.page;a.textContent=s.name;a.rel='noopener';
+  var t=document.createElement('td');t.appendChild(a);
+  var l=document.createElement('td');l.textContent=s.licence+' ';var ta=document.createElement('a');ta.href=s.terms;ta.textContent='(terms)';ta.rel='noopener';l.appendChild(ta);
+  var c=document.createElement('td');c.textContent=s.checked.replace('T',' ').replace('Z','')+(s.ok?'':' (last check failed)');
+  tr.appendChild(t);tr.appendChild(l);tr.appendChild(c);tb.appendChild(tr);});
+}).catch(function(){});
+</script>
+</body></html>

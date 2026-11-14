@@ -1,0 +1,10 @@
+const B = require('../lib.js'), assert = require('assert');
+const now = Date.parse('2026-11-14T12:00:00Z');
+const ev = [{type:'earthquake',region:'Asia',time:'2026-11-14T11:00:00Z'},{type:'weather',region:'Americas',time:'2026-11-12T11:00:00Z'}];
+assert.strictEqual(B.filterEvents(ev,{type:'all',region:'all',day:true},now).length,1);
+assert.strictEqual(B.filterEvents(ev,{type:'weather'},now).length,1);
+assert.strictEqual(B.filterEvents(ev,{region:'Asia'},now).length,1);
+assert.strictEqual(B.ago('2026-11-14T11:30:00Z',now),'30 min ago');
+assert.strictEqual(B.safeUrl('javascript:alert(1)'),null);
+assert.ok(B.safeUrl('https://usgs.gov/x'));
+console.log('lib.js ok');

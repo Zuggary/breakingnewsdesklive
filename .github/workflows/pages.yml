@@ -1,0 +1,60 @@
+name: Update alerts and deploy Pages
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  pages: write
+  id-token: write
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Unit tests
+        run: python -m unittest discover -s tests
+      - name: JS tests
+        run: node tests/test-lib.js
+      - name: Build event data
+        run: python tools/build_data.py --out data
+      - name: Prepare _site
+        run: |
+          rm -rf _site && mkdir -p _site/data
+          for f in index.html about.html privacy.html app.js lib.js style.css favicon.svg CNAME robots.txt sitemap.xml; do cp "$f" _site/; done
+          cp data/events.json data/sources.json data/world.json _site/data/
+      - name: Check that every public root file is published
+        run: |
+          missing=0
+          for f in *.html *.js *.css *.txt *.xml *.svg CNAME; do
+            [ -f "$f" ] || continue
+            [ -f "_site/$f" ] || { echo "::error::$f is in the repo root but not in _site"; missing=1; }
+          done
+          exit $missing
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - run: sleep 10
+      - id: deployment
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+      - if: steps.deployment.outcome == 'failure'
+        run: sleep 20
+      - if: steps.deployment.outcome == 'failure'
+        uses: actions/deploy-pages@v4
