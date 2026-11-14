@@ -796,6 +796,10 @@ def main():
         print("No events from any source; keeping the previous file", file=sys.stderr)
         return 0
     track_seen(events, a.out, now)
+    if not a.fixtures:
+        from tools import context as ctxmod
+        n = ctxmod.add_context(events, now, os.path.join(a.out, "context-cache.json"))
+        print("context on %d events" % n)
     with open(prev, "w", encoding="utf-8") as f:
         json.dump({"generated": iso_utc(now), "count": len(events), "events": events}, f, separators=(",", ":"))
     with open(os.path.join(a.out, "sources.json"), "w", encoding="utf-8") as f:

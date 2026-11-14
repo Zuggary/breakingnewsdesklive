@@ -46,6 +46,28 @@
     });
   }
   function safeUrl(u) { return /^https:\/\/[^\s]+$/.test(u || '') ? u : null; }
-  var api = { GROUPS: GROUPS, TYPES: TYPES, SEV: SEV, ago: ago, filterEvents: filterEvents, safeUrl: safeUrl };
+  function renderContext(c) {
+    var d = document, box = d.createElement('div'); box.className = 'ctx';
+    function el(t, cls, x) { var n = d.createElement(t); if (cls) n.className = cls; if (x != null) n.textContent = x; return n; }
+    function link(href, text) { var a = el('a', '', text); a.href = safeUrl(href) || '#'; a.rel = 'noopener'; return a; }
+    box.appendChild(el('h3', '', 'Context'));
+    if (c.summary) {
+      var p = el('p', 'ctx-text', c.summary.text); box.appendChild(p);
+      var cr = el('p', 'src'); cr.appendChild(d.createTextNode('Text from Wikipedia: ')); cr.appendChild(link(c.summary.url, c.summary.title));
+      cr.appendChild(d.createTextNode(' (')); cr.appendChild(link(c.summary.history_url, 'authors'));
+      cr.appendChild(d.createTextNode('), licence ')); cr.appendChild(link('https://creativecommons.org/licenses/by-sa/4.0/', c.summary.licence)); cr.appendChild(d.createTextNode('. Not our words.'));
+      box.appendChild(cr);
+    }
+    if (c.image) {
+      var f = el('figure', 'ctx-fig'); var im = d.createElement('img'); im.loading = 'lazy'; im.alt = 'Photo related to ' + (c.summary ? c.summary.title : 'this item'); im.src = safeUrl(c.image.src) || ''; im.width = 320; f.appendChild(im);
+      var fc = el('figcaption', 'src'); fc.appendChild(d.createTextNode('Photo: ' + c.image.author + ', ' + c.image.license + '. ')); fc.appendChild(link(c.image.credit_url, 'File page on Wikimedia Commons')); f.appendChild(fc); box.appendChild(f);
+    }
+    if (c.satellite) {
+      var f2 = el('figure', 'ctx-fig'); var im2 = d.createElement('img'); im2.loading = 'lazy'; im2.alt = 'Satellite view of the wider area'; im2.src = safeUrl(c.satellite.src) || ''; im2.width = 320; f2.appendChild(im2);
+      var fc2 = el('figcaption', 'src'); fc2.appendChild(d.createTextNode(c.satellite.note + ' Credit: ')); fc2.appendChild(link(c.satellite.credit_url, c.satellite.credit)); f2.appendChild(fc2); box.appendChild(f2);
+    }
+    return box;
+  }
+  var api = { renderContext: renderContext, GROUPS: GROUPS, TYPES: TYPES, SEV: SEV, ago: ago, filterEvents: filterEvents, safeUrl: safeUrl };
   if (typeof module !== 'undefined') module.exports = api; else root.BND = api;
 })(this);

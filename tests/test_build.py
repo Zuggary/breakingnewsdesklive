@@ -136,6 +136,45 @@ class T(unittest.TestCase):
         root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.assertIn("e.type!=='statement'&&e.type!=='headline'", open(os.path.join(root, "tv.html")).read())
 
+    def test_context_rules(self):
+        from tools import context as cx
+        now = NOW
+        self.assertTrue(cx.licence_ok("CC BY 4.0"))
+        self.assertTrue(cx.licence_ok("Public domain"))
+        self.assertTrue(cx.licence_ok("CC0"))
+        self.assertFalse(cx.licence_ok("CC BY-SA 4.0"))
+        self.assertFalse(cx.licence_ok(""))
+        good = {"summary": {"text": "x", "title": "Alaska", "licence": "CC BY-SA 4.0", "url": "https://en.wikipedia.org/wiki/Alaska",
+                            "history_url": "https://en.wikipedia.org/w/index.php?title=Alaska&action=history"}}
+        self.assertTrue(cx.validate_item(good))
+        for mut in ({"licence": "CC BY 4.0"}, {"url": "http://x"}, {"text": ""}, {"history_url": ""}):
+            bad = {"summary": dict(good["summary"], **mut)}
+            self.assertFalse(cx.validate_item(bad), mut)
+        img = {"src": "https://commons.wikimedia.org/wiki/Special:FilePath/A.jpg?width=640", "author": "Jane", "license": "CC BY 4.0",
+               "credit_url": "https://commons.wikimedia.org/wiki/File:A.jpg"}
+        self.assertTrue(cx.validate_item({"image": img}))
+        self.assertFalse(cx.validate_item({"image": dict(img, author="")}))
+        self.assertFalse(cx.validate_item({"image": dict(img, license="CC BY-SA 4.0")}))
+        self.assertFalse(cx.validate_item({"image": dict(img, src="https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_X.svg")}))
+        ev = {"id": "v", "type": "volcano", "place": "Observatory", "lat": 52.0, "lon": -176.0, "detail": {"volcano": "Great Sitkin"}}
+
+        def fake(url):
+            if "rest_v1" in url:
+                return {"type": "standard", "title": "Great Sitkin Island", "description": "Volcanic island in Alaska",
+                        "extract": "Great Sitkin Island is an uninhabited volcanic island.", "content_urls": {"desktop": {"page": "https://en.wikipedia.org/wiki/Great_Sitkin_Island"}}}
+            if "pageimages" in url:
+                return {"query": {"pages": {"1": {"pageimage": "Great_Sitkin_Island.jpg"}}}}
+            return {"query": {"pages": {"2": {"imageinfo": [{"extmetadata": {"LicenseShortName": {"value": "CC BY 2.0"}, "Artist": {"value": "<a>Some Author</a>"}}}]}}}}
+        c = cx.build_one(ev, now, fake, {})
+        self.assertEqual(c["image"]["author"], "Some Author")
+        self.assertEqual(c["summary"]["licence"], "CC BY-SA 4.0")
+        self.assertIn("NASA", c["satellite"]["credit"])
+        wrong = dict(ev, detail={"volcano": "Paris"})
+        def fake2(url):
+            return {"type": "standard", "title": "Paris", "description": "Capital of France", "extract": "Paris is the capital."} if "rest_v1" in url else {}
+        c2 = cx.build_one(wrong, now, fake2, {})
+        self.assertNotIn("summary", c2)  # a non-volcano page is never used for a volcano
+
     def test_old_events_dropped(self):
         for e in self.events:
             self.assertLessEqual((NOW - lib.parse_time(e["time"])).total_seconds(), 168 * 3600)

@@ -38,10 +38,13 @@ jobs:
             data/seen.json
             data/log.jsonl
             data/gdelt-last.json
+            data/context-cache.json
           key: bnd-history-${{ github.run_id }}
           restore-keys: bnd-history-
       - name: Build event data
         run: python tools/build_data.py --out data
+      - name: Check that every context item carries its credit
+        run: python tools/context.py data/events.json
       - name: Prepare _site
         run: |
           rm -rf _site && mkdir -p _site/data

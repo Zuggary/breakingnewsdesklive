@@ -95,3 +95,5 @@ main>*{min-width:0}main{grid-template-columns:minmax(0,1fr)}@media (min-width:98
 @media (min-width:980px){.chips-row{margin:0;padding-left:0;padding-right:0;flex-wrap:wrap;overflow:visible}}
 .status{padding:8px 16px}.status span{display:inline}
 @media (max-width:979px){.chips-row{flex-wrap:wrap;overflow:visible;margin:0;padding:0 0 4px}.cat{min-height:36px;padding:0 10px;font-size:13px}}
+.ctx{margin-top:12px;padding-top:8px;border-top:1px dashed var(--line)}.ctx h3{font-size:14px;margin:0 0 6px;color:var(--mute);text-transform:uppercase;letter-spacing:.06em}
+.ctx-text{font-size:15px;margin:6px 0}.ctx-fig{margin:10px 0;max-width:340px}.ctx-fig img{display:block;max-width:100%;height:auto;border:1px solid var(--line)}.ctx-fig figcaption{margin-top:4px}
