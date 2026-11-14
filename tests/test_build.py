@@ -39,6 +39,16 @@ class T(unittest.TestCase):
         e = next(x for x in self.events if x["type"] == "earthquake")
         self.assertFalse(lib.guard_ok("An earthquake hit Atlantis.", e))
 
+    def test_kp_storm_event(self):
+        src = next(s for s in build_data.SOURCES if s["id"] == "swpc-kp")
+        rows = [{"time_tag": "2026-11-14T06:00:00", "Kp": 6.33}, {"time_tag": "2026-11-14T03:00:00", "Kp": 2.0}]
+        ev = build_data.parse_kp(rows, src)
+        self.assertEqual(len(ev), 1)
+        self.assertEqual(ev[0]["detail"]["g_scale"], 2)
+        ev[0]["summary"] = lib.summarize(ev[0])
+        self.assertTrue(lib.guard_ok(ev[0]["summary"], ev[0]), ev[0]["summary"])
+        self.assertEqual(build_data.parse_kp([{"time_tag": "2026-11-14T06:00:00", "Kp": 3.0}], src), [])
+
     def test_old_events_dropped(self):
         for e in self.events:
             self.assertLessEqual((NOW - lib.parse_time(e["time"])).total_seconds(), 168 * 3600)

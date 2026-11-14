@@ -117,6 +117,10 @@ def summarize(e):
         if d.get("magnitude"):
             return "A wildfire is open in the NASA EONET list. Reported size: %s %s." % (_num(d["magnitude"]), d.get("unit") or "")
         return "A wildfire is open in the NASA EONET list. No size is reported."
+    if t == "space":
+        return "NOAA reports a planetary Kp index of %s, a G%d geomagnetic storm level. Aurora may be visible farther south than usual." % (_num(d["kp"]), d["g_scale"])
+    if t == "volcano" and d.get("volcano"):
+        return "%s lists %s at alert level %s, colour code %s." % (d["observatory"], d["volcano"], d["alert_level"], d["color_code"])
     if t in ("flood", "volcano", "drought"):
         lvl = d.get("alert_level")
         txt = "GDACS lists a %s event: %s." % (t, e["title"])
@@ -134,7 +138,7 @@ def _num(x):
 _NUM = re.compile(r"\d+(?:\.\d+)?")
 _WORD = re.compile(r"\b[A-Z][a-zA-Z]{2,}\b")
 _COMMON = {"The", "This", "That", "National", "Weather", "Service", "Check", "Depth", "Location", "State", "Hurricane",
-           "Center", "NASA", "EONET", "GDACS", "USGS", "Reported", "Wildfire", "Earthquake", "Listed", "Alert", "Level"}
+           "Center", "Aurora", "Kp", "NOAA", "Observatory", "Program", "NASA", "EONET", "GDACS", "USGS", "Reported", "Wildfire", "Earthquake", "Listed", "Alert", "Level"}
 
 
 def guard_ok(summary, event):

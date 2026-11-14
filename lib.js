@@ -7,6 +7,7 @@
     flood: { label: 'Flood', color: '#3fd0d0' },
     wildfire: { label: 'Wildfire', color: '#ff5c5c' },
     volcano: { label: 'Volcano', color: '#f2d04b' },
+    space: { label: 'Space weather', color: '#d58cff' },
     drought: { label: 'Drought', color: '#c9a06b' },
     other: { label: 'Other', color: '#93a1b5' }
   };

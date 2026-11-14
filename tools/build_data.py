@@ -18,6 +18,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from tools.lib import (REGIONS, region_of, score_event, summarize, STATE_CENTROIDS,  # noqa: E402
                        iso_utc, parse_time, haversine_km)
 
+FIXTURE_MODE = False
 UA = "breakingnewsdesklive/1.0 (+https://breakingnewsdesklive.com; independent alert aggregator)"
 MAX_AGE_H = 72
 MAX_AGE_LONG_H = 168  # open fires, floods and volcanoes stay listed for 7 days
@@ -43,6 +44,16 @@ SOURCES = [
      "page": "https://eonet.gsfc.nasa.gov/",
      "licence": "NASA open data; credit NASA EONET and the original source",
      "terms": "https://www.nasa.gov/nasa-brand-center/images-and-media/"},
+    {"id": "usgs-volcano", "name": "USGS Volcano Hazards Program",
+     "url": "https://volcanoes.usgs.gov/hans-public/api/volcano/getElevatedVolcanoes",
+     "page": "https://volcanoes.usgs.gov/",
+     "licence": "US Government work, public domain; credit USGS",
+     "terms": "https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits"},
+    {"id": "swpc-kp", "name": "NOAA Space Weather Prediction Center",
+     "url": "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json",
+     "page": "https://www.swpc.noaa.gov/",
+     "licence": "US Government work, public domain; credit NOAA SWPC",
+     "terms": "https://www.weather.gov/disclaimer"},
     {"id": "gdacs", "name": "GDACS (UN and European Commission)",
      "url": "https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH?eventlist=EQ;TC;FL;VO;DR;WF&alertlevel=Green;Orange;Red",
      "page": "https://www.gdacs.org/",
@@ -198,7 +209,43 @@ def parse_gdacs(d, src):
     return out
 
 
-PARSERS = {"usgs-quakes": parse_usgs, "nws-alerts": parse_nws, "nhc": parse_nhc, "eonet": parse_eonet, "gdacs": parse_gdacs}
+def parse_volcano(d, src):
+    out = []
+    for v in d:
+        color = (v.get("color_code") or "").upper()
+        if color not in ("YELLOW", "ORANGE", "RED"):
+            continue
+        lat = lon = None
+        if not FIXTURE_MODE:
+            try:
+                info = fetch_json({"id": "x", "url": "https://volcanoes.usgs.gov/hans-public/api/volcano/getVolcano/%s" % v["vnum"]}, None)
+                lat, lon = float(info["latitude"]), float(info["longitude"])
+            except Exception:  # noqa: BLE001
+                pass
+        sev = {"RED": "extreme", "ORANGE": "severe", "YELLOW": "moderate"}[color]
+        out.append(mk("volcano-" + v["vnum"], "volcano", "%s volcano" % v["volcano_name"], v["obs_fullname"], lat, lon,
+                      parse_time(v["sent_utc"]), sev, 0, src, v.get("notice_url"),
+                      detail={"color_code": color.title(), "alert_level": (v.get("alert_level") or "").title(),
+                              "observatory": v["obs_fullname"], "volcano": v["volcano_name"]}))
+    return out
+
+
+def parse_kp(d, src):
+    rows = [r for r in d if isinstance(r, dict) and r.get("Kp") is not None]
+    if not rows:
+        return []
+    best = max(rows[-8:], key=lambda r: float(r["Kp"]))  # last 24 hours
+    kp = float(best["Kp"])
+    if kp < 5:
+        return []
+    g = int(min(5, kp - 4))
+    sev = "extreme" if g >= 4 else "severe" if g >= 3 else "moderate"
+    return [mk("swpc-kp-" + best["time_tag"], "space", "Geomagnetic storm, G%d level" % g, "Global (aurora possible at high latitudes)",
+               None, None, parse_time(best["time_tag"]), sev, kp, src, "https://www.swpc.noaa.gov/",
+               detail={"kp": kp, "g_scale": g})]
+
+
+PARSERS = {"usgs-volcano": parse_volcano, "swpc-kp": parse_kp, "usgs-quakes": parse_usgs, "nws-alerts": parse_nws, "nhc": parse_nhc, "eonet": parse_eonet, "gdacs": parse_gdacs}
 
 
 def dedupe(events):
@@ -218,6 +265,8 @@ def dedupe(events):
 
 
 def build(fixtures=None, now=None):
+    global FIXTURE_MODE
+    FIXTURE_MODE = bool(fixtures)
     now = now or datetime.now(timezone.utc)
     events, status = [], []
     for src in SOURCES:
