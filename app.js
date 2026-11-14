@@ -49,6 +49,8 @@
         var u = B.safeUrl(e.source_url), s = el('p', 'src');
         s.appendChild(document.createTextNode('Source: ' + e.source + '. Event time: ' + e.time.replace('T', ' ').replace('Z', ' UTC') + '. '));
         if (u) { var a = el('a', '', 'Open the official page'); a.href = u; a.rel = 'noopener'; s.appendChild(a); }
+        if (u) s.appendChild(document.createTextNode(' '));
+        var pl = el('a', '', 'Permalink'); pl.href = 'event.html?id=' + encodeURIComponent(e.id); s.appendChild(pl);
         m.appendChild(s);
         m.appendChild(el('p', 'warn', 'Check official sources. This site is automated and may be wrong or late.'));
         li.appendChild(m);

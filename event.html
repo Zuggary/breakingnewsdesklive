@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Event: Breaking News Desk</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css"><meta name="robots" content="noindex"><meta name="theme-color" content="#0b0f14"></head><body>
+<header class="top"><a class="brand" href="./"><span>Breaking News Desk<small>Automated hazard alerts, public sources</small></span></a><nav><a href="./">Map</a><a href="about.html">About</a><a href="privacy.html">Privacy</a></nav></header>
+<p class="notice">Automated alerts from public sources. Check official sources before you act. This site is not an emergency service.</p>
+<main class="page" style="display:block"><p><a href="./">&larr; All events</a></p><div id="ev"><p class="sub">Loading.</p></div></main>
+<script src="lib.js"></script>
+<script>
+(function(){var B=BND,box=document.getElementById('ev');
+function el(t,c,x){var n=document.createElement(t);if(c)n.className=c;if(x!=null)n.textContent=x;return n}
+var id=new URLSearchParams(location.search).get('id');
+fetch('data/events.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){
+ box.textContent='';var e=d.events.filter(function(x){return x.id===id})[0];
+ if(!e){box.appendChild(el('h1',null,'This event is no longer in the feeds'));box.appendChild(el('p',null,'Events leave the list after 3 days (7 days for fires, floods and volcanoes), or when the source removes them. Check the source agency for the record.'));return}
+ document.title=e.title+': Breaking News Desk';
+ box.appendChild(el('h1',null,e.title));
+ var meta=el('p','sub',(B.TYPES[e.type]||B.TYPES.other).label+' · '+e.place+' · severity '+e.severity+' · score '+e.score+' of 100');box.appendChild(meta);
+ box.appendChild(el('p',null,e.summary));
+ var tb=el('table'),rows=[['Event time (UTC)',e.time.replace('T',' ').replace('Z','')],['Age',B.ago(e.time)],['Source',e.source],['Region',e.region]];
+ if(e.lat!=null)rows.push(['Position',e.lat+', '+e.lon]);
+ Object.keys(e.detail||{}).forEach(function(k){var v=e.detail[k];if(v==null||v===''||(Array.isArray(v)&&!v.length))return;rows.push([k.replace(/_/g,' '),Array.isArray(v)?v.join(', '):String(v)])});
+ rows.push(['Data built (UTC)',d.generated.replace('T',' ').replace('Z','')]);
+ rows.forEach(function(r){var tr=el('tr');tr.appendChild(el('th',null,r[0]));tr.appendChild(el('td',null,r[1]));tb.appendChild(tr)});box.appendChild(tb);
+ var u=B.safeUrl(e.source_url);if(u){var p=el('p'),a=el('a',null,'Open the official page');a.href=u;a.rel='noopener';p.appendChild(a);box.appendChild(p)}
+ box.appendChild(el('p','warn','Check official sources. This site is automated and may be wrong or late.'));
+}).catch(function(){box.textContent='Data could not be loaded. Try again in a minute.'});})();
+</script></body></html>

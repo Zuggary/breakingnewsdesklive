@@ -49,7 +49,7 @@ def haversine_km(la1, lo1, la2, lo2):
 def region_of(lat, lon, place=""):
     if lat is None or lon is None:
         return "Ocean"
-    if -170 <= lon <= -30 and -60 <= lat <= 80:
+    if -170 <= lon <= -30 and -60 <= lat <= 80 and (lon <= -52 or (lat < -5 and lon <= -34) or (lat > 60 and lon <= -20)):
         return "Americas"
     if 34 <= lon <= 60 and 12 <= lat <= 42 and lon > 34 and not (lon < 40 and lat < 22):
         return "Middle East"
@@ -100,9 +100,7 @@ def summarize(e):
     """Plain-word summary built from a template. Uses only values that are in the event."""
     d, t, place = e.get("detail") or {}, e["type"], e["place"]
     if t == "earthquake":
-        s = "A magnitude %.1f earthquake was recorded %s." % (d["magnitude"], place[0].lower() + place[1:] if place else "")
-        s = s.replace(" .", ".")
-        s += " Depth was about %d km." % d["depth_km"]
+        s = "A magnitude %.1f earthquake was recorded. Location: %s. Depth was about %d km." % (d["magnitude"], place, d["depth_km"])
         if d.get("tsunami_flag"):
             s += " The USGS tsunami flag is set. Check tsunami.gov for official messages."
         return s
