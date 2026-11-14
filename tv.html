@@ -12,6 +12,9 @@ header{grid-column:1/3;display:flex;align-items:center;justify-content:space-bet
 .clocks{display:flex;gap:22px;font:600 16px ui-monospace,Menlo,monospace}.clocks span small{display:block;color:var(--mute);font-weight:400;font-size:11px;letter-spacing:.08em}
 #mapcol{position:relative;min-height:0}
 canvas{position:absolute;inset:0;width:100%;height:100%}
+#mapcol{perspective:1600px;overflow:hidden}
+body.tilt #map{transform:rotateX(38deg) scale(1.22) translateY(-4%);transform-origin:50% 60%;animation:sway 40s ease-in-out infinite alternate;will-change:transform}
+@keyframes sway{from{transform:rotateX(38deg) rotateZ(-2deg) scale(1.22) translateY(-4%)}to{transform:rotateX(38deg) rotateZ(2deg) scale(1.22) translateY(-4%)}}
 #lower{position:absolute;left:24px;right:24px;bottom:24px;background:rgba(10,16,24,.92);border:1px solid var(--line);border-left:6px solid var(--c,var(--amber));padding:14px 20px;transition:opacity .4s}
 #lower b{font-size:30px;display:block}#lower span{color:var(--mute);font-size:17px}#lower em{display:block;margin-top:6px;font-style:normal;color:#f3dca5;font-size:15px}
 #board{border-left:1px solid var(--line);padding:16px 18px;overflow:hidden;background:var(--panel)}
@@ -77,6 +80,7 @@ window.BNDTV={
  version:1,
  state:function(){return{events:S.ev.slice(0,20).map(function(e){return{id:e.id,title:e.title,place:e.place,score:e.score,severity:e.severity,time:e.time}}),focus:(top()[S.i]||{}).id||null,auto:CTL.auto,generated:S.gen}},
  set_auto:function(on){CTL.auto=!!on;return true},
+ set_tilt:function(on){document.body.classList.toggle('tilt',!!on);return true},
  focus_map:function(id){var i=top().findIndex(function(e){return e.id===id});if(i<0||!cool())return false;S.i=i;aim();board();lower();return true},
  show_card:function(id){return window.BNDTV.focus_map(id)},
  show_board_pass:function(){S.i=0;aim();board();lower();return true},
@@ -84,6 +88,7 @@ window.BNDTV={
  set_banner:function(t){if(t!==''&&!textOk(t))return false;CTL.banner=t;lower();return true},
  return_to_wide:function(){CTL.banner='';S.i=0;VT={lon:0,lat:0,z:1};board();lower();return true}
 };
+if(new URLSearchParams(location.search).get('tilt')==='1')document.body.classList.add('tilt');
 clocks();setInterval(clocks,1000);load();setInterval(load,300000);requestAnimationFrame(draw);
 setInterval(function(){if(!CTL.auto)return;var n=floorList().length;if(!n){S.i=0;aim();board();lower();return}S.i=(S.i+1)%n;aim();board();lower()},DWELL);
 })();
