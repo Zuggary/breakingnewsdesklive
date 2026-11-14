@@ -132,6 +132,10 @@ class T(unittest.TestCase):
         self.assertTrue(0 < len(st) <= 6)
         self.assertTrue(all(e["title"].startswith("UK Foreign Office: ") and e["source_url"].startswith("https://") for e in st))
 
+    def test_tv_excludes_world_events(self):
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        self.assertIn("e.type!=='statement'&&e.type!=='headline'", open(os.path.join(root, "tv.html")).read())
+
     def test_old_events_dropped(self):
         for e in self.events:
             self.assertLessEqual((NOW - lib.parse_time(e["time"])).total_seconds(), 168 * 3600)

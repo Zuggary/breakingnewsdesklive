@@ -67,7 +67,7 @@ function draw(t){ease();var r=cv.getBoundingClientRect(),d=window.devicePixelRat
   ctx.beginPath();ctx.arc(p.x,p.y,foc?base*1.5:base,0,7);ctx.fillStyle=col;ctx.fill();if(foc){ctx.strokeStyle='#fff';ctx.lineWidth=2*d;ctx.stroke()}});
  if(!matchMedia('(prefers-reduced-motion: reduce)').matches)requestAnimationFrame(draw)}
 function load(){Promise.all([fetch('data/events.json',{cache:'no-cache'}).then(function(r){return r.json()}),S.world.length?0:fetch('data/world.json').then(function(r){return r.json()})]).then(function(r){
-  var SH={'usgs-quakes':'USGS','nws-alerts':'NWS',nhc:'NHC',eonet:'NASA',gdacs:'GDACS'};S.ev=r[0].events;S.ev.forEach(function(e){e.source_short=SH[e.source_id]||e.source});if(r[1])S.world=r[1];S.i=0;aim();board();lower();crawl();if(matchMedia('(prefers-reduced-motion: reduce)').matches)draw(0)}).catch(function(){})}
+  var SH={'usgs-quakes':'USGS','nws-alerts':'NWS',nhc:'NHC',eonet:'NASA',gdacs:'GDACS'};S.ev=r[0].events.filter(function(e){return e.type!=='statement'&&e.type!=='headline'});/* world-events headlines are kept off the stream until Zach decides (CoS, GD4) */S.ev.forEach(function(e){e.source_short=SH[e.source_id]||e.source});if(r[1])S.world=r[1];S.i=0;aim();board();lower();crawl();if(matchMedia('(prefers-reduced-motion: reduce)').matches)draw(0)}).catch(function(){})}
 /* Control surface for the Showrunner kit (GD2). Every call is validated; nothing here reaches outside the page. */
 var CTL={auto:new URLSearchParams(location.search).get('auto')!=='0',zoom:new URLSearchParams(location.search).get('zoom')!=='0',last:0,banner:'',extra:[]};
 function blob(){return S.ev.map(function(e){return [e.title,e.place,e.score,e.summary,JSON.stringify(e.detail||{})].join(' ')}).join(' ').toLowerCase()}
