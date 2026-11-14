@@ -2,7 +2,7 @@
   'use strict';
   var B = window.BND, $ = function (id) { return document.getElementById(id); };
   var state = { events: [], world: [], f: { type: 'all', region: 'all', hours: 0 }, sel: null, globe: false, rot: [-40, 20], pts: [] };
-  var SHORT = { 'usgs-quakes': 'USGS', 'nws-alerts': 'NWS', nhc: 'NHC', eonet: 'NASA', gdacs: 'GDACS' };
+  var SHORT = { 'usgs-quakes': 'USGS', 'nws-alerts': 'NWS', nhc: 'NHC', eonet: 'NASA', gdacs: 'GDACS', 'usgs-volcano': 'USGS', 'swpc-kp': 'NOAA', 'spc-outlook': 'NOAA SPC', 'hms-smoke': 'NOAA', 'atd-faa': 'FAA', ms365: 'Microsoft status', 'openfda-food': 'FDA', cpsc: 'CPSC', 'cisa-kev': 'CISA', 'fedreg-presidential': 'Federal Register', fcdo: 'UK FCDO', 'eu-press': 'EU Commission', 'gdelt-doc': 'GDELT', 'tsunami-ak': 'NOAA', 'tsunami-hi': 'NOAA', 'status-github': 'GitHub status', 'status-cloudflare': 'Cloudflare status', 'status-openai': 'OpenAI status', 'status-atlassian': 'Atlassian status' };
   var cv = $('map'), ctx = cv.getContext('2d');
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -12,17 +12,7 @@
   /* ---------- filters ---------- */
   function buildFilters() {
     var box = $('filters'); box.textContent = '';
-    var sel = el('select', 'chip'); sel.setAttribute('aria-label', 'Event type');
-    var all = el('option', '', 'All categories'); all.value = 'all'; sel.appendChild(all);
-    Object.keys(B.GROUPS).forEach(function (g) {
-      var present = B.GROUPS[g][1].filter(function (t) { return state.events.some(function (e) { return e.type === t; }); });
-      if (!present.length) return;
-      var og = document.createElement('optgroup'); og.label = B.GROUPS[g][0];
-      var ga = el('option', '', 'All ' + B.GROUPS[g][0].toLowerCase()); ga.value = 'g:' + g; og.appendChild(ga);
-      present.forEach(function (t) { var o = el('option', '', (B.TYPES[t] || B.TYPES.other).label); o.value = t; og.appendChild(o); });
-      sel.appendChild(og);
-    });
-    sel.onchange = function () { state.f.type = sel.value; render(); };
+    buildCats();
     var regs = ['all'].concat(Array.from(new Set(state.events.map(function (e) { return e.region; }))).sort());
     var rs = el('select', 'chip'); rs.setAttribute('aria-label', 'Region');
     regs.forEach(function (r) { var o = el('option', '', r === 'all' ? 'All regions' : r); o.value = r; rs.appendChild(o); });
@@ -30,7 +20,33 @@
     var ts = el('select', 'chip'); ts.setAttribute('aria-label', 'Event age');
     [['0', 'Any age'], ['24', 'Last 24 hours'], ['6', 'Last 6 hours'], ['1', 'Last hour']].forEach(function (o) { var op = el('option', '', o[1]); op.value = o[0]; ts.appendChild(op); });
     ts.onchange = function () { state.f.hours = +ts.value; render(); };
-    box.appendChild(sel); box.appendChild(rs); box.appendChild(ts);
+    box.appendChild(rs); box.appendChild(ts);
+  }
+
+  var ICONS = {
+    all: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    hazards: '<path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/>',
+    transport: '<path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19 4s-2 1-3.5 2.5L11 8 2.8 6.2l-.9.9 5.2 3.1L4.5 13l-2.2-.4-.6.6 3.2 1.6 1.6 3.2.6-.6L6.5 15l2.8-2.6 3.1 5.2z"/>',
+    outages: '<path d="M13 2L3 14h8l-1 8 10-12h-8z"/>',
+    recalls: '<path d="M21 8l-9-5-9 5v8l9 5 9-5zM3 8l9 5 9-5M12 13v8"/>',
+    notices: '<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9zM14 3v6h6M8 13h8M8 17h6"/>',
+    space: '<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>',
+    world: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>'
+  };
+  function buildCats() {
+    var box = $('cats'); box.textContent = '';
+    function chip(key, label, count) {
+      var b = el('button', 'cat'); b.type = 'button'; b.setAttribute('aria-pressed', String(state.f.type === key));
+      var sv = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); sv.setAttribute('viewBox', '0 0 24 24'); sv.setAttribute('aria-hidden', 'true'); sv.innerHTML = ICONS[key.indexOf('g:') === 0 ? key.slice(2) : 'all'];
+      b.appendChild(sv); b.appendChild(document.createTextNode(label)); b.appendChild(el('b', '', String(count)));
+      b.onclick = function () { state.f.type = key; buildCats(); render(); };
+      box.appendChild(b);
+    }
+    chip('all', 'All', state.events.length);
+    Object.keys(B.GROUPS).forEach(function (g) {
+      var n = B.filterEvents(state.events, { type: 'g:' + g }).length;
+      if (n) chip('g:' + g, B.GROUPS[g][0].replace('Outages and cyber', 'Outages').replace('Recalls and safety', 'Recalls').replace('Official notices', 'Notices'), n);
+    });
   }
 
   /* ---------- list ---------- */
@@ -38,7 +54,7 @@
     var now = Date.now();
     var evs = B.filterEvents(state.events, state.f, now);
     var ol = $('list'); ol.textContent = '';
-    $('count').textContent = evs.length + ' of ' + state.events.length + ' events shown';
+    $('count').textContent = evs.length + (evs.length === state.events.length ? ' events' : ' of ' + state.events.length + ' events');
     if (!evs.length) ol.appendChild(el('li', 'empty', 'No events match these filters.'));
     evs.slice(0, 60).forEach(function (e, i) {
       var li = el('li', 'card' + (state.sel === e.id ? ' sel' : '')); li.style.setProperty('--c', B.SEV[e.severity] || '#93a1b5'); li.id = 'ev-' + e.id;
@@ -66,7 +82,7 @@
         var pl = el('a', '', 'Permalink'); pl.href = 'event.html?id=' + encodeURIComponent(e.id); s.appendChild(pl);
         m.appendChild(s);
         m.appendChild(el('p', 'warn', (e.type === 'headline' || e.type === 'statement') ? 'Headlines and statements are claims by the named outlet or party. This site does not verify them. It is automated and may be wrong. Check official sources.' : 'Check official sources. This site is automated and may be wrong or late.'));
-        var cr = el('p', 'src'); var ca = el('a', '', 'Report an error or ask for a correction'); ca.href = 'about.html#corrections'; cr.appendChild(ca); m.appendChild(cr);
+        var cr = el('p', 'src'); var ca = el('a', '', 'Report an error or ask for a correction'); ca.href = 'corrections.html'; cr.appendChild(ca); m.appendChild(cr);
         li.appendChild(m);
       }
       ol.appendChild(li);
@@ -199,9 +215,9 @@
   Promise.all([get('data/events.json'), get('data/world.json')]).then(function (r) {
     state.events = r[0].events; state.world = r[1];
     var age = (Date.now() - Date.parse(r[0].generated)) / 60000;
-    $('updated').textContent = 'Data built ' + B.ago(r[0].generated) + '. Weather alerts and volcano levels come from US agencies and cover the US; earthquakes, cyclones, floods and fires are global.';
+    $('updated').textContent = 'Updated ' + B.ago(r[0].generated);
     $('dot').className = 'dot' + (age > 45 ? ' stale' : '');
-    if (age > 45) $('updated').textContent += ' Warning: this data is older than 45 minutes.';
+    if (age > 45) $('updated').textContent += ' This data is older than 45 minutes.';
     buildFilters(); legend(); stats(); digest(); render(); histInit();
   }).catch(function () {
     $('count').textContent = 'Data could not be loaded. Try again in a minute.';

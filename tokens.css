@@ -1,0 +1,57 @@
+/* Shared design tokens for the desk family (Air Travel Desk and sister desks).
+   Structure is shared. Only the accent block differs per desk.
+   Variables only: no selectors other than :root. */
+:root {
+  color-scheme: dark;
+
+  /* Palette */
+  --navy: #0d1722;
+  --surface: #142233;
+  --surface-alt: #1b2f46;
+  --border: #2d4560;
+  --text: #eef3f7;
+  --text-muted: #b9c8d6;
+  --link: #9fd3ff;
+  --red: #ef4444;
+  --red-text: #fecaca;
+  --red-soft: rgba(239, 68, 68, 0.2);
+  --green: #34d399;
+  --green-text: #a7f3d0;
+  --green-soft: rgba(52, 211, 153, 0.15);
+  --amber: #f2b33d;
+  --amber-text: #ffd98a;
+  --amber-soft: rgba(242, 179, 61, 0.16);
+
+  /* Accent block: the only part that changes per desk */
+  --accent: #4cc3ff;
+  --accent-hover: #7dd3ff;
+  --accent-soft: rgba(76, 195, 255, 0.16);
+  --on-accent: #0d1722;
+
+  /* Type scale */
+  --fs-xs: 0.8125rem;
+  --fs-sm: 0.9375rem;
+  --fs-md: 1rem;
+  --fs-lg: 1.2rem;
+  --fs-xl: 1.5rem;
+  --lh: 1.5;
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* Shape and layout */
+  --radius: 10px;
+  --gutter: 16px;
+
+  /* Focus ring */
+  --focus-ring: 3px solid var(--accent);
+}
+
+@media (min-width: 700px) {
+  :root { --gutter: 24px; }
+}

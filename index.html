@@ -6,6 +6,7 @@
 <title>Breaking News Desk: facts as they come in</title>
 <meta name="description" content="Facts as they come in, from official sources: hazards, air travel, outages and more on one live map. Every item links to its source. No opinion, no agenda.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="style.css">
 <meta property="og:title" content="Breaking News Desk: facts as they come in">
 <meta property="og:description" content="Hazards, air travel and service outages from official sources, ranked by size and severity.">
@@ -21,8 +22,8 @@
 <div class="status" id="status" aria-live="polite"><span><i class="dot stale" id="dot"></i><b id="count">Loading</b></span><span id="updated"></span></div>
 <main>
  <section id="list-wrap" aria-labelledby="now">
-  <h1 id="now">Top events</h1>
-  <p class="sub">Ranked by severity, size and recency. <a href="about.html#rank">How ranking works</a>. <a class="jump" href="#map-wrap">Jump to map</a></p>
+  <div class="headrow"><h1 id="now">Top events</h1><a class="jump" href="#map-wrap">Map &darr;</a></div>
+  <div class="chips-row" role="group" aria-label="Category" id="cats"></div>
   <div class="filters" role="group" aria-label="Filters" id="filters"></div>
   <ol class="list" id="list"></ol>
  </section>
@@ -37,7 +38,7 @@
 </main>
 <footer>
  <p>Official health notices (links only, no copied text): <a href="https://www.who.int/emergencies/disease-outbreak-news" rel="noopener">WHO Disease Outbreak News</a> · <a href="https://www.cdc.gov/outbreaks/" rel="noopener">CDC outbreaks</a>. Also: <a href="https://www.airtraveldesklive.com/" rel="noopener">US airport delays</a> · <a href="https://www.isit364yet.com/" rel="noopener">service outages</a>.</p>
- <p>Independent, automated project. Data from USGS, NOAA, NASA, GDACS and the National Weather Service. Map outlines: Natural Earth. See <a href="data.html">Data and sources</a> and <a href="about.html">About</a> for sources, licences and how to report an error.</p>
+ <p>Independent, automated project. Weather alerts, volcano levels and FAA status are US only; other items are global. <a href="about.html#rank">How ranking works</a>. Data from USGS, NOAA, NASA, GDACS and the National Weather Service. Map outlines: Natural Earth. See <a href="data.html">Data and sources</a>, <a href="about.html">About</a> and <a href="corrections.html">Corrections</a> for sources, licences and how to report an error.</p>
 </footer>
 <script src="lib.js"></script>
 <script src="app.js"></script>

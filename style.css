@@ -1,4 +1,4 @@
-:root{--bg:#0b0f14;--panel:#121923;--panel2:#18212e;--line:#243044;--text:#e8edf3;--mute:#93a1b5;--amber:#ffb020;--red:#ff5c5c;--orange:#ff9340;--yellow:#f2d04b;--blue:#5cb3ff;--green:#4fd18b;--r:3px}
+:root{--accent:#ffb020;--accent-hover:#ffc94d;--accent-soft:rgba(255,176,32,.16);--on-accent:#1a1200;--bg:#0b0f14;--panel:#121923;--panel2:#18212e;--line:var(--border);--mute:var(--text-muted);--amber:#ffb020;--red:#ff5c5c;--orange:#ff9340;--yellow:#f2d04b;--blue:var(--link);--green:#4fd18b;--r:3px}
 *{box-sizing:border-box}
 html{color-scheme:dark}
 body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
@@ -79,3 +79,18 @@ th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-a
 #hist-wrap{margin-top:14px}
 main>*{min-width:0}main{grid-template-columns:minmax(0,1fr)}@media (min-width:980px){main{grid-template-columns:minmax(0,1.5fr) minmax(360px,1fr)}}
 @media (max-width:979px){.brand small{display:none}}
+
+.headrow{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:8px}
+.headrow .jump{display:inline;margin:0;font-size:14px;color:var(--accent)}
+@media (min-width:980px){.headrow .jump{display:none}}
+.chips-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin:0 -16px;padding-left:16px;padding-right:16px;scrollbar-width:none}
+.chips-row::-webkit-scrollbar{display:none}
+.cat{flex:none;display:inline-flex;align-items:center;gap:6px;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:var(--r);padding:0 12px;min-height:40px;font:inherit;font-size:14px;cursor:pointer}
+.cat svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cat b{font:600 12px ui-monospace,Menlo,monospace;color:var(--mute)}
+.cat[aria-pressed=true]{background:var(--accent);color:var(--on-accent);border-color:var(--accent);font-weight:600}
+.cat[aria-pressed=true] b{color:var(--on-accent)}
+.filters{margin-top:8px}
+.filters select{flex:1 1 120px}
+@media (min-width:980px){.chips-row{margin:0;padding-left:0;padding-right:0;flex-wrap:wrap;overflow:visible}}
+.status{padding:8px 16px}.status span{display:inline}

@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   var CACHE = "bnd-offline-v1";
-  var FILES = ["./", "./index.html", "./about.html", "./privacy.html", "./data.html", "./tv.html", "./event.html",
+  var FILES = ["./", "./index.html", "./about.html", "./privacy.html", "./data.html", "./corrections.html", "./tokens.css", "./tv.html", "./event.html",
                "./style.css", "./app.js", "./lib.js", "./favicon.svg",
                "./data/events.json", "./data/sources.json", "./data/world.json"];
   function path(rel) { return new URL(rel, self.registration.scope).pathname; }
