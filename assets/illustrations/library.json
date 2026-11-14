@@ -66,17 +66,6 @@
   "label": "Illustration"
  },
  {
-  "file": "wildfire-1.webp",
-  "category": "wildfire",
-  "variant": 1,
-  "prompt": "editorial illustration, deep navy and amber ink on cream paper, visible paper grain, flat simple shapes, calm composition, wide empty margins, ridge line with amber flame shapes and drifting smoke bands, wide view, no text, no letters, no people, no faces, no logos, no buildings, no flags, not a photo",
-  "model": "FLUX.1 schnell",
-  "host": "laptop RTX 5070 Ti",
-  "date": "2026-11-14",
-  "bytes": 18032,
-  "label": "Illustration"
- },
- {
   "file": "flood-1.webp",
   "category": "flood",
   "variant": 1,
@@ -327,6 +316,61 @@
   "host": "laptop RTX 5070 Ti",
   "date": "2026-11-14",
   "bytes": 76054,
+  "label": "Illustration"
+ },
+ {
+  "file": "wildfire-4.webp",
+  "category": "wildfire",
+  "variant": 4,
+  "prompt": "editorial illustration, deep navy and amber ink on cream paper, visible paper grain, flat simple shapes, calm composition, wide empty margins, dark navy hillside silhouette with bright amber flame tongues rising along the ridge and grey smoke bands drifting, wide view, no text, no letters, no people, no faces, no logos, no buildings, no flags, not a photo",
+  "model": "FLUX.1 schnell",
+  "host": "laptop RTX 5070 Ti",
+  "date": "2026-11-14",
+  "bytes": 64516,
+  "label": "Illustration"
+ },
+ {
+  "file": "wildfire-5.webp",
+  "category": "wildfire",
+  "variant": 5,
+  "prompt": "editorial illustration, deep navy and amber ink on cream paper, visible paper grain, flat simple shapes, calm composition, wide empty margins, dark navy hillside silhouette with bright amber flame tongues rising along the ridge and grey smoke bands drifting, close view, no text, no letters, no people, no faces, no logos, no buildings, no flags, not a photo",
+  "model": "FLUX.1 schnell",
+  "host": "laptop RTX 5070 Ti",
+  "date": "2026-11-14",
+  "bytes": 76844,
+  "label": "Illustration"
+ },
+ {
+  "file": "wildfire-6.webp",
+  "category": "wildfire",
+  "variant": 6,
+  "prompt": "editorial illustration, deep navy and amber ink on cream paper, visible paper grain, flat simple shapes, calm composition, wide empty margins, dark navy hillside silhouette with bright amber flame tongues rising along the ridge and grey smoke bands drifting, top view, no text, no letters, no people, no faces, no logos, no buildings, no flags, not a photo",
+  "model": "FLUX.1 schnell",
+  "host": "laptop RTX 5070 Ti",
+  "date": "2026-11-14",
+  "bytes": 64188,
+  "label": "Illustration"
+ },
+ {
+  "file": "outage-5.webp",
+  "category": "outage",
+  "variant": 5,
+  "prompt": "editorial illustration, deep navy and amber ink on cream paper, visible paper grain, flat simple shapes, calm composition, wide empty margins, grid of cream tiles where several tiles are filled dark navy, one amber tile, a plain cable line, close view, no text, no letters, no people, no faces, no logos, no buildings, no flags, not a photo",
+  "model": "FLUX.1 schnell",
+  "host": "laptop RTX 5070 Ti",
+  "date": "2026-11-14",
+  "bytes": 42084,
+  "label": "Illustration"
+ },
+ {
+  "file": "outage-6.webp",
+  "category": "outage",
+  "variant": 6,
+  "prompt": "editorial illustration, deep navy and amber ink on cream paper, visible paper grain, flat simple shapes, calm composition, wide empty margins, grid of cream tiles where several tiles are filled dark navy, one amber tile, a plain cable line, top view, no text, no letters, no people, no faces, no logos, no buildings, no flags, not a photo",
+  "model": "FLUX.1 schnell",
+  "host": "laptop RTX 5070 Ti",
+  "date": "2026-11-14",
+  "bytes": 27378,
   "label": "Illustration"
  }
 ]
