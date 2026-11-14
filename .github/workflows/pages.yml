@@ -2,7 +2,7 @@ name: Update alerts and deploy Pages
 
 on:
   schedule:
-    - cron: '*/10 * * * *'
+    - cron: '*/10 * * * *'  # GitHub runs this only about every 4 hours; the chain job below keeps the cadence
   workflow_dispatch:
   push:
     branches: [main]
@@ -12,12 +12,11 @@ permissions:
   id-token: write
   contents: read
 
-concurrency:
-  group: pages
-  cancel-in-progress: false
-
 jobs:
   build-and-deploy:
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -71,3 +70,23 @@ jobs:
         run: sleep 20
       - if: steps.deployment.outcome == 'failure'
         uses: actions/deploy-pages@v4
+
+  # GitHub's cron for this repo runs only about every 4 hours. This job re-dispatches the workflow about 8 minutes after each run,
+  # unless another run is already queued or running (that run has its own chain). The cron entry above restarts the chain if it breaks.
+  chain:
+    needs: build-and-deploy
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - name: Wait
+        run: sleep 420
+      - name: Dispatch the next run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          n=$(gh run list -R "${{ github.repository }}" --workflow pages.yml --json status -q '[.[]|select(.status=="queued" or .status=="in_progress")]|length')
+          echo "active runs including this one: $n"
+          if [ "$n" -le 1 ]; then gh workflow run pages.yml -R "${{ github.repository }}"; else echo "another run is active; not dispatching"; fi
