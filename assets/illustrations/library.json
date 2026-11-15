@@ -312,18 +312,6 @@
   "corner_check": "2026-11-14: bottom-left and bottom-right corners zoomed by eye; no lettering or signature"
  },
  {
-  "file": "space-1.webp",
-  "category": "space",
-  "variant": 1,
-  "prompt": "editorial illustration, deep navy and amber ink on cream paper, visible paper grain, flat simple shapes, calm composition, wide empty margins, sun disc with curved field lines over the outline of the earth, wide view, no text, no letters, no people, no faces, no logos, no buildings, no flags, not a photo",
-  "model": "FLUX.1 schnell",
-  "host": "laptop RTX 5070 Ti",
-  "date": "2026-11-14",
-  "bytes": 47976,
-  "label": "Illustration",
-  "corner_check": "2026-11-14: bottom-left and bottom-right corners zoomed by eye; no lettering or signature"
- },
- {
   "file": "space-2.webp",
   "category": "space",
   "variant": 2,

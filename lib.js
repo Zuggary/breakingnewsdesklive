@@ -48,7 +48,7 @@
   function safeUrl(u) { return /^https:\/\/[^\s]+$/.test(u || '') ? u : null; }
   var ILLUS = { earthquake: ['earthquake-1', 'earthquake-2', 'earthquake-3'], storm: ['storm-1', 'storm-2', 'storm-3'], wildfire: ['wildfire-4', 'wildfire-5', 'wildfire-6'],
     smoke: ['wildfire-4', 'wildfire-5', 'wildfire-6'], flood: ['flood-1', 'flood-2', 'flood-3'], volcano: ['volcano-1', 'volcano-2', 'volcano-3'], outage: ['outage-2', 'outage-3', 'outage-5', 'outage-6'],
-    cyber: ['outage-2', 'outage-3', 'outage-5', 'outage-6'], transport: ['flight-1', 'flight-2', 'flight-3'], recall: ['recall-1', 'recall-2', 'recall-3'], space: ['space-1', 'space-2', 'space-3'] };
+    cyber: ['outage-2', 'outage-3', 'outage-5', 'outage-6'], transport: ['flight-1', 'flight-2', 'flight-3'], recall: ['recall-1', 'recall-2', 'recall-3'], space: ['space-2', 'space-3'] };
   function illustrationFor(e) {
     var list = ILLUS[e.type]; if (!list) return null;
     var h = 0, s = e.id || ''; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
