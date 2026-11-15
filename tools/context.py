@@ -43,6 +43,8 @@ def titles_for(e):
         out.append(("volcano", d["volcano"] + " (volcano)"))
     elif t == "weather" and d.get("state"):
         out.append(("region", e["place"].split(",")[0]))
+    elif t == "transport" and re.fullmatch(r"[A-Z]{3}", str(d.get("airport_code") or "")):
+        out.append(("iata", d["airport_code"]))
     elif t == "earthquake" and "," in e["place"]:
         out.append(("region", e["place"].split(",")[-1].strip()))
     return out
@@ -54,9 +56,18 @@ def good_match(kind, summ):
     desc = ((summ.get("description") or "") + " " + (summ.get("extract") or "")[:300]).lower()
     if kind == "volcano":
         return "volcan" in desc
+    if kind == "airport":
+        return "airport" in desc or "aerodrome" in desc
     if kind == "region":
         return bool(re.search(r"country|republic|kingdom|u\.s\. state|state of|territory|island|nation|province", desc))
     return False
+
+
+def iata_title(code, get=get_json):
+    """English Wikipedia title of the airport with this IATA code, from Wikidata (CC0). None when there is not exactly one."""
+    q = ('SELECT ?t WHERE { ?a wdt:P238 "%s" . ?s schema:about ?a ; schema:isPartOf <https://en.wikipedia.org/> ; schema:name ?t } LIMIT 3' % code)
+    rows = get("https://query.wikidata.org/sparql?format=json&query=" + urllib.parse.quote(q)).get("results", {}).get("bindings", [])
+    return rows[0]["t"]["value"] if len(rows) == 1 else None
 
 
 def wiki_summary(title, get=get_json):
@@ -117,15 +128,30 @@ def build_one(e, now, get=get_json, cache=None):
     cache = cache if cache is not None else {}
     ctx = {}
     for kind, title in titles_for(e):
+        if kind == "iata":
+            ik = "iata:" + title
+            entry = cache.get(ik)
+            if entry and (now - datetime.fromisoformat(entry["t"])).days < CACHE_DAYS:
+                resolved = entry["v"]
+            else:
+                try:
+                    resolved = iata_title(title, get)
+                    cache[ik] = {"t": now.isoformat(), "v": resolved}  # cache only a real answer, never a failed call
+                except Exception:  # noqa: BLE001
+                    resolved = None
+            if not resolved:
+                continue
+            kind, title = "airport", resolved
         key = "wiki:" + title
         entry = cache.get(key)
         if entry and (now - datetime.fromisoformat(entry["t"])).days < CACHE_DAYS:
             data = entry["v"]
         else:
+            failed = False
             try:
                 summ = wiki_summary(title, get)
             except Exception:  # noqa: BLE001
-                summ = None
+                summ, failed = None, True
             data = None
             if good_match(kind, summ):
                 data = {"summary": {"text": summ["extract"], "title": summ["title"], "licence": "CC BY-SA 4.0",
@@ -139,7 +165,8 @@ def build_one(e, now, get=get_json, cache=None):
                             data["image"] = img
                 except Exception:  # noqa: BLE001
                     pass
-            cache[key] = {"t": now.isoformat(), "v": data}
+            if not failed:
+                cache[key] = {"t": now.isoformat(), "v": data}
         if data:
             ctx.update(data)
             break

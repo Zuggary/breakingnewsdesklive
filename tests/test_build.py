@@ -199,6 +199,32 @@ class T(unittest.TestCase):
         self.assertIn("illus-tag", js)
         self.assertIn("It does not show the actual scene", js)
 
+    def test_airport_context_via_wikidata(self):
+        from tools import context as cx
+        ev = {"id": "f", "type": "transport", "place": "Santa Ana", "lat": 33.68, "lon": -117.87, "detail": {"airport_code": "SNA"}}
+
+        def fake(url):
+            if "query.wikidata.org" in url:
+                return {"results": {"bindings": [{"t": {"value": "John Wayne Airport"}}]}}
+            if "rest_v1" in url:
+                return {"type": "standard", "title": "John Wayne Airport", "description": "Airport in California",
+                        "extract": "John Wayne Airport is a public airport.", "content_urls": {"desktop": {"page": "https://en.wikipedia.org/wiki/John_Wayne_Airport"}}}
+            return {"query": {"pages": {"1": {}}}}
+        c = cx.build_one(ev, NOW, fake, {})
+        self.assertEqual(c["summary"]["title"], "John Wayne Airport")
+        self.assertTrue(cx.validate_item(c))
+        # a page that is not an airport is rejected
+        def fake2(url):
+            if "query.wikidata.org" in url:
+                return {"results": {"bindings": [{"t": {"value": "Paris"}}]}}
+            return {"type": "standard", "title": "Paris", "description": "Capital of France", "extract": "Paris is a city."} if "rest_v1" in url else {}
+        c2 = cx.build_one(ev, NOW, fake2, {})
+        self.assertNotIn("summary", c2)
+        # an ambiguous code (two airports) is skipped
+        def fake3(url):
+            return {"results": {"bindings": [{"t": {"value": "A"}}, {"t": {"value": "B"}}]}} if "query.wikidata.org" in url else {}
+        self.assertNotIn("summary", cx.build_one(ev, NOW, fake3, {}))
+
     def test_old_events_dropped(self):
         for e in self.events:
             self.assertLessEqual((NOW - lib.parse_time(e["time"])).total_seconds(), 168 * 3600)
