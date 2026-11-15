@@ -35,6 +35,10 @@ def strip_tags(s):
     return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", s or "")).strip()
 
 
+# These state names are disambiguation pages on Wikipedia, so the plain name would show nothing.
+STATE_TITLES = {"Washington": "Washington (state)", "Georgia": "Georgia (U.S. state)", "New York": "New York (state)"}
+
+
 def titles_for(e):
     """Exact Wikipedia titles worth trying for an event. Conservative on purpose."""
     d, t, out = e.get("detail") or {}, e["type"], []
@@ -42,7 +46,8 @@ def titles_for(e):
         out.append(("volcano", d["volcano"]))
         out.append(("volcano", d["volcano"] + " (volcano)"))
     elif t == "weather" and d.get("state"):
-        out.append(("region", e["place"].split(",")[0]))
+        name = e["place"].split(",")[0]
+        out.append(("region", STATE_TITLES.get(name, name)))
     elif t == "transport" and re.fullmatch(r"[A-Z]{3}", str(d.get("airport_code") or "")):
         out.append(("iata", d["airport_code"]))
     elif t == "earthquake" and "," in e["place"]:

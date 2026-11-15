@@ -225,6 +225,17 @@ class T(unittest.TestCase):
             return {"results": {"bindings": [{"t": {"value": "A"}}, {"t": {"value": "B"}}]}} if "query.wikidata.org" in url else {}
         self.assertNotIn("summary", cx.build_one(ev, NOW, fake3, {}))
 
+    def test_ambiguous_titles_show_nothing(self):
+        from tools import context as cx
+        dab = {"type": "disambiguation", "title": "Georgia", "description": "Topics referred to by the same term", "extract": "Georgia may refer to:"}
+        self.assertFalse(cx.good_match("region", dab))
+        self.assertFalse(cx.good_match("volcano", dab))
+        self.assertFalse(cx.good_match("airport", dab))
+        ev = {"id": "w", "type": "weather", "place": "Georgia, United States", "lat": None, "lon": None, "detail": {"state": "GA"}}
+        self.assertEqual(cx.titles_for(ev), [("region", "Georgia (U.S. state)")])
+        got = cx.build_one(ev, NOW, lambda u: dab if "rest_v1" in u else {}, {})
+        self.assertIsNone(got)  # nothing to show, so no context key at all
+
     def test_old_events_dropped(self):
         for e in self.events:
             self.assertLessEqual((NOW - lib.parse_time(e["time"])).total_seconds(), 168 * 3600)
