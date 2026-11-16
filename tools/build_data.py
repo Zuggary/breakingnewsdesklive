@@ -16,7 +16,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from tools import feed_terms, killswitch, probes  # noqa: E402
+from tools import feed_terms, killswitch, probes, news_lane  # noqa: E402
 from tools.lib import (REGIONS, region_of, score_event, summarize, STATE_CENTROIDS, claims_ok, status_label, SAFE_SUMMARY,  # noqa: E402
                        iso_utc, parse_time, haversine_km)
 
@@ -148,6 +148,7 @@ def fetch_gkg(files=4):
         raise ValueError("no gkg file listed")
     t0 = datetime.strptime(m.group(1), "%Y%m%d%H%M%S")
     arts, seen = [], set()
+    news, news_seen = [], set()
     for k in range(files):
         ts = (t0 - timedelta(minutes=15 * k)).strftime("%Y%m%d%H%M%S")
         try:
@@ -164,12 +165,16 @@ def fetch_gkg(files=4):
             if not tm or not f[4].startswith("http"):
                 continue
             themes = {x.split(",")[0] for x in f[7].split(";") if x}
+            ttl = " ".join(tm.group(1).split())
+            if f[4] not in news_seen and news_lane.match(ttl):
+                news_seen.add(f[4])
+                news.append({"url": f[4], "title": ttl, "seendate": f[1][:8] + "T" + f[1][8:] + "Z", "domain": f[3]})
             if not (themes & GKG_THEMES) or f[4] in seen:
                 continue
             seen.add(f[4])
             arts.append({"url": f[4], "title": " ".join(tm.group(1).split()), "seendate": f[1][:8] + "T" + f[1][8:] + "Z",
                          "domain": f[3], "sourcecountry": ""})
-    return {"articles": arts}
+    return {"articles": arts, "news_articles": news}
 
 
 def fetch_json(src, fixtures):
@@ -646,7 +651,12 @@ def _toks(title):
     return {w for w in re.findall(r"[a-z]{4,}", t) if w not in STOP}
 
 
+NEWS_ARTICLES = []
+
+
 def parse_gdelt(d, src):
+    global NEWS_ARTICLES
+    NEWS_ARTICLES = d.get("news_articles", []) if isinstance(d, dict) else []
     arts = d.get("articles", []) if isinstance(d, dict) else []
     clusters = []
     for a in arts:
@@ -765,6 +775,22 @@ def build(fixtures=None, now=None):
     except Exception as ex:  # noqa: BLE001
         prec["error"] = type(ex).__name__
     status.append(prec)
+    # GD7 part B: the "News reports" lane. Headline and link only, from the GDELT headlines read above. Plain code.
+    nrec = {"id": "news-lane", "update": "every 15 minutes (GDELT)", "name": "News reports (via GDELT)", "url": news_lane.ABOUT_URL, "page": news_lane.ABOUT_URL,
+            "licence": "Headline and link only, with the outlet name. GDELT allows unrestricted use with credit to GDELT.", "terms": "https://www.gdeltproject.org/about.html#termsofuse",
+            "checked": iso_utc(now), "ok": False, "count": 0}
+    try:
+        plist = probes.load_json(os.path.join(os.path.dirname(os.path.abspath(__file__)), "probe_list.json"), [])
+        snap2 = probes.load_json(os.path.join(fixtures if fixtures else (OUT_DIR or "data"), "probes.json"), None)
+        nev = [mk(e["id"], e["type"], e["title"], e["place"], None, None, parse_time(e["time"]), e["severity"], e["size"],
+                  {"name": e["source"], "id": e["source_id"], "page": e["source_url"]}, e["source_url"], detail=e["detail"], links=e["links"],
+                  region=e["region"], big=e["big"], summary_override=e["summary_override"])
+               for e in news_lane.build_items(news_lane.collect(NEWS_ARTICLES), plist, now, snap2)]
+        events += nev
+        nrec["ok"], nrec["count"] = True, len(nev)
+    except Exception as ex:  # noqa: BLE001
+        nrec["error"] = type(ex).__name__
+    status.append(nrec)
     def fresh_enough(e):
         age = MAX_AGE_LONG_H if e["type"] in ("wildfire", "volcano", "drought", "flood", "recall", "notice") else MAX_AGE_H
         t = parse_time(e["time"])

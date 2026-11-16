@@ -1,0 +1,65 @@
+{
+ "note": "SYNTHETIC replay of the 16 Nov 2026 bank login outage. Outlets are fictional (.example). The real GDELT files for 14:00-16:00Z that day held no matching headline.",
+ "articles": [
+  {
+   "url": "https://wire-one.example/chase-login-problems",
+   "title": "Chase customers report problems logging in to the mobile app",
+   "seendate": "20261116T140800Z",
+   "domain": "wire-one.example"
+  },
+  {
+   "url": "https://metro-daily.example/bank-login-outage",
+   "title": "Bank of America and Chase login outage: customers cannot log in",
+   "seendate": "20261116T141500Z",
+   "domain": "metro-daily.example"
+  },
+  {
+   "url": "https://financial-desk.example/wells-chase-problems",
+   "title": "Wells Fargo says some customers unable to log in, Chase also reporting problems",
+   "seendate": "20261116T142000Z",
+   "domain": "financial-desk.example"
+  },
+  {
+   "url": "https://radio-hub.example/usbank-down",
+   "title": "U.S. Bank online banking down for many customers",
+   "seendate": "20261116T142900Z",
+   "domain": "radio-hub.example"
+  },
+  {
+   "url": "https://wire-one.example/bofa-not-working",
+   "title": "Bank of America app not working for some customers",
+   "seendate": "20261116T143500Z",
+   "domain": "wire-one.example"
+  },
+  {
+   "url": "https://wire-one.example/wells-down",
+   "title": "Wells Fargo online banking down for some users",
+   "seendate": "20261116T144600Z",
+   "domain": "wire-one.example"
+  },
+  {
+   "url": "https://metro-daily.example/chase-glitch",
+   "title": "Chase says login issues were a technical glitch, not a cyber incident",
+   "seendate": "20261116T144100Z",
+   "domain": "metro-daily.example"
+  },
+  {
+   "url": "https://wire-one.example/police-chase",
+   "title": "Police chase suspect through downtown after shooting",
+   "seendate": "20261116T150000Z",
+   "domain": "wire-one.example"
+  },
+  {
+   "url": "https://metro-daily.example/united-we-stand",
+   "title": "United we stand: community rallies after the storm",
+   "seendate": "20261116T150500Z",
+   "domain": "metro-daily.example"
+  },
+  {
+   "url": "https://radio-hub.example/delta-variant",
+   "title": "Delta variant cases fall, officials say",
+   "seendate": "20261116T151000Z",
+   "domain": "radio-hub.example"
+  }
+ ]
+}

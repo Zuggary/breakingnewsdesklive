@@ -2,7 +2,7 @@
   'use strict';
   var B = window.BND, $ = function (id) { return document.getElementById(id); };
   var state = { events: [], world: [], f: { type: 'all', region: 'all', hours: 0 }, sel: null, globe: false, rot: [-40, 20], pts: [] };
-  var SHORT = { 'usgs-quakes': 'USGS', 'nws-alerts': 'NWS', nhc: 'NHC', eonet: 'NASA', gdacs: 'GDACS', 'usgs-volcano': 'USGS', 'swpc-kp': 'NOAA', 'spc-outlook': 'NOAA SPC', 'hms-smoke': 'NOAA', 'atd-faa': 'FAA', ms365: 'MS365', 'openfda-food': 'FDA', cpsc: 'CPSC', 'cisa-kev': 'CISA', 'fedreg-presidential': 'FED REG', fcdo: 'UK FCDO', 'eu-press': 'EU', 'gdelt-doc': 'GDELT', 'tsunami-ak': 'NOAA', 'tsunami-hi': 'NOAA', 'status-github': 'GITHUB', 'status-cloudflare': 'CLOUDFLARE', 'status-openai': 'OPENAI', 'status-atlassian': 'ATLASSIAN' };
+  var SHORT = { 'usgs-quakes': 'USGS', 'nws-alerts': 'NWS', nhc: 'NHC', eonet: 'NASA', gdacs: 'GDACS', 'usgs-volcano': 'USGS', 'swpc-kp': 'NOAA', 'spc-outlook': 'NOAA SPC', 'hms-smoke': 'NOAA', 'atd-faa': 'FAA', ms365: 'MS365', 'openfda-food': 'FDA', cpsc: 'CPSC', 'cisa-kev': 'CISA', 'fedreg-presidential': 'FED REG', fcdo: 'UK FCDO', 'eu-press': 'EU', 'gdelt-doc': 'GDELT', probes: 'DESK', 'news-lane': 'NEWS', 'tsunami-ak': 'NOAA', 'tsunami-hi': 'NOAA', 'status-github': 'GITHUB', 'status-cloudflare': 'CLOUDFLARE', 'status-openai': 'OPENAI', 'status-atlassian': 'ATLASSIAN' };
   var cv = $('map'), ctx = cv.getContext('2d');
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
