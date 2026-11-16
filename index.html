@@ -25,9 +25,19 @@
 </header>
 <p class="notice">Automated. Check official sources before you act. Not an emergency service.</p>
 <div class="status" id="status" aria-live="polite"><span><i class="dot stale" id="dot"></i><b id="count">Loading</b></span><span id="updated"></span></div>
+<section class="band hero" aria-labelledby="h1">
+ <div class="wrap hero-in">
+  <p class="dateline" id="dateline">&nbsp;</p>
+  <h1 id="h1">Facts as they come in</h1>
+  <p class="verdict" id="verdict">Reading the latest events from official public sources, ranked by severity and size.</p>
+  <p class="verdict2" id="verdict2"></p>
+  <p class="srcline" id="srcline">Sources: USGS, NOAA, NASA, GDACS, FAA and more. <a href="data.html">Every source and age</a>.</p>
+  <div class="tiles" id="tiles" aria-label="Events by type"></div>
+ </div>
+</section>
 <main>
  <section id="list-wrap" aria-labelledby="now">
-  <div class="headrow"><h1 id="now">Top events</h1><a class="jump" href="#map-wrap">Map &darr;</a></div>
+  <div class="headrow"><h2 id="now">Top events</h2><a class="jump" href="#map-wrap">Map &darr;</a></div>
   <div class="chips-row" role="group" aria-label="Category" id="cats"></div>
   <div class="filters" role="group" aria-label="Filters" id="filters"></div>
   <ol class="list" id="list"></ol>

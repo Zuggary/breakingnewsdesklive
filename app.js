@@ -170,7 +170,7 @@
     var g = el('div', 'chips');
     Object.keys(by).sort(function (x, y) { return by[y] - by[x]; }).forEach(function (t) {
       var c = el('span', 'stat');
-      c.appendChild(document.createTextNode((B.TYPES[t] || B.TYPES.other).label + ' ' + by[t])); g.appendChild(c);
+      c.appendChild(el('b', '', String(by[t]))); c.appendChild(el('span', '', (B.TYPES[t] || B.TYPES.other).label)); g.appendChild(c);
     });
     box.appendChild(g);
   }
@@ -181,6 +181,20 @@
     w.hidden = false;
     box.appendChild(el('p', 'sub', recent.length + ' event' + (recent.length === 1 ? '' : 's') + ' appeared in the feeds in the last hour. Top by rank:'));
     var ul = el('ul', 'dg'); recent.slice(0, 5).forEach(function (e) { ul.appendChild(el('li', '', e.title + ' \u2014 ' + e.place + ' (' + B.ago(e.time) + ')')); }); box.appendChild(ul);
+  }
+  function hero(d) {
+    var evs = state.events, hi = evs.filter(function (e) { return e.severity === 'extreme' || e.severity === 'severe'; }), top = evs[0];
+    var now = new Date();
+    try { $('dateline').textContent = now.toLocaleString(undefined, { weekday: 'long', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }); } catch (e) { $('dateline').textContent = ''; }
+    $('verdict').textContent = hi.length + ' of ' + evs.length + ' events are rated severe or extreme by their sources right now.';
+    if (top) $('verdict2').textContent = 'Top of the list: ' + top.title + ', ' + top.place + ', ' + B.ago(top.time) + '.';
+    $('srcline').textContent = 'Data updated ' + B.ago(d.generated) + '. ';
+    var l = el('a', '', 'Every source and its age'); l.href = 'data.html'; $('srcline').appendChild(l);
+    var t = $('tiles'); t.textContent = '';
+    ['extreme', 'severe', 'moderate', 'minor'].forEach(function (k) {
+      var n = evs.filter(function (e) { return e.severity === k; }).length; if (!n) return;
+      var c = el('span', 'tile'); c.setAttribute('data-sev', k); c.appendChild(el('b', '', String(n))); c.appendChild(el('span', '', k)); t.appendChild(c);
+    });
   }
   var hist = [];
   function drawHist(hours) {
@@ -219,7 +233,7 @@
     $('updated').textContent = 'Updated ' + B.ago(r[0].generated);
     $('dot').className = 'dot' + (age > 45 ? ' stale' : '');
     if (age > 45) $('updated').textContent += ' This data is older than 45 minutes.';
-    buildFilters(); legend(); stats(); digest(); render(); histInit();
+    buildFilters(); legend(); stats(); digest(); hero(r[0]); render(); histInit();
   }).catch(function () {
     $('count').textContent = 'Data could not be loaded. Try again in a minute.';
   });

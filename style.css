@@ -1,3 +1,8 @@
+@font-face{font-family:"Public Sans";src:url("fonts/public-sans-latin-wght-normal.woff2") format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Barlow Condensed";src:url("fonts/barlow-condensed-600.woff2") format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Barlow Condensed";src:url("fonts/barlow-condensed-700.woff2") format("woff2");font-weight:700 800;font-display:swap}
+@font-face{font-family:"Public Fallback";src:local("Arial");size-adjust:104%;ascent-override:96%;descent-override:24%;line-gap-override:0%}
+@font-face{font-family:"Barlow Fallback";src:local("Arial Narrow"),local("Arial");size-adjust:78%;ascent-override:105%}
 :root{--accent:#ffb020;--accent-hover:#ffc94d;--accent-soft:rgba(255,176,32,.16);--on-accent:#1a1200;--bg:#0b0f14;--panel:#121923;--panel2:#18212e;--line:var(--border);--mute:var(--text-muted);--amber:#ffb020;--red:#ff5c5c;--orange:#ff9340;--yellow:#f2d04b;--blue:var(--link);--green:#4fd18b;--r:3px}
 *{box-sizing:border-box}
 html{color-scheme:dark}
@@ -98,3 +103,54 @@ main>*{min-width:0}main{grid-template-columns:minmax(0,1fr)}@media (min-width:98
 .ctx{margin-top:12px;padding-top:8px;border-top:1px dashed var(--line)}.ctx h3{font-size:14px;margin:0 0 6px;color:var(--mute);text-transform:uppercase;letter-spacing:.06em}
 .ctx-text{font-size:15px;margin:6px 0}.ctx-fig{margin:10px 0;max-width:340px}.ctx-fig img{display:block;max-width:100%;height:auto;border:1px solid var(--line)}.ctx-fig figcaption{margin-top:4px}
 .illus-wrap{position:relative;display:block}.illus-tag{position:absolute;left:8px;top:8px;background:#0b0f14;color:var(--accent);border:1px solid var(--accent);font:700 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px}
+
+/* GD5: sibling of Air Travel Desk. Same type and bands, amber accent. Tokens in design/DESIGN.md. */
+:root{--bg:#0d1722;--panel:#142233;--panel2:#1b2f46;--r:12px;--disp:"Barlow Condensed","Barlow Fallback","Arial Narrow",sans-serif;--ease:cubic-bezier(.2,.7,.2,1)}
+body{font-family:"Public Sans","Public Fallback",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2,.brand b,.rank,.badge,.tile b,.stat b{font-family:var(--disp)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+header.top{background:#0a121b;padding:10px 16px}
+.brand{font-family:var(--disp);font-size:20px;font-weight:700;letter-spacing:.01em}
+nav a{display:inline-block;margin-left:6px;padding:6px 12px;border-radius:999px;color:var(--text-muted)}
+nav a:hover{background:var(--panel2);color:var(--text)}
+.notice{background:transparent;border:0;border-bottom:1px solid var(--line);color:var(--text-muted);font-size:13px}
+.band.hero{background:#080f17;border-bottom:1px solid var(--line);padding:36px 0 28px;min-height:360px;position:relative;overflow:hidden}
+.hero-in{position:relative;z-index:1}
+.dateline{margin:0 0 10px;color:var(--text-muted);font-size:14px;min-height:21px}
+.band.hero h1{font-size:clamp(2.4rem,7vw,4.2rem);line-height:1.02;margin:0 0 14px;font-weight:700;letter-spacing:0}
+.verdict{font-size:clamp(1.15rem,2.4vw,1.5rem);line-height:1.3;margin:0 0 6px;max-width:34em;font-weight:600;min-height:2.6em}
+.verdict2{margin:0 0 10px;color:var(--text);max-width:40em;min-height:1.5em}
+.srcline{margin:0 0 18px;color:var(--text-muted);font-size:14px}
+.tiles{display:flex;flex-wrap:wrap;gap:8px}
+.tile,.stat{display:inline-flex;align-items:baseline;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 14px}
+.tile b,.stat b{font-size:22px;line-height:1;font-weight:700;color:var(--accent)}
+.tile span,.stat span{font-size:14px;color:var(--text)}
+.chips{font:inherit;gap:8px}
+.chip,.cat{border-radius:999px}
+select.chip{border-radius:12px}
+.card{border-left:1px solid var(--line);border-radius:var(--r);background:linear-gradient(90deg,color-mix(in srgb,var(--c,var(--mute)) 14%,var(--panel)),var(--panel) 40%);overflow:hidden}
+.card.sel{background:var(--panel2)}
+.rank{font-size:22px;font-weight:600;color:var(--text-muted)}
+.title{font-size:17px}
+.badge{border-radius:999px;font-size:14px;padding:2px 12px;letter-spacing:.03em}
+.when{font-family:inherit;font-size:13px}
+.mapbox,.stats{border-radius:var(--r);background:var(--panel)}
+.mapbox{background:#0a1520}
+.stats h2,#now,.headrow h2{font-family:var(--disp);font-size:26px;font-weight:700;margin:0 0 8px}
+.stats .sub{font-size:14px}
+footer{border-top:1px solid var(--line);background:#0a121b;max-width:none;padding:24px 16px 48px}
+footer p{max-width:1180px;margin-left:auto;margin-right:auto}
+.rank{font-variant-numeric:tabular-nums}
+@media (max-width:979px){.band.hero{padding:24px 0 20px;min-height:0}.verdict{min-height:0}.dateline{min-height:0}}
+.tile[data-sev=extreme] b{color:var(--red)}.tile[data-sev=severe] b{color:var(--orange)}.tile[data-sev=moderate] b{color:var(--yellow)}.tile[data-sev=minor] b{color:var(--text-muted)}
+main{max-width:1180px}
+.verdict{min-height:0}.verdict2{min-height:0;margin-top:8px}
+.band.hero{background:radial-gradient(ellipse at 85% 30%,rgba(242,179,61,.10),transparent 55%),#080f17}
+.brand{white-space:nowrap}nav{display:flex;flex-wrap:nowrap}nav a{white-space:nowrap;margin-left:2px}
+@media (max-width:979px){.brand{font-size:18px}nav a{padding:6px 8px}}
+ol.list:empty{min-height:900px}
+.tiles{min-height:46px}
+@media (max-width:979px){.verdict{min-height:3.9em}.verdict2{min-height:3em}.dateline{min-height:21px}}
+header.top{min-height:61px}.status{min-height:40px;align-items:center}
+.verdict{min-height:2.7em}.verdict2{min-height:1.6em}
+@media (max-width:979px){.verdict{min-height:3.9em}.verdict2{min-height:3.2em}}
