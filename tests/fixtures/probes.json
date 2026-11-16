@@ -10,7 +10,8 @@
    "since": "2026-11-14T11:42:00Z",
    "last_probe": "2026-11-14T11:54:00Z",
    "last_code": 503,
-   "last_ms": 80
+   "last_ms": 80,
+   "ever_healthy": true
   },
   {
    "id": "bofa",
@@ -20,7 +21,8 @@
    "since": "2026-11-14T11:43:00Z",
    "last_probe": "2026-11-14T11:54:00Z",
    "last_code": 503,
-   "last_ms": 90
+   "last_ms": 90,
+   "ever_healthy": true
   },
   {
    "id": "wellsfargo",
@@ -30,7 +32,8 @@
    "since": "2026-11-14T11:44:00Z",
    "last_probe": "2026-11-14T11:54:00Z",
    "last_code": 200,
-   "last_ms": 900
+   "last_ms": 900,
+   "ever_healthy": true
   },
   {
    "id": "usbank",
@@ -40,7 +43,8 @@
    "since": "2026-11-14T11:44:00Z",
    "last_probe": "2026-11-14T11:54:00Z",
    "last_code": 503,
-   "last_ms": 85
+   "last_ms": 85,
+   "ever_healthy": true
   },
   {
    "id": "delta",
@@ -50,7 +54,8 @@
    "since": null,
    "last_probe": "2026-11-14T11:54:00Z",
    "last_code": 200,
-   "last_ms": 150
+   "last_ms": 150,
+   "ever_healthy": true
   },
   {
    "id": "tmobile",
@@ -60,7 +65,8 @@
    "since": "2026-11-14T10:00:00Z",
    "last_probe": "2026-11-14T11:54:00Z",
    "last_code": 403,
-   "last_ms": 90
+   "last_ms": 90,
+   "ever_healthy": false
   }
  ],
  "incidents": [

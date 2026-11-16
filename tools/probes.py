@@ -117,9 +117,11 @@ def update(state, svc, res):
     h = st["history"]
     kinds = [x["kind"] for x in h]
     # Unprobeable: all of the first probes were blocked and nothing healthy was ever seen.
-    # A service that was never reachable cannot be told from one that refuses plain probes, so it never makes an item.
-    if not st["ever_healthy"] and len(h) >= BASELINE_N and all(k in ("blocked", "hard") for k in kinds[:BASELINE_N]) and all(k in ("blocked", "hard") for k in kinds):
-        st["status"], st["since"] = "unprobeable", st["since"] or res["t"]
+    # False-headline guard: a service that was never healthy cannot be told from one that refuses plain probes
+    # (a WAF may answer our address with a challenge, a 404, a 5xx or a timeout). It can never be degraded or down.
+    if not st["ever_healthy"]:
+        if len(h) >= BASELINE_N:
+            st["status"], st["since"] = "unprobeable", st["since"] or res["t"]
         return st["status"]
     last = kinds[-DOWN_RUN:]
     prev = st["status"]
@@ -195,7 +197,7 @@ def snapshot(state, services, now):
             continue
         last = st["history"][-1] if st["history"] else {}
         out.append({"id": sid, "name": svc["name"], "group": svc["group"], "status": st["status"], "since": st["since"],
-                    "last_probe": last.get("t"), "last_code": last.get("code"), "last_ms": last.get("ms")})
+                    "last_probe": last.get("t"), "last_code": last.get("code"), "last_ms": last.get("ms"), "ever_healthy": bool(st.get("ever_healthy"))})
     return {"generated": iso(now), "interval_s": INTERVAL_S, "services": out, "incidents": state.get("incidents", [])}
 
 
@@ -238,7 +240,7 @@ def events_from_snapshot(snap, now):
             "source": "Desk probes (our own)", "source_id": "probes", "source_url": ABOUT_URL,
             "detail": {"lane": "probes", "open": True, "services": [{"id": s["id"], "name": s["name"], "status": s["status"], "since": s["since"]} for s in g],
                        "measured_at": et_clock(first), "services_failing": n},
-            "region": "Americas", "big": n >= 3, "summary_override": summary,
+            "region": "Americas", "big": n >= 3 and all(s.get("ever_healthy") for s in g), "summary_override": summary,
         })
     # Cleared items stay in the 24-hour history as quiet items.
     by_id = {s["id"]: s for s in snap["services"]}

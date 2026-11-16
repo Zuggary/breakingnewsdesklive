@@ -101,6 +101,7 @@ class Detection(unittest.TestCase):
 
     def test_missing_check_word_three_times_is_degraded(self):
         services, state, last = [svc("chase")], {}, {}
+        warm(state, services, last)
         nowords = lambda u, t: (200, "<html>Maintenance</html>", 100)
         for m in (0, 3, 6):
             now = step(state, services, m, nowords, last)
@@ -144,6 +145,54 @@ class NeverReachable(unittest.TestCase):
         for m in (3, 6, 9):
             now = step(state, services, m, fetch_timeout, last)
         self.assertEqual(probes.snapshot(state, services, now)["services"][0]["status"], "down")
+
+
+class FalseHeadlineGuard(unittest.TestCase):
+    """A service never seen healthy cannot be degraded or down, whatever the probes return (CoS fix 1)."""
+
+    def run_never_healthy(self, fetch):
+        services, state, last = [svc("somebank")], {}, {}
+        for m in (0, 3, 6, 9, 12):
+            now = step(state, services, m, fetch, last)
+        return services, state, now
+
+    def test_challenge_page_200_without_the_check_word(self):
+        services, state, now = self.run_never_healthy(lambda u, t: (200, "<html>Verify you are human</html>", 100))
+        snap = probes.snapshot(state, services, now)
+        self.assertEqual(snap["services"][0]["status"], "unprobeable")
+        self.assertEqual(probes.events_from_snapshot(snap, now), [])
+
+    def test_404_never_healthy(self):
+        services, state, now = self.run_never_healthy(lambda u, t: (404, "", 100))
+        self.assertEqual(probes.snapshot(state, services, now)["services"][0]["status"], "unprobeable")
+
+    def test_5xx_never_healthy(self):
+        services, state, now = self.run_never_healthy(fetch_503)
+        snap = probes.snapshot(state, services, now)
+        self.assertEqual(snap["services"][0]["status"], "unprobeable")
+        self.assertEqual(probes.events_from_snapshot(snap, now), [])
+
+    def test_timeout_never_healthy(self):
+        services, state, now = self.run_never_healthy(fetch_timeout)
+        self.assertEqual(probes.snapshot(state, services, now)["services"][0]["status"], "unprobeable")
+
+    def test_a_group_is_not_big_unless_every_member_was_healthy_once(self):
+        now = T0 + timedelta(minutes=10)
+        def s(i, healthy):
+            return {"id": i, "name": i.title(), "group": "bank", "status": "down", "since": probes.iso(T0), "last_probe": probes.iso(now),
+                    "last_code": 503, "last_ms": 80, "ever_healthy": healthy}
+        snap = {"generated": probes.iso(now), "services": [s("a", True), s("b", True), s("c", False)], "incidents": []}
+        ev = probes.events_from_snapshot(snap, now)
+        self.assertEqual(len(ev), 1)
+        self.assertFalse(ev[0]["big"])
+        snap["services"][2]["ever_healthy"] = True
+        self.assertTrue(probes.events_from_snapshot(snap, now)[0]["big"])
+
+    def test_a_snapshot_without_the_flag_is_never_big(self):
+        now = T0 + timedelta(minutes=10)
+        snap = {"generated": probes.iso(now), "incidents": [], "services": [
+            {"id": i, "name": i, "group": "bank", "status": "down", "since": probes.iso(T0), "last_probe": probes.iso(now), "last_code": 503, "last_ms": 80} for i in "abc"]}
+        self.assertFalse(probes.events_from_snapshot(snap, now)[0]["big"])
 
 
 class Grouping(unittest.TestCase):
