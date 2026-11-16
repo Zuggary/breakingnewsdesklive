@@ -130,3 +130,4 @@ ol.list:empty{min-height:1600px}
 .card.group.sel .title::before{content:"\25BE  "}
 .aibug{margin:0;padding:5px 12px;font-size:12px;color:var(--mute);border-bottom:1px solid var(--line);background:var(--panel)}.aibug b{font:700 13px var(--disp);letter-spacing:.06em;color:#fff;margin-right:6px}
 .notice b{font:700 13px var(--disp);letter-spacing:.06em;color:#fff;margin-right:6px}
+.notice b,.aibug b{line-height:1;font-size:12px;display:inline-block;vertical-align:baseline}
