@@ -201,6 +201,23 @@ _COMMON = {"The", "This", "That", "National", "Weather", "Service", "Check", "De
            "Center", "Outlets", "Sites", "First", "These", "Headline", "Foreign", "Office", "Commission", "European", "Federal", "Register", "FDA", "CISA", "Consumer", "Product", "Safety", "Commission", "Vendors", "Software", "Read", "Class", "Impact", "Status", "Airport", "Microsoft", "Microsoft's", "Reason", "Expected", "Average", "Current", "FAA", "Delays", "Ground", "Stop", "Closed", "PAGER", "Smoke", "NOAA", "Storm", "Prediction", "Aurora", "Follow", "Tsunami", "Warning", "Watch", "Advisory", "Pacific", "Alaska", "Hawaii", "Bulletin", "Kp", "NOAA", "Observatory", "Program", "NASA", "EONET", "GDACS", "USGS", "Reported", "Wildfire", "Earthquake", "Listed", "Alert", "Level"}
 
 
+CLAIM_RE = re.compile(r"\b(kill(?:ed|s|ing)?|dead|deaths?|died|casualt\w+|victims?|fatalit\w+|suspects?|arrest(?:ed|s)?|blam(?:e|es|ed)|perpetrators?|gunman|terroris[mt]s?|massacre|hostages?)\b", re.I)
+SAFE_SUMMARY = "The source lists this item. This site does not repeat unverified claims. Check the source page."
+
+
+def claims_ok(text):
+    """False when generated text holds blame, suspect or casualty words. Only the source may say these."""
+    return not CLAIM_RE.search(text or "")
+
+
+def status_label(e, now):
+    """UNVERIFIED for claims by an outlet or a party. DEVELOPING for any other event under 90 minutes old. Otherwise empty."""
+    if e["type"] in ("headline", "statement"):
+        return "UNVERIFIED"
+    age_min = (now - parse_time(e["time"])).total_seconds() / 60
+    return "DEVELOPING" if age_min < 90 else ""
+
+
 def guard_ok(summary, event):
     """True only if every number and every capitalised word in `summary` appears in the event data."""
     blob = " ".join(str(v) for v in _flat(event)).lower()

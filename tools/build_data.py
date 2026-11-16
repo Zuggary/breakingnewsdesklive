@@ -17,7 +17,7 @@ from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from tools import feed_terms  # noqa: E402
-from tools.lib import (REGIONS, region_of, score_event, summarize, STATE_CENTROIDS,  # noqa: E402
+from tools.lib import (REGIONS, region_of, score_event, summarize, STATE_CENTROIDS, claims_ok, status_label, SAFE_SUMMARY,  # noqa: E402
                        iso_utc, parse_time, haversine_km)
 
 FIXTURE_MODE = False
@@ -754,6 +754,9 @@ def build(fixtures=None, now=None):
         try:
             e["score"] = score_event(e, now)
             e["summary"] = summarize(e)
+            if not claims_ok(e["summary"]):
+                e["summary"], e["claims_blocked"] = SAFE_SUMMARY, True
+            e["status"] = status_label(e, now)
             good.append(e)
         except Exception as ex:  # noqa: BLE001
             # One malformed item must never stop the data job. Drop it, and say which one.

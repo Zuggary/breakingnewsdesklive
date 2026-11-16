@@ -51,3 +51,35 @@ class FeedGate(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ClaimsAndStatus(unittest.TestCase):
+    def test_blocked_words(self):
+        from tools import lib
+        for bad in ("Police arrested a suspect.", "Three people were killed.", "The victims were", "He was blamed for it"):
+            self.assertFalse(lib.claims_ok(bad), bad)
+        for good in ("A magnitude 5.0 earthquake was recorded.", "FAA status for San Diego (SAN): airport closed."):
+            self.assertTrue(lib.claims_ok(good), good)
+
+    def test_safe_summary_passes_the_fact_gate(self):
+        from tools import lib
+        ev = {"title": "x", "place": "y", "type": "recall", "detail": {}}
+        self.assertTrue(lib.guard_ok(lib.SAFE_SUMMARY, ev), lib.SAFE_SUMMARY)
+
+    def test_status_labels(self):
+        from datetime import datetime, timezone, timedelta
+        from tools import lib
+        now = datetime(2026, 11, 16, 12, 0, tzinfo=timezone.utc)
+        iso = lambda m: (now - timedelta(minutes=m)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        self.assertEqual(lib.status_label({"type": "headline", "time": iso(500)}, now), "UNVERIFIED")
+        self.assertEqual(lib.status_label({"type": "statement", "time": iso(5)}, now), "UNVERIFIED")
+        self.assertEqual(lib.status_label({"type": "earthquake", "time": iso(30)}, now), "DEVELOPING")
+        self.assertEqual(lib.status_label({"type": "earthquake", "time": iso(300)}, now), "")
+
+    def test_built_events_carry_a_status_and_clean_summaries(self):
+        events, _ = build_data.build(os.path.join(ROOT, "tests", "fixtures"))
+        from tools import lib
+        self.assertTrue(events)
+        for e in events:
+            self.assertIn("status", e)
+            self.assertTrue(lib.claims_ok(e["summary"]), e["summary"])
