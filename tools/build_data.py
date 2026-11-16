@@ -16,6 +16,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from tools import feed_terms  # noqa: E402
 from tools.lib import (REGIONS, region_of, score_event, summarize, STATE_CENTROIDS,  # noqa: E402
                        iso_utc, parse_time, haversine_km)
 
@@ -715,6 +716,12 @@ def build(fixtures=None, now=None):
     for src in SOURCES:
         rec = {"id": src["id"], "update": src.get("update", ""), "url": src["url"].split("{")[0].split("?")[0], "name": src["name"], "page": src["page"], "licence": src["licence"], "terms": src["terms"],
                "checked": iso_utc(now), "ok": False, "count": 0}
+        gate_ok, gate_why = feed_terms.gate(src)
+        if not gate_ok:
+            rec["error"] = "feed gate: " + gate_why
+            print("BLOCKED %s: %s" % (src["id"], gate_why), file=sys.stderr)
+            status.append(rec)
+            continue
         try:
             evs = PARSERS[src["id"]](fetch_json(src, fixtures), src)
             rec["ok"], rec["count"] = True, len(evs)
