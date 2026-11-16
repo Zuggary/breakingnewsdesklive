@@ -32,6 +32,7 @@
     if (h < 48) return h + 'h ago';
     return Math.round(h / 24) + 'd ago';
   }
+  var SEVRANK = { extreme: 0, severe: 1, moderate: 2, minor: 3 };
   function filterEvents(events, f, now) {
     now = now || Date.now();
     return events.filter(function (e) {
@@ -40,6 +41,7 @@
         else if (e.type !== f.type) return false;
       }
       if (f.region && f.region !== 'all' && e.region !== f.region) return false;
+      if (f.sev && SEVRANK[f.sev] != null && (SEVRANK[e.severity] == null ? 9 : SEVRANK[e.severity]) > SEVRANK[f.sev]) return false;
       var hrs = f.hours || (f.day ? 24 : 0);
       if (hrs && now - Date.parse(e.time) > hrs * 36e5) return false;
       return true;

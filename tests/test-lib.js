@@ -11,3 +11,10 @@ assert.strictEqual(B.filterEvents(ev,{hours:6},now).length,1);
 assert.strictEqual(B.filterEvents(ev,{type:'g:hazards'},now).length,2);
 assert.strictEqual(B.filterEvents(ev,{type:'g:transport'},now).length,0);
 console.log('lib.js ok');
+
+var sevEv=[{type:'earthquake',severity:'extreme',time:new Date(now).toISOString(),region:'Asia'},{type:'weather',severity:'severe',time:new Date(now).toISOString(),region:'Americas'},{type:'flood',severity:'moderate',time:new Date(now).toISOString(),region:'Asia'},{type:'storm',severity:'minor',time:new Date(now).toISOString(),region:'Asia'}];
+assert.strictEqual(B.filterEvents(sevEv,{sev:'extreme'},now).length,1);
+assert.strictEqual(B.filterEvents(sevEv,{sev:'severe'},now).length,2);
+assert.strictEqual(B.filterEvents(sevEv,{sev:'moderate'},now).length,3);
+assert.strictEqual(B.filterEvents(sevEv,{sev:''},now).length,4);
+console.log('severity filter ok');

@@ -20,7 +20,10 @@
     var ts = el('select', 'chip'); ts.setAttribute('aria-label', 'Event age');
     [['0', 'Any age'], ['24', 'Last 24 hours'], ['6', 'Last 6 hours'], ['1', 'Last hour']].forEach(function (o) { var op = el('option', '', o[1]); op.value = o[0]; ts.appendChild(op); });
     ts.onchange = function () { state.f.hours = +ts.value; render(); };
-    box.appendChild(rs); box.appendChild(ts);
+    var ss = el('select', 'chip'); ss.setAttribute('aria-label', 'Severity');
+    [['', 'Any severity'], ['extreme', 'Extreme only'], ['severe', 'Severe or worse'], ['moderate', 'Moderate or worse']].forEach(function (o) { var op = el('option', '', o[1]); op.value = o[0]; ss.appendChild(op); });
+    ss.onchange = function () { state.f.sev = ss.value; render(); };
+    box.appendChild(ss); box.appendChild(rs); box.appendChild(ts);
   }
 
   var ICONS = {
