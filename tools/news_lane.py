@@ -21,6 +21,13 @@ OUTAGE_RE = re.compile(
     r"glitch(?:es)?|can(?:'|’)?t\s+log\s*in|cannot\s+log\s*in|unable\s+to\s+log\s*in|log-?in\s+(?:issues|problems|troubles?|errors?|failures?)|"
     r"technical\s+(?:issues?|glitch(?:es)?|problems?|bug)|service\s+disruptions?|disrupt(?:ed|ion)s?|down\s+for\s+(?:many|some|users|customers))\b", re.I)
 
+EXTRA_RE = re.compile(r"(?:\bdown\?|\breport(?:ing|s|ed)?\s+(?:issues|problems|trouble)|\b(?:customers|users)\s+(?:have|having|experiencing)\s+(?:issues|problems|trouble))", re.I)
+
+
+def is_outage(title):
+    return bool(OUTAGE_RE.search(title) or EXTRA_RE.search(title))
+
+
 RESOLVED_RE = re.compile(r"\b(?:resum(?:e|ed|es|ing)|fixed|resolved|restored|back\s+to\s+normal|lifted|issue\s+(?:is\s+)?over)\b", re.I)
 
 # Names that are also common words need a second word, so "chase" the verb and "united" the adjective do not match.
@@ -77,7 +84,7 @@ def seen_time(a):
 
 def match(title):
     """Return the list of probe-list service ids named in a headline that also holds an outage word. Empty when none."""
-    if not title or not (OUTAGE_RE.search(title) or RESOLVED_RE.search(title)):
+    if not title or not (is_outage(title) or RESOLVED_RE.search(title)):
         return []
     found = [sid for sid, pats in _COMPILED.items() if any(p.search(title) for p in pats)]
     if found:
@@ -92,7 +99,7 @@ def collect(articles):
         sids = match(a.get("title", ""))
         if sids and (a.get("url") or "").startswith("https://"):
             t = a.get("title", "")
-            out.append(dict(a, services=sids, outage=bool(OUTAGE_RE.search(t)), resolved=bool(RESOLVED_RE.search(t))))
+            out.append(dict(a, services=sids, outage=is_outage(t), resolved=bool(RESOLVED_RE.search(t))))
     return out
 
 

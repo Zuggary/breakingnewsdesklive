@@ -24,6 +24,11 @@ class Matching(unittest.TestCase):
         self.assertIn("venmo", news_lane.match("Venmo outage leaves users unable to send money"))
         self.assertIn("att", news_lane.match("AT&T outage reported across several states"))
 
+    def test_question_and_issue_wording_matches(self):
+        self.assertIn("zelle", news_lane.match("Is Your Bank Down? Chase, Wells Fargo, Zelle users report issues"))
+        self.assertIn("zelle", news_lane.match("Are banks down? Chase, Bank of America, Zelle customers have problems"))
+        self.assertEqual(news_lane.match("Zelle shares plans for new app"), [])
+
     def test_common_words_do_not_match(self):
         for t in ("Police chase suspect through downtown after shooting", "United we stand: community rallies after the storm",
                   "Delta variant cases fall, officials say", "Bank of America opens 10 new branches", "Discover the best coffee in town", "Chase stars in new film, outage of talent at studio"):
