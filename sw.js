@@ -1,9 +1,9 @@
 /* Breaking News Desk service worker: offline support, same-origin files only. */
 (function () {
   "use strict";
-  var CACHE = "bnd-offline-v1";
+  var CACHE = "bnd-offline-v2";
   var FILES = ["./", "./index.html", "./about.html", "./privacy.html", "./data.html", "./corrections.html", "./tokens.css", "./tv.html", "./event.html",
-               "./style.css", "./app.js", "./lib.js", "./favicon.svg",
+               "./style.css", "./fonts/public-sans-latin-wght-normal.woff2", "./fonts/barlow-condensed-700.woff2", "./fonts/barlow-condensed-600.woff2", "./app.js", "./lib.js", "./favicon.svg",
                "./data/events.json", "./data/sources.json", "./data/world.json"];
   function path(rel) { return new URL(rel, self.registration.scope).pathname; }
   var PATHS = {};
