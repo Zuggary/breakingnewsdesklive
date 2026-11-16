@@ -16,7 +16,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from tools import feed_terms  # noqa: E402
+from tools import feed_terms, killswitch  # noqa: E402
 from tools.lib import (REGIONS, region_of, score_event, summarize, STATE_CENTROIDS, claims_ok, status_label, SAFE_SUMMARY,  # noqa: E402
                        iso_utc, parse_time, haversine_km)
 
@@ -26,6 +26,9 @@ OUT_DIR = None
 UA = "breakingnewsdesklive/1.0 (+https://breakingnewsdesklive.com; independent alert aggregator)"
 MAX_AGE_H = 72
 MAX_AGE_LONG_H = 168  # open fires, floods and volcanoes stay listed for 7 days
+
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+HELD = []
 
 SOURCES = [
     {"id": "usgs-quakes", "update": "about every minute", "name": "USGS Earthquake Hazards Program",
@@ -761,7 +764,11 @@ def build(fixtures=None, now=None):
         except Exception as ex:  # noqa: BLE001
             # One malformed item must never stop the data job. Drop it, and say which one.
             print("dropped %s: %s %s" % (e.get("id"), type(ex).__name__, ex), file=sys.stderr)
-    events = good
+    events, held = killswitch.apply(good, killswitch.load_approved(os.path.join(ROOT_DIR, "approved.json")))
+    global HELD
+    HELD = held
+    for h in held:
+        print("HELD %s (%s): trigger '%s'" % (h["id"], h["title"][:70], h["trigger"]), file=sys.stderr)
     events.sort(key=lambda e: -e["score"])
     # Diversity: repeated US warnings of one kind drop 10 points per earlier copy, so they do not fill the top of the list.
     seen = {}
@@ -831,6 +838,9 @@ def main():
     OUT_DIR = a.out
     os.makedirs(a.out, exist_ok=True)
     now = datetime.now(timezone.utc)
+    if killswitch.global_stop(ROOT_DIR):
+        print("KILL switch is on: publishing nothing new, keeping the last good files", file=sys.stderr)
+        return 0
     events, status = build(a.fixtures, now)
     os.makedirs(a.out, exist_ok=True)
     prev = os.path.join(a.out, "events.json")
@@ -844,6 +854,8 @@ def main():
         print("context on %d events" % n)
     with open(prev, "w", encoding="utf-8") as f:
         json.dump({"generated": iso_utc(now), "count": len(events), "events": events}, f, separators=(",", ":"))
+    with open(os.path.join(a.out, "held.json"), "w", encoding="utf-8") as f:
+        json.dump({"generated": iso_utc(now), "count": len(HELD), "items": HELD}, f, indent=1)
     with open(os.path.join(a.out, "sources.json"), "w", encoding="utf-8") as f:
         json.dump({"generated": iso_utc(now), "sources": status}, f, indent=1)
     print("events=%d sources_ok=%d/%d" % (len(events), sum(s["ok"] for s in status), len(status)))

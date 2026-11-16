@@ -83,3 +83,71 @@ class ClaimsAndStatus(unittest.TestCase):
         for e in events:
             self.assertIn("status", e)
             self.assertTrue(lib.claims_ok(e["summary"]), e["summary"])
+
+
+class KillSwitch(unittest.TestCase):
+    def ev(self, i, t, title):
+        return {"id": i, "type": t, "title": title, "place": "Somewhere", "source": "s"}
+
+    def test_crisis_headline_is_held(self):
+        from tools import killswitch
+        evs = [self.ev("a", "headline", "Headline: “Plane crash kills 40 near airport”"), self.ev("b", "headline", "Headline: “Budget talks resume”")]
+        out, held = killswitch.apply(evs, set())
+        self.assertEqual([e["id"] for e in out], ["b"])
+        self.assertEqual(held[0]["id"], "a")
+
+    def test_person_approval_clears_a_hold(self):
+        from tools import killswitch
+        evs = [self.ev("a", "headline", "Headline: “Shooting at stadium”")]
+        out, held = killswitch.apply(evs, {"a"})
+        self.assertEqual((len(out), len(held)), (1, 0))
+
+    def test_official_hazard_titles_are_not_held(self):
+        from tools import killswitch
+        evs = [self.ev("q", "earthquake", "M 5.5 earthquake"), self.ev("w", "weather", "Flood Warning"), self.ev("t", "transport", "Airport closed at SAN")]
+        out, held = killswitch.apply(evs, set())
+        self.assertEqual((len(out), len(held)), (3, 0))
+
+    def test_global_stop_by_env_and_file(self):
+        import tempfile
+        from tools import killswitch
+        with tempfile.TemporaryDirectory() as d:
+            self.assertFalse(killswitch.global_stop(d))
+            open(os.path.join(d, "KILL"), "w").close()
+            self.assertTrue(killswitch.global_stop(d))
+        os.environ["BND_KILL"] = "1"
+        try:
+            self.assertTrue(killswitch.global_stop("/nonexistent"))
+        finally:
+            del os.environ["BND_KILL"]
+
+    def test_job_writes_nothing_when_killed(self):
+        import tempfile
+        os.environ["BND_KILL"] = "1"
+        old = sys.argv
+        try:
+            with tempfile.TemporaryDirectory() as d:
+                sys.argv = ["build_data.py", "--out", d, "--fixtures", os.path.join(ROOT, "tests", "fixtures")]
+                self.assertEqual(build_data.main(), 0)
+                self.assertEqual(os.listdir(d), [])
+        finally:
+            sys.argv = old
+            del os.environ["BND_KILL"]
+
+    def test_job_writes_held_file_and_keeps_held_out(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            old = sys.argv
+            sys.argv = ["build_data.py", "--out", d, "--fixtures", os.path.join(ROOT, "tests", "fixtures")]
+            try:
+                build_data.main()
+            finally:
+                sys.argv = old
+            held = json.load(open(os.path.join(d, "held.json")))
+            ids = {e["id"] for e in json.load(open(os.path.join(d, "events.json")))["events"]}
+            self.assertEqual(held["count"], len(held["items"]))
+            self.assertTrue(all(h["id"] not in ids for h in held["items"]))
+
+    def test_approved_file_is_a_list(self):
+        data = json.load(open(os.path.join(ROOT, "approved.json")))
+        self.assertIsInstance(data, list)
