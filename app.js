@@ -68,7 +68,7 @@
       h.appendChild(el('span', 'place', e.place));
       h.appendChild(el('span', 'src', e.source_short));
       var mt = el('span', 'meta'); var ms = el('b', '', SEVS[e.severity] || e.severity); mt.appendChild(ms);
-      mt.appendChild(document.createTextNode(' \u00b7 ' + (B.TYPES[e.type] || B.TYPES.other).label + ' \u00b7 ' + e.place + ' \u00b7 ' + e.source_short)); h.appendChild(mt);
+      mt.appendChild(document.createTextNode(' \u00b7 ' + (B.TYPES[e.type] || B.TYPES.other).label + ' \u00b7 ' + e.source_short + ' \u00b7 ' + e.place)); h.appendChild(mt);
       h.appendChild(el('span', 'when', B.ago(e.time, now)));
       h.onclick = function () { state.sel = state.sel === e.id ? null : e.id; render(); draw(); };
       li.appendChild(h);

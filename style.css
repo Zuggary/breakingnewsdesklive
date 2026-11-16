@@ -4,8 +4,8 @@
 @font-face{font-family:"Public Fallback";src:local("Arial");size-adjust:104%;ascent-override:96%;descent-override:24%;line-gap-override:0%}
 @font-face{font-family:"Barlow Fallback";src:local("Arial Narrow"),local("Arial");size-adjust:78%;ascent-override:105%}
 /* Wire-desk look: hairlines, tight rows, condensed type. Colour is for severity only. */
-:root{--bg:#0a1017;--panel:#0f1822;--panel2:#142130;--line:#1f2d3b;--text:#d3dce5;--mute:#8396a8;--link:#93bde6;--accent:#93bde6;--on-accent:#06101a;
---c-extreme:#ff5252;--c-severe:#ff8a3d;--c-moderate:#e9b53a;--c-minor:#70849a;--amber:#e9b53a;--red:#ff5252;--orange:#ff8a3d;--yellow:#e9b53a;--green:#4fd18b;--blue:var(--link);
+:root{--bg:#0a1017;--panel:#0f1822;--panel2:#142130;--line:#1f2d3b;--text:#d3dce5;--mute:#a9b8c7;--link:#93bde6;--accent:#93bde6;--on-accent:#06101a;
+--c-extreme:#ff5252;--c-severe:#ff8a3d;--c-moderate:#e9b53a;--c-minor:#9cb0c4;--amber:#e9b53a;--red:#ff5252;--orange:#ff8a3d;--yellow:#e9b53a;--green:#4fd18b;--blue:var(--link);
 --disp:"Barlow Condensed","Barlow Fallback","Arial Narrow",sans-serif;--r:0}
 *{box-sizing:border-box}
 html{color-scheme:dark}
@@ -57,7 +57,7 @@ ol.list{list-style:none;margin:0;padding:0}
 .title{grid-area:title;font:600 16px/1.15 var(--disp);color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .when{grid-area:when;font:600 13px var(--disp);color:var(--mute);text-align:right;white-space:nowrap}
 .head .sev,.head .typ,.head .place,.head .src{display:none}
-.meta{grid-area:meta;font:12.5px/1.25 "Public Sans","Public Fallback",sans-serif;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta{grid-area:meta;font:13px/1.25 "Public Sans","Public Fallback",sans-serif;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .meta b{font:700 12px var(--disp);letter-spacing:.06em;color:var(--c,var(--mute))}
 .card.s-extreme .title{color:var(--c-extreme)}
 .card.sel .when::after{content:""}
@@ -104,6 +104,7 @@ main.page.wide{max-width:1180px}main.page.wide #ev>*{max-width:760px}
  .title{font-size:16px}
 }
 @media (max-width:759px){
+ .title{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
  .card button.head{grid-template-areas:"rank title when" "rank meta meta";padding:4px 0}
  .strip{font-size:12px;padding:5px 12px;gap:1px 12px}.strip .notice{margin-left:0;font-size:11px;flex-basis:100%}.dateline{display:none}
 }
