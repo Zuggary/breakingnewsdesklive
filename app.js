@@ -215,7 +215,14 @@
     x.strokeStyle = '#ffb020'; x.lineWidth = 2 * d; x.beginPath();
     pts.forEach(function (r, i) { var px = 8 * d + (Date.parse(r.t) - t0) / Math.max(1, t1 - t0) * (W - 16 * d), py = H - 22 * d - (r.count - min) / Math.max(1, max - min) * (H - 40 * d); i ? x.lineTo(px, py) : x.moveTo(px, py); });
     x.stroke(); x.fillStyle = '#93a1b5'; x.font = (11 * d) + 'px ui-monospace,monospace';
-    x.fillText(max + ' events', 8 * d, 12 * d); x.fillText(min + '', 8 * d, H - 6 * d);
+    x.fillText(max + ' events', 8 * d, 12 * d); x.fillText(min + '', 8 * d, H - 28 * d);
+    // Time axis: first, middle and last point, in the visitor's clock.
+    function tl(t) { var dt = new Date(t); return hours > 30 ? dt.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : dt.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }); }
+    x.fillStyle = '#a9b8c7'; x.font = (11 * d) + 'px system-ui';
+    x.textAlign = 'left'; x.fillText(tl(t0), 8 * d, H - 6 * d);
+    x.textAlign = 'center'; x.fillText(tl((t0 + t1) / 2), W / 2, H - 6 * d);
+    x.textAlign = 'right'; x.fillText(tl(t1), W - 8 * d, H - 6 * d); x.textAlign = 'left';
+    x.strokeStyle = '#1f2d3b'; x.lineWidth = 1 * d; x.beginPath(); x.moveTo(8 * d, H - 18 * d); x.lineTo(W - 8 * d, H - 18 * d); x.stroke();
   }
   function histInit() {
     fetch('data/log.jsonl', { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw 0; return r.text(); }).then(function (t) {
