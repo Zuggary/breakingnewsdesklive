@@ -24,8 +24,12 @@ class T(unittest.TestCase):
             self.assertTrue(e["time"].endswith("Z"))
 
     def test_sorted(self):
-        sc = [e["score"] for e in self.events]
-        self.assertEqual(sc, sorted(sc, reverse=True))
+        keys = [build_data.rank_key(e) for e in self.events]
+        self.assertEqual(keys, sorted(keys))
+
+    def test_severity_ranks_first(self):
+        order = [build_data.SEV_ORDER[e["severity"]] for e in self.events]
+        self.assertEqual(order, sorted(order), "a lower severity tier appears above a higher one")
 
     def test_summaries_pass_guard(self):
         for e in self.events:

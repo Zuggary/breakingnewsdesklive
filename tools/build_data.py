@@ -761,8 +761,16 @@ def build(fixtures=None, now=None):
             n = seen.get(key, 0)
             seen[key] = n + 1
             e["score"] = round(max(0, e["score"] - (10 if e["type"] == "weather" else 3) * n), 1)
-    events.sort(key=lambda e: -e["score"])
+    events.sort(key=rank_key)  # severity first, then score
     return events, status
+
+
+SEV_ORDER = {"extreme": 0, "severe": 1, "moderate": 2, "minor": 3}
+
+
+def rank_key(e):
+    """Severity tier first, then score. A minor event never ranks above a severe one."""
+    return (SEV_ORDER.get(e["severity"], 4), -e["score"])
 
 
 def track_seen(events, out_dir, now):
