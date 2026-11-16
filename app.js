@@ -234,6 +234,13 @@
     var evs = state.events, now = new Date();
     try { $('dateline').textContent = now.toLocaleString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }); } catch (e) { $('dateline').textContent = ''; }
     $('verdict').textContent = evs.length + ' events';
+    var big = evs.filter(function (e) { return e.big; })[0], tl = $('topline');
+    if (big && tl) {
+      tl.hidden = false; tl.textContent = '';
+      tl.appendChild(el('b', 'tl-label', 'TOP HEADLINE'));
+      var ta = el('a', 'tl-title', big.title); ta.href = 'event.html?id=' + encodeURIComponent(big.id); tl.appendChild(ta);
+      tl.appendChild(el('span', 'tl-meta', ((big.detail && big.detail.measured_at) ? 'Measured by the desk, first failure ' + big.detail.measured_at : big.source) + ' \u00b7 ' + B.ago(big.time)));
+    } else if (tl) { tl.hidden = true; }
     var t = $('tiles'); t.textContent = '';
     ['extreme', 'severe', 'moderate', 'minor'].forEach(function (k) {
       var n = evs.filter(function (e) { return e.severity === k; }).length; if (!n) return;

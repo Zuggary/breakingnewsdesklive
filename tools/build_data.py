@@ -16,7 +16,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from tools import feed_terms, killswitch  # noqa: E402
+from tools import feed_terms, killswitch, probes  # noqa: E402
 from tools.lib import (REGIONS, region_of, score_event, summarize, STATE_CENTROIDS, claims_ok, status_label, SAFE_SUMMARY,  # noqa: E402
                        iso_utc, parse_time, haversine_km)
 
@@ -746,6 +746,25 @@ def build(fixtures=None, now=None):
                 except (OSError, ValueError, KeyError):
                     pass
         status.append(rec)
+    # GD7 part A: our own probes. The probe runner writes probes.json; the job reads it. Plain code, no model calls.
+    prec = {"id": "probes", "update": "every 3 minutes", "name": "Desk probes (our own)", "url": probes.ABOUT_URL, "page": probes.ABOUT_URL,
+            "licence": "Our own measurements of signed-out public pages", "terms": probes.ABOUT_URL, "checked": iso_utc(now), "ok": False, "count": 0}
+    try:
+        snap = probes.load_json(os.path.join(fixtures if fixtures else (OUT_DIR or "data"), "probes.json"), None)
+        if snap is None:
+            prec["ok"], prec["note"] = True, "No probe file yet; the probe runner has not written one"
+        else:
+            pev = [mk(e["id"], e["type"], e["title"], e["place"], None, None, parse_time(e["time"]), e["severity"], e["size"],
+                      {"name": e["source"], "id": e["source_id"], "page": e["source_url"]}, e["source_url"], detail=e["detail"],
+                      region=e["region"], big=e["big"], summary_override=e["summary_override"]) for e in probes.events_from_snapshot(snap, now)]
+            events += pev
+            prec["ok"], prec["count"] = True, len(pev)
+            prec["services_monitored"] = sum(1 for s in snap["services"] if s["status"] != "unprobeable")
+            prec["services_unprobeable"] = sum(1 for s in snap["services"] if s["status"] == "unprobeable")
+            prec["probes_generated"] = snap["generated"]
+    except Exception as ex:  # noqa: BLE001
+        prec["error"] = type(ex).__name__
+    status.append(prec)
     def fresh_enough(e):
         age = MAX_AGE_LONG_H if e["type"] in ("wildfire", "volcano", "drought", "flood", "recall", "notice") else MAX_AGE_H
         t = parse_time(e["time"])
@@ -756,7 +775,7 @@ def build(fixtures=None, now=None):
     for e in events:
         try:
             e["score"] = score_event(e, now)
-            e["summary"] = summarize(e)
+            e["summary"] = e.pop("summary_override") if "summary_override" in e else summarize(e)
             if not claims_ok(e["summary"]):
                 e["summary"], e["claims_blocked"] = SAFE_SUMMARY, True
             e["status"] = status_label(e, now)
@@ -788,7 +807,7 @@ SEV_ORDER = {"extreme": 0, "severe": 1, "moderate": 2, "minor": 3}
 def rank_key(e):
     """Severity tier first, then score. A minor event never ranks above a severe one."""
     # Outlet headlines (GDELT) sort after every other event of the same tier, so they stay out of the top of the list.
-    return (SEV_ORDER.get(e["severity"], 4), e["type"] == "headline", -e["score"])
+    return (0 if e.get("big") else 1, SEV_ORDER.get(e["severity"], 4), e["type"] == "headline", -e["score"])
 
 
 def track_seen(events, out_dir, now):

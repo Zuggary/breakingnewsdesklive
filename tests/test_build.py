@@ -33,7 +33,7 @@ class T(unittest.TestCase):
             self.assertTrue(all(e["type"] != "headline" for e in self.events[:15]))
 
     def test_severity_ranks_first(self):
-        order = [build_data.SEV_ORDER[e["severity"]] for e in self.events]
+        order = [build_data.SEV_ORDER[e["severity"]] for e in self.events if not e.get("big")]
         self.assertEqual(order, sorted(order), "a lower severity tier appears above a higher one")
 
     def test_summaries_pass_guard(self):

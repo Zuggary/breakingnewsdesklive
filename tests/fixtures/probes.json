@@ -1,0 +1,74 @@
+{
+ "generated": "2026-11-14T11:55:00Z",
+ "interval_s": 180,
+ "services": [
+  {
+   "id": "chase",
+   "name": "Chase",
+   "group": "bank",
+   "status": "down",
+   "since": "2026-11-14T11:42:00Z",
+   "last_probe": "2026-11-14T11:54:00Z",
+   "last_code": 503,
+   "last_ms": 80
+  },
+  {
+   "id": "bofa",
+   "name": "Bank of America",
+   "group": "bank",
+   "status": "down",
+   "since": "2026-11-14T11:43:00Z",
+   "last_probe": "2026-11-14T11:54:00Z",
+   "last_code": 503,
+   "last_ms": 90
+  },
+  {
+   "id": "wellsfargo",
+   "name": "Wells Fargo",
+   "group": "bank",
+   "status": "degraded",
+   "since": "2026-11-14T11:44:00Z",
+   "last_probe": "2026-11-14T11:54:00Z",
+   "last_code": 200,
+   "last_ms": 900
+  },
+  {
+   "id": "usbank",
+   "name": "U.S. Bank",
+   "group": "bank",
+   "status": "down",
+   "since": "2026-11-14T11:44:00Z",
+   "last_probe": "2026-11-14T11:54:00Z",
+   "last_code": 503,
+   "last_ms": 85
+  },
+  {
+   "id": "delta",
+   "name": "Delta Air Lines",
+   "group": "airline",
+   "status": "up",
+   "since": null,
+   "last_probe": "2026-11-14T11:54:00Z",
+   "last_code": 200,
+   "last_ms": 150
+  },
+  {
+   "id": "tmobile",
+   "name": "T-Mobile",
+   "group": "carrier",
+   "status": "unprobeable",
+   "since": "2026-11-14T10:00:00Z",
+   "last_probe": "2026-11-14T11:54:00Z",
+   "last_code": 403,
+   "last_ms": 90
+  }
+ ],
+ "incidents": [
+  {
+   "service": "delta",
+   "start": "2026-11-14T09:00:00Z",
+   "end": "2026-11-14T09:20:00Z",
+   "worst": "down"
+  }
+ ]
+}

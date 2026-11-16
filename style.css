@@ -131,3 +131,8 @@ ol.list:empty{min-height:1600px}
 .aibug{margin:0;padding:5px 12px;font-size:12px;color:var(--mute);border-bottom:1px solid var(--line);background:var(--panel)}.aibug b{font:700 13px var(--disp);letter-spacing:.06em;color:#fff;margin-right:6px}
 .notice b{font:700 13px var(--disp);letter-spacing:.06em;color:#fff;margin-right:6px}
 .notice b,.aibug b{line-height:1;font-size:12px;display:inline-block;vertical-align:baseline}
+.topline{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 14px;padding:8px 12px;background:#2a0f12;border-bottom:2px solid var(--c-extreme);color:#fff}
+.topline[hidden]{display:none}
+.tl-label{font:700 13px var(--disp);letter-spacing:.1em;color:var(--c-extreme)}
+.tl-title{font:700 clamp(1.4rem,3.2vw,2rem)/1.1 var(--disp);color:#fff;text-decoration:none}
+.tl-meta{font-size:13px;color:var(--mute)}

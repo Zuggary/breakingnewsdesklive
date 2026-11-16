@@ -1,0 +1,66 @@
+name: Probe consumer services
+# GD7 part A. Probes 30 public sign-in pages every 3 minutes for about 4 hours 50 minutes, then starts itself again.
+# Plain code. No model calls. Results go to the probe-data branch (state.json, probes.json). When the set of failing services
+# changes, the job starts the Pages workflow so the site shows the change within minutes.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */5 * * *"
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: probes
+  cancel-in-progress: false
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 345
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Load probe state from the probe-data branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p work
+          if git ls-remote --exit-code --heads origin probe-data >/dev/null 2>&1; then
+            git clone --depth 1 --branch probe-data "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" pd
+          else
+            mkdir pd && git -C pd init -q -b probe-data && git -C pd remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          fi
+          [ -f pd/state.json ] && cp pd/state.json work/state.json || echo '{}' > work/state.json
+      - name: Probe every 3 minutes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git -C pd config user.name "Zuggary"
+          git -C pd config user.email "Zuggary@users.noreply.github.com"
+          end=$(( $(date +%s) + 17400 ))
+          prev="init"
+          lastpush=0
+          while [ "$(date +%s)" -lt "$end" ]; do
+            python tools/probe_runner.py --once --state work/state.json --out work/probes.json --log work/probe-log.jsonl
+            cur=$(python -c "import json;d=json.load(open('work/probes.json'));print(','.join(sorted(s['id']+':'+s['status'] for s in d['services'] if s['status'] in ('down','degraded'))))")
+            now=$(date +%s)
+            if [ "$cur" != "$prev" ] || [ $(( now - lastpush )) -ge 900 ]; then
+              cp work/state.json pd/state.json
+              cp work/probes.json pd/probes.json
+              git -C pd add state.json probes.json
+              git -C pd commit -q -m "probes $(date -u +%H:%M)" || true
+              git -C pd push -q origin HEAD:probe-data --force || true
+              lastpush=$now
+              if [ "$cur" != "$prev" ]; then
+                gh workflow run pages.yml --repo "$GITHUB_REPOSITORY" || true
+              fi
+              prev="$cur"
+            fi
+            sleep 150
+          done
+      - name: Start the next run
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run probes.yml --repo "$GITHUB_REPOSITORY" || true

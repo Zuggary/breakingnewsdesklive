@@ -1,0 +1,214 @@
+[
+ {
+  "id": "chase",
+  "name": "Chase",
+  "group": "bank",
+  "login_url": "https://www.chase.com/",
+  "check_word": "Chase"
+ },
+ {
+  "id": "bofa",
+  "name": "Bank of America",
+  "group": "bank",
+  "login_url": "https://www.bankofamerica.com/",
+  "check_word": "Bank of America"
+ },
+ {
+  "id": "wellsfargo",
+  "name": "Wells Fargo",
+  "group": "bank",
+  "login_url": "https://connect.secure.wellsfargo.com/auth/login/present",
+  "check_word": "Wells Fargo"
+ },
+ {
+  "id": "citi",
+  "name": "Citi",
+  "group": "bank",
+  "login_url": "https://online.citi.com/US/login.do",
+  "check_word": "Citi"
+ },
+ {
+  "id": "usbank",
+  "name": "U.S. Bank",
+  "group": "bank",
+  "login_url": "https://onlinebanking.usbank.com/",
+  "check_word": "U.S. Bank"
+ },
+ {
+  "id": "pnc",
+  "name": "PNC",
+  "group": "bank",
+  "login_url": "https://www.pnc.com/",
+  "check_word": "PNC"
+ },
+ {
+  "id": "truist",
+  "name": "Truist",
+  "group": "bank",
+  "login_url": "https://www.truist.com/",
+  "check_word": "Truist"
+ },
+ {
+  "id": "capitalone",
+  "name": "Capital One",
+  "group": "bank",
+  "login_url": "https://verified.capitalone.com/auth/signin",
+  "check_word": "Capital One"
+ },
+ {
+  "id": "tdbank",
+  "name": "TD Bank",
+  "group": "bank",
+  "login_url": "https://onlinebanking.tdbank.com/",
+  "check_word": "TD Bank"
+ },
+ {
+  "id": "regions",
+  "name": "Regions",
+  "group": "bank",
+  "login_url": "https://www.regions.com/",
+  "check_word": "Regions"
+ },
+ {
+  "id": "navyfederal",
+  "name": "Navy Federal",
+  "group": "bank",
+  "login_url": "https://www.navyfederal.org/",
+  "check_word": "Navy Federal"
+ },
+ {
+  "id": "ally",
+  "name": "Ally",
+  "group": "bank",
+  "login_url": "https://www.ally.com/",
+  "check_word": "Ally"
+ },
+ {
+  "id": "zelle",
+  "name": "Zelle",
+  "group": "payment app",
+  "login_url": "https://www.zellepay.com/",
+  "check_word": "Zelle"
+ },
+ {
+  "id": "venmo",
+  "name": "Venmo",
+  "group": "payment app",
+  "login_url": "https://venmo.com/",
+  "check_word": "Venmo"
+ },
+ {
+  "id": "paypal",
+  "name": "PayPal",
+  "group": "payment app",
+  "login_url": "https://www.paypal-status.com/",
+  "check_word": "PayPal",
+  "note": "Probe URL is the public PayPal status page; the signed-out login page blocks plain probes."
+ },
+ {
+  "id": "cashapp",
+  "name": "Cash App",
+  "group": "payment app",
+  "login_url": "https://cash.app/",
+  "check_word": "Cash App",
+  "note": "Probe URL is the public home page; the login page blocks plain probes."
+ },
+ {
+  "id": "amex",
+  "name": "American Express",
+  "group": "card issuer",
+  "login_url": "https://global.americanexpress.com/login",
+  "check_word": "Amex"
+ },
+ {
+  "id": "discover",
+  "name": "Discover",
+  "group": "card issuer",
+  "login_url": "https://portal.discover.com/customersvcs/universalLogin/ac_main",
+  "check_word": "Discover"
+ },
+ {
+  "id": "synchrony",
+  "name": "Synchrony",
+  "group": "card issuer",
+  "login_url": "https://www.synchrony.com/",
+  "check_word": "Synchrony"
+ },
+ {
+  "id": "barclays",
+  "name": "Barclays US",
+  "group": "card issuer",
+  "login_url": "https://www.barclaysus.com/",
+  "check_word": "Barclays"
+ },
+ {
+  "id": "bread",
+  "name": "Bread Financial",
+  "group": "card issuer",
+  "login_url": "https://www.breadfinancial.com/",
+  "check_word": "Bread"
+ },
+ {
+  "id": "creditone",
+  "name": "Credit One Bank",
+  "group": "card issuer",
+  "login_url": "https://www.creditonebank.com/",
+  "check_word": "Credit One"
+ },
+ {
+  "id": "verizon",
+  "name": "Verizon",
+  "group": "carrier",
+  "login_url": "https://www.verizon.com/",
+  "check_word": "Verizon"
+ },
+ {
+  "id": "att",
+  "name": "AT&T",
+  "group": "carrier",
+  "login_url": "https://www.att.com/my/",
+  "check_word": "AT&T"
+ },
+ {
+  "id": "tmobile",
+  "name": "T-Mobile",
+  "group": "carrier",
+  "login_url": "https://www.t-mobile.com/support",
+  "check_word": "T-Mobile"
+ },
+ {
+  "id": "cricket",
+  "name": "Cricket Wireless",
+  "group": "carrier",
+  "login_url": "https://www.cricketwireless.com/",
+  "check_word": "Cricket"
+ },
+ {
+  "id": "american",
+  "name": "American Airlines",
+  "group": "airline",
+  "login_url": "https://www.aa.com/homePage.do",
+  "check_word": "American"
+ },
+ {
+  "id": "delta",
+  "name": "Delta Air Lines",
+  "group": "airline",
+  "login_url": "https://www.delta.com/",
+  "check_word": "Delta"
+ },
+ {
+  "id": "united",
+  "name": "United Airlines",
+  "group": "airline",
+  "login_url": "https://www.united.com/en/us",
+  "check_word": "United"
+ },
+ {
+  "id": "southwest",
+  "name": "Southwest Airlines",
+  "group": "airline",
+  "login_url": "https://www.southwest.com/",
+  "check_word": "Southwest"
+ }
+]

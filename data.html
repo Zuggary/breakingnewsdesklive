@@ -37,6 +37,10 @@
 <h2>How a score is made</h2>
 <p>Severity gives up to 50 points: the source's own level, or our reading of a magnitude or wind speed. Size gives up to 30. Freshness gives up to 20 and fades over about a day. Repeated US warnings of one kind lose 10 points each. The score only orders the list. It says nothing about danger to you.</p>
 <h2>Map outlines</h2><p>Natural Earth, public domain.</p>
+<h2 id="probes">Desk probes</h2>
+<p>The desk checks 30 consumer services itself: 12 banks, 4 payment apps, 6 card issuers, 4 mobile carriers and 4 airlines. Our server loads one signed-out public page of each service about every 3 minutes. It sends one plain request, no password, no cookie and no form. The request names the desk and links to this site.</p>
+<p>A service is marked <b>down</b> after 3 probes in a row return a server error or no answer within 15 seconds. It is marked <b>degraded</b> after 3 probes in a row fail a check or run at more than 3 times the 24-hour median time. It clears after 3 healthy probes. Services that fail at about the same time are grouped into one item. Some services refuse automated requests; the desk cannot watch those and does not guess.</p>
+<p>A probe item states only what the desk measured, with the time of the first failing probe in Eastern Time. A page can load while sign-in itself fails, and probes cannot see that case.</p>
 </main>
 <script>
 fetch('data/sources.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){
