@@ -23,17 +23,14 @@
  <a class="brand" href="./"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="8" fill="#ffb020"/><circle cx="32" cy="32" r="18" fill="none" stroke="#ffb020" stroke-width="4" opacity=".6"/><circle cx="32" cy="32" r="28" fill="none" stroke="#ffb020" stroke-width="3" opacity=".3"/></svg><span>Breaking News Desk<small>Facts as they come in, from public sources</small></span></a>
  <nav><a href="about.html">About</a><a href="privacy.html">Privacy</a></nav>
 </header>
-<p class="notice">Automated. Check official sources before you act. Not an emergency service.</p>
 <div class="status" id="status" aria-live="polite"><span><i class="dot stale" id="dot"></i><b id="count">Loading</b></span><span id="updated"></span></div>
-<section class="band hero" aria-labelledby="h1">
- <div class="wrap hero-in">
-  <p class="dateline" id="dateline">&nbsp;</p>
-  <h1 id="h1">Facts as they come in</h1>
-  <p class="verdict" id="verdict">Reading the latest events from official public sources, ranked by severity and size.</p>
-  <p class="verdict2" id="verdict2"></p>
-  <p class="srcline" id="srcline">Sources: USGS, NOAA, NASA, GDACS, FAA and more. <a href="data.html">Every source and age</a>.</p>
-  <div class="tiles" id="tiles" aria-label="Events by type"></div>
- </div>
+<section class="strip" aria-labelledby="h1">
+ <h1 id="h1">Facts as they come in</h1>
+ <span class="dateline" id="dateline"></span>
+ <span class="verdict" id="verdict">&ndash; events</span>
+ <span class="tiles" id="tiles" aria-label="Events by severity"></span>
+ <span class="srcline" id="srcline">updated now &middot; <a href="data.html">every source and age</a></span>
+ <span class="notice">Automated. Check official sources before you act. Not an emergency service.</span>
 </section>
 <main>
  <section id="list-wrap" aria-labelledby="now">

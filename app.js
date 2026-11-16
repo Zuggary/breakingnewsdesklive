@@ -50,6 +50,7 @@
   }
 
   /* ---------- list ---------- */
+  var SEVS = { extreme: 'EXTREME', severe: 'SEVERE', moderate: 'MODERATE', minor: 'MINOR' };
   function render() {
     var now = Date.now();
     var evs = B.filterEvents(state.events, state.f, now);
@@ -57,13 +58,17 @@
     $('count').textContent = evs.length + (evs.length === state.events.length ? ' events' : ' of ' + state.events.length + ' events');
     if (!evs.length) ol.appendChild(el('li', 'empty', 'No events match these filters.'));
     evs.slice(0, 60).forEach(function (e, i) {
-      var li = el('li', 'card' + (state.sel === e.id ? ' sel' : '')); li.style.setProperty('--c', B.SEV[e.severity] || '#93a1b5'); li.id = 'ev-' + e.id;
+      var li = el('li', 'card s-' + e.severity + (state.sel === e.id ? ' sel' : '')); li.style.setProperty('--c', B.SEV[e.severity] || '#93a1b5'); li.id = 'ev-' + e.id;
       var h = el('button', 'head'); h.type = 'button'; h.setAttribute('aria-expanded', String(state.sel === e.id));
       h.appendChild(el('span', 'rank', String(i + 1)));
       e.source_short = e.source_short || SHORT[e.source_id] || e.source;
+      var sv = el('span', 'sev', SEVS[e.severity] || e.severity); h.appendChild(sv);
+      h.appendChild(el('span', 'typ', (B.TYPES[e.type] || B.TYPES.other).label));
       h.appendChild(el('span', 'title', e.title));
-      var b = el('span', 'badge', e.severity); h.appendChild(b);
-      h.appendChild(el('span', 'place', e.source_short + ' · ' + (B.TYPES[e.type] || B.TYPES.other).label + ' · ' + e.place));
+      h.appendChild(el('span', 'place', e.place));
+      h.appendChild(el('span', 'src', e.source_short));
+      var mt = el('span', 'meta'); var ms = el('b', '', SEVS[e.severity] || e.severity); mt.appendChild(ms);
+      mt.appendChild(document.createTextNode(' \u00b7 ' + (B.TYPES[e.type] || B.TYPES.other).label + ' \u00b7 ' + e.place + ' \u00b7 ' + e.source_short)); h.appendChild(mt);
       h.appendChild(el('span', 'when', B.ago(e.time, now)));
       h.onclick = function () { state.sel = state.sel === e.id ? null : e.id; render(); draw(); };
       li.appendChild(h);
@@ -183,25 +188,17 @@
     var ul = el('ul', 'dg'); recent.slice(0, 5).forEach(function (e) { ul.appendChild(el('li', '', e.title + ' \u2014 ' + e.place + ' (' + B.ago(e.time) + ')')); }); box.appendChild(ul);
   }
   function hero(d) {
-    var evs = state.events, hi = evs.filter(function (e) { return e.severity === 'extreme' || e.severity === 'severe'; }), top = evs[0];
-    var now = new Date();
-    try { $('dateline').textContent = now.toLocaleString(undefined, { weekday: 'long', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }); } catch (e) { $('dateline').textContent = ''; }
-    $('verdict').textContent = hi.length + ' of ' + evs.length + ' events are rated severe or extreme by their sources right now.';
-    if (top) $('verdict2').textContent = 'Top of the list: ' + top.title + ', ' + top.place + ', ' + B.ago(top.time) + '.';
-    $('srcline').textContent = evs.length + ' events from public sources, updated ' + B.ago(d.generated) + (Date.now() - Date.parse(d.generated) > 45 * 6e4 ? '. This data is older than 45 minutes' : '') + '. ';
-    var l = el('a', '', 'Every source and its age'); l.href = 'data.html'; $('srcline').appendChild(l);
-    if (window.matchMedia && window.matchMedia('(min-width:980px)').matches) {
-      fetch('assets/stock/manifest.json').then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (m) {
-        var it = B.pickStock(m, 'world', new Date().toISOString().slice(0, 10)); if (!it) return;
-        var box = el('div', 'hero-art'); box.appendChild(B.stockPicture(it, '50vw', false)); box.appendChild(el('span', 'illus-tag', 'Illustration'));
-        document.querySelector('.band.hero').appendChild(box);
-      }).catch(function () {});
-    }
+    var evs = state.events, now = new Date();
+    try { $('dateline').textContent = now.toLocaleString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }); } catch (e) { $('dateline').textContent = ''; }
+    $('verdict').textContent = evs.length + ' events';
     var t = $('tiles'); t.textContent = '';
     ['extreme', 'severe', 'moderate', 'minor'].forEach(function (k) {
       var n = evs.filter(function (e) { return e.severity === k; }).length; if (!n) return;
-      var c = el('span', 'tile'); c.setAttribute('data-sev', k); c.appendChild(el('b', '', String(n))); c.appendChild(el('span', '', k)); t.appendChild(c);
+      var c = el('span', 'tile'); c.setAttribute('data-sev', k); c.appendChild(el('b', '', String(n))); c.appendChild(document.createTextNode(' ' + k)); t.appendChild(c);
     });
+    var old = (Date.now() - Date.parse(d.generated)) > 45 * 6e4;
+    $('srcline').textContent = 'updated ' + B.ago(d.generated) + (old ? ', older than 45 minutes' : '') + ' \u00b7 ';
+    var l = el('a', '', 'every source and age'); l.href = 'data.html'; $('srcline').appendChild(l);
   }
   var hist = [];
   function drawHist(hours) {
