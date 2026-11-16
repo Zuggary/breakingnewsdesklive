@@ -175,3 +175,38 @@ class Masthead(unittest.TestCase):
         t = open(os.path.join(ROOT, "corrections.html"), encoding="utf-8").read()
         for need in ("Report an error", "What we do", "Past corrections"):
             self.assertIn(need, t)
+
+
+class Gd8Part2(unittest.TestCase):
+    def test_awc_keeps_ash_and_cyclone_only_and_latest_wins(self):
+        from tools import build_data
+        src = next(s for s in build_data.SOURCES if s["id"] == "awc-sigmet")
+        ev = build_data.parse_awc(json.load(open(os.path.join(ROOT, "tests", "fixtures", "awc-sigmet.json"))), src)
+        self.assertEqual(sorted(e["id"] for e in ev), ["awc-VHHK-3-tc", "awc-WAAF-14-va"])
+        va = next(e for e in ev if e["id"].endswith("-va"))
+        self.assertEqual(va["detail"]["top_ft"], 18000)          # the later report of series 14
+        self.assertEqual(va["type"], "aviation")
+        self.assertEqual(va["severity"], "severe")
+        self.assertTrue(va["source_url"].startswith("https://"))
+
+    def test_awc_has_a_terms_record_and_a_credit(self):
+        from tools import feed_terms
+        self.assertEqual(feed_terms.FEED_TERMS["awc-sigmet"]["commercial"], "yes")
+        src = next(s for s in build_data.SOURCES if s["id"] == "awc-sigmet")
+        self.assertIn("not flight cancellations", src["licence"])
+
+    def test_aviation_summary_says_advisory_not_cancellation(self):
+        events, _ = build_data.build(os.path.join(ROOT, "tests", "fixtures"), __import__("datetime").datetime(2026, 11, 14, 12, 0, tzinfo=__import__("datetime").timezone.utc))
+        av = [e for e in events if e["type"] == "aviation"]
+        self.assertTrue(av)
+        for e in av:
+            self.assertIn("not a flight cancellation", e["summary"])
+
+    def test_sec_parser_keeps_8k_only_and_is_not_live(self):
+        from tools import sec_edgar
+        items = sec_edgar.parse_atom(open(os.path.join(ROOT, "tests", "fixtures", "sec-8k.xml"), encoding="utf-8").read())
+        self.assertEqual([i["company"] for i in items], ["Example Corp", "Sample Holdings Inc"])
+        self.assertEqual(items[0]["filed"], "2026-11-17T01:40:00Z")
+        self.assertNotIn("sec-8k", {s["id"] for s in build_data.SOURCES})
+        self.assertIn("contact@breakingnewsdesklive.com", sec_edgar.UA)
+        self.assertNotIn("@gmail", sec_edgar.UA)

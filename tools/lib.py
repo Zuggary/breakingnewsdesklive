@@ -136,6 +136,8 @@ def summarize(e):
     if t == "weather":
         return "The National Weather Service has %d active %s alert%s in %s. Location shown is the state centre." % (
             d["alerts"], e["title"].lower(), "" if d["alerts"] == 1 else "s", place.split(",")[0])
+    if t == "aviation":
+        return "An aviation weather advisory (%s SIGMET) is in force for the %s flight information region. It is valid until %s. Cloud top near %d ft. This is an advisory for pilots, not a flight cancellation." % (d["hazard"], d["fir"], d["valid_to"], d["top_ft"] or 0)
     if t == "storm":
         if d.get("wind_mph"):
             return "The National Hurricane Center lists %s with sustained winds near %d mph." % (e["title"], d["wind_mph"])

@@ -1,0 +1,170 @@
+[
+ {
+  "icaoId": "WAAA",
+  "firId": "WAAF",
+  "firName": "WAAF UJUNG PANDANG",
+  "receiptTime": "2026-11-14T10:32:40.299Z",
+  "validTimeFrom": 1794846600,
+  "validTimeTo": 1794868200,
+  "seriesId": "14",
+  "hazard": "VA",
+  "qualifier": "ERUPTION MT SEMERU",
+  "base": 0,
+  "top": 15000,
+  "geom": "AREA",
+  "coords": [
+   {
+    "lon": 113.033,
+    "lat": -8.15
+   },
+   {
+    "lon": 112.383,
+    "lat": -8.717
+   },
+   {
+    "lon": 112.1,
+    "lat": -8.167
+   },
+   {
+    "lon": 113.033,
+    "lat": -8.15
+   }
+  ],
+  "dir": "SW",
+  "spd": "10",
+  "chng": "NC",
+  "rawSigmet": "WVID21 WAAA 161630"
+ },
+ {
+  "icaoId": "WAAA",
+  "firId": "WAAF",
+  "firName": "WAAF UJUNG PANDANG",
+  "receiptTime": "2026-11-14T11:05:00.000Z",
+  "validTimeFrom": 1794848000,
+  "validTimeTo": 1794870000,
+  "seriesId": "14",
+  "hazard": "VA",
+  "qualifier": "ERUPTION MT SEMERU",
+  "base": 0,
+  "top": 18000,
+  "geom": "AREA",
+  "coords": [
+   {
+    "lon": 113.033,
+    "lat": -8.15
+   },
+   {
+    "lon": 112.383,
+    "lat": -8.717
+   },
+   {
+    "lon": 112.1,
+    "lat": -8.167
+   },
+   {
+    "lon": 113.033,
+    "lat": -8.15
+   }
+  ],
+  "dir": "SW",
+  "spd": "10",
+  "chng": "NC",
+  "rawSigmet": "WVID21 WAAA 161705"
+ },
+ {
+  "icaoId": "VHHH",
+  "firId": "VHHK",
+  "firName": "VHHK HONG KONG",
+  "receiptTime": "2026-11-14T09:10:00.000Z",
+  "validTimeFrom": 1794840000,
+  "validTimeTo": 1794861600,
+  "seriesId": "3",
+  "hazard": "TC",
+  "qualifier": "AKVAN",
+  "base": null,
+  "top": 45000,
+  "geom": "AREA",
+  "coords": [
+   {
+    "lon": 115.0,
+    "lat": 18.0
+   },
+   {
+    "lon": 116.0,
+    "lat": 19.0
+   },
+   {
+    "lon": 114.5,
+    "lat": 19.5
+   }
+  ],
+  "dir": "NW",
+  "spd": "12",
+  "chng": "INTSF",
+  "rawSigmet": "WSHK31 VHHH 160900"
+ },
+ {
+  "icaoId": "KZAK",
+  "firId": "KZAK",
+  "firName": "KZAK OAKLAND OCEANIC",
+  "receiptTime": "2026-11-14T10:00:00.000Z",
+  "validTimeFrom": 1794844000,
+  "validTimeTo": 1794858000,
+  "seriesId": "5",
+  "hazard": "TURB",
+  "qualifier": "SEV",
+  "base": 30000,
+  "top": 40000,
+  "geom": "AREA",
+  "coords": [
+   {
+    "lon": -150.0,
+    "lat": 30.0
+   },
+   {
+    "lon": -149.0,
+    "lat": 31.0
+   },
+   {
+    "lon": -151.0,
+    "lat": 31.5
+   }
+  ],
+  "dir": "",
+  "spd": "",
+  "chng": "NC",
+  "rawSigmet": "WSPA05"
+ },
+ {
+  "icaoId": "KZAK",
+  "firId": "KZAK",
+  "firName": "KZAK OAKLAND OCEANIC",
+  "receiptTime": "2026-11-14T10:00:00.000Z",
+  "validTimeFrom": 1794844000,
+  "validTimeTo": 1794858000,
+  "seriesId": "6",
+  "hazard": "TS",
+  "qualifier": "EMBD",
+  "base": null,
+  "top": 45000,
+  "geom": "AREA",
+  "coords": [
+   {
+    "lon": -140.0,
+    "lat": 10.0
+   },
+   {
+    "lon": -139.0,
+    "lat": 11.0
+   },
+   {
+    "lon": -141.0,
+    "lat": 11.5
+   }
+  ],
+  "dir": "",
+  "spd": "",
+  "chng": "NC",
+  "rawSigmet": "WSPA06"
+ }
+]

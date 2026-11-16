@@ -125,6 +125,10 @@ SOURCES = [
     {"id": "tsunami-hi", "update": "when a bulletin is issued", "name": "NOAA Pacific Tsunami Warning Center (Hawaii)", "xml": True,
      "url": "https://www.tsunami.gov/events/xml/PHEBAtom.xml", "page": "https://www.tsunami.gov/",
      "licence": "US Government work, public domain; credit NOAA/NWS", "terms": "https://www.weather.gov/disclaimer"},
+    {"id": "awc-sigmet", "update": "every minute", "name": "Aviation Weather Center (international SIGMETs)",
+     "url": "https://aviationweather.gov/api/data/isigmet?format=json", "page": "https://aviationweather.gov/",
+     "licence": "US Government work (NOAA/NWS), public domain; credit NOAA Aviation Weather Center. Advisories, not flight cancellations.",
+     "terms": "https://www.weather.gov/disclaimer"},
     {"id": "gdacs", "update": "every few minutes", "name": "GDACS (UN and European Commission)",
      "url": "https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH?eventlist=EQ;TC;FL;VO;DR;WF&alertlevel=Green;Orange;Red",
      "page": "https://www.gdacs.org/",
@@ -700,7 +704,32 @@ def parse_gdelt(d, src):
     return out[:12]
 
 
-PARSERS = {"fcdo": parse_fcdo, "eu-press": parse_eu, "gdelt-doc": parse_gdelt, "fedreg-presidential": parse_fedreg, "openfda-food": parse_openfda, "cpsc": parse_cpsc, "cisa-kev": parse_kev,
+def parse_awc(d, src):
+    """International SIGMETs from the Aviation Weather Center. Only volcanic ash (VA) and tropical cyclone (TC) are shown.
+    Routine thunderstorm, turbulence and icing SIGMETs are skipped. One event for each FIR, series and hazard (latest wins)."""
+    out, seen = [], {}
+    for x in d if isinstance(d, list) else []:
+        hz = x.get("hazard")
+        if hz not in ("VA", "TC") or not x.get("coords"):
+            continue
+        lats = [c["lat"] for c in x["coords"]]
+        lons = [c["lon"] for c in x["coords"]]
+        lat, lon = sum(lats) / len(lats), sum(lons) / len(lons)
+        key = (x.get("firId"), x.get("seriesId"), hz, x.get("qualifier"))
+        when = parse_time(x["receiptTime"].split(".")[0].rstrip("Z") + "Z")
+        if key in seen and seen[key][0] >= when:
+            continue
+        what = "Volcanic ash SIGMET" if hz == "VA" else "Tropical cyclone SIGMET"
+        title = "%s: %s" % (what, (x.get("qualifier") or "").title())
+        det = {"hazard": "volcanic ash" if hz == "VA" else "tropical cyclone", "fir": x.get("firName"), "series": x.get("seriesId"),
+               "top_ft": x.get("top"), "valid_to": iso_utc(datetime.fromtimestamp(x["validTimeTo"], timezone.utc))[11:16] + " UTC"}
+        ev = mk("awc-%s-%s-%s" % (x.get("firId"), x.get("seriesId"), hz.lower()), "aviation", title, x.get("firName") or "Flight information region",
+                lat, lon, when, "severe" if hz == "VA" else "moderate", (x.get("top") or 0) / 1000.0, src, "https://aviationweather.gov/gfa/#sigmet", detail=det)
+        seen[key] = (when, ev)
+    return [v[1] for v in seen.values()]
+
+
+PARSERS = {"awc-sigmet": parse_awc, "fcdo": parse_fcdo, "eu-press": parse_eu, "gdelt-doc": parse_gdelt, "fedreg-presidential": parse_fedreg, "openfda-food": parse_openfda, "cpsc": parse_cpsc, "cisa-kev": parse_kev,
            "status-github": parse_statuspage, "status-cloudflare": parse_statuspage, "status-openai": parse_statuspage, "status-atlassian": parse_statuspage, "atd-faa": parse_faa, "ms365": parse_ms365, "hms-smoke": parse_hms, "spc-outlook": parse_spc, "tsunami-ak": parse_tsunami, "tsunami-hi": parse_tsunami, "usgs-volcano": parse_volcano, "swpc-kp": parse_kp, "usgs-quakes": parse_usgs, "nws-alerts": parse_nws, "nhc": parse_nhc, "eonet": parse_eonet, "gdacs": parse_gdacs}
 
 

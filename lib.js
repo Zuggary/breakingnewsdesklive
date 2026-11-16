@@ -14,6 +14,7 @@
     recall: { label: 'Recall', color: '#e6c14a' },
     cyber: { label: 'Cyber', color: '#ff5fd0' },
     outage: { label: 'Outage', color: '#ff7ab8' },
+    aviation: { label: 'Aviation weather', color: '#8fd0ff' },
     smoke: { label: 'Smoke', color: '#b0a090' },
     tsunami: { label: 'Tsunami', color: '#27c2ff' },
     space: { label: 'Space weather', color: '#d58cff' },
@@ -21,7 +22,7 @@
     other: { label: 'Other', color: '#93a1b5' }
   };
   var GROUPS = { hazards: ['Hazards', ['earthquake', 'weather', 'storm', 'flood', 'wildfire', 'volcano', 'drought', 'tsunami', 'smoke']],
-    transport: ['Transport', ['transport']], outages: ['Outages and cyber', ['outage', 'cyber']], recalls: ['Recalls and safety', ['recall']],
+    transport: ['Transport', ['transport', 'aviation']], outages: ['Outages and cyber', ['outage', 'cyber']], recalls: ['Recalls and safety', ['recall']],
     world: ['World events', ['statement', 'headline']],
     notices: ['Official notices', ['notice']], space: ['Space', ['space', 'launch']] };
   var SEV = { extreme: '#ff5c5c', severe: '#ff6a3d', moderate: '#f3cb45', minor: '#93a1b5' };

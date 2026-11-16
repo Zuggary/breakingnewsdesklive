@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Latest Filings</title>
+<entry><title>8-K - Example Corp (0001234567) (Filer)</title><link rel="alternate" type="text/html" href="https://www.sec.gov/Archives/edgar/data/1234567/000123456726000010/0001234567-26-000010-index.htm"/><summary type="html">&lt;b&gt;Filed:&lt;/b&gt; 2026-11-16 &lt;b&gt;AccNo:&lt;/b&gt; 0001234567-26-000010</summary><updated>2026-11-16T20:40:00-05:00</updated></entry>
+<entry><title>8-K/A - Sample Holdings Inc (0007654321) (Filer)</title><link rel="alternate" type="text/html" href="https://www.sec.gov/Archives/edgar/data/7654321/000765432126000002/0007654321-26-000002-index.htm"/><summary type="html">&lt;b&gt;Filed:&lt;/b&gt; 2026-11-16 &lt;b&gt;AccNo:&lt;/b&gt; 0007654321-26-000002</summary><updated>2026-11-16T20:35:00-05:00</updated></entry>
+<entry><title>10-Q - Other Co (0000000001) (Filer)</title><link rel="alternate" href="https://www.sec.gov/x"/><updated>2026-11-16T20:30:00-05:00</updated></entry>
+</feed>

@@ -34,6 +34,7 @@ FEED_TERMS = {
     "tsunami-hi": {"verdict": "OK", "commercial": "yes", "llm": "yes", "attribution": "Credit NOAA/NWS", "ads_ok": True, "checked": "2026-11-16"},
     "probes": {"verdict": "OK (our own)", "commercial": "yes", "llm": "n/a", "attribution": "Measured by the desk", "ads_ok": True, "checked": "2026-11-16"},
     "news-lane": {"verdict": "OK (GDELT terms)", "commercial": "yes", "llm": "yes", "attribution": "Cite the GDELT Project; show the outlet name and a link; headline only", "ads_ok": True, "checked": "2026-11-16"},
+    "awc-sigmet": {"verdict": "OK (NOAA/NWS rules; the AWC page states no licence)", "commercial": "yes", "llm": "yes", "attribution": "Credit NOAA Aviation Weather Center; advisories, not flight cancellations", "ads_ok": True, "checked": "2026-11-16"},
     "gdacs": {"verdict": "UNCLEAR, low risk", "commercial": "unclear", "llm": "unclear", "attribution": "Credit GDACS; copyright notice points to the European Commission CC BY 4.0 legal notice", "ads_ok": False, "checked": "2026-11-16"},
 }
 
