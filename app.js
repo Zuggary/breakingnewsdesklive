@@ -53,17 +53,44 @@
   }
 
   /* ---------- list ---------- */
-  var SEVS = { extreme: 'EXTREME', severe: 'SEVERE', moderate: 'MODERATE', minor: 'MINOR' };
-  function render() {
-    var now = Date.now();
-    var evs = B.filterEvents(state.events, state.f, now);
-    var ol = $('list'); ol.textContent = '';
-    $('count').textContent = evs.length + (evs.length === state.events.length ? ' events' : ' of ' + state.events.length + ' events');
-    if (!evs.length) ol.appendChild(el('li', 'empty', 'No events match these filters.'));
-    evs.slice(0, 60).forEach(function (e, i) {
-      var li = el('li', 'card s-' + e.severity + (state.sel === e.id ? ' sel' : '')); li.style.setProperty('--c', B.SEV[e.severity] || '#93a1b5'); li.id = 'ev-' + e.id;
+  var GROUPABLE = /(Warning|Watch|Advisory|Statement)$/;
+  function plural(t) { return /(ch|s|x)$/.test(t) ? t + 'es' : t + 's'; }
+  function viewRows(evs) {
+    var rows = [], byKey = {};
+    evs.forEach(function (e) {
+      if (e.type === 'weather' && e.severity !== 'extreme' && GROUPABLE.test(e.title)) {
+        var k = e.title + '|' + e.severity;
+        if (byKey[k]) { byKey[k].members.push(e); return; }
+        byKey[k] = { key: k, ev: e, members: [e] }; rows.push(byKey[k]);
+      } else rows.push({ key: e.id, ev: e, members: [e] });
+    });
+    return rows;
+  }
+  function groupRow(g, label, now) {
+    var e = g.ev, open = state.selGroup === g.key;
+    var li = el('li', 'card group s-' + e.severity + (open ? ' sel' : '')); li.style.setProperty('--c', B.SEV[e.severity] || '#93a1b5');
+    var h = el('button', 'head'); h.type = 'button'; h.setAttribute('aria-expanded', String(open));
+    var states = []; g.members.forEach(function (m) { var s = m.place.split(',')[0]; if (states.indexOf(s) < 0) states.push(s); });
+    var placeTxt = states.slice(0, 4).join(', ') + (states.length > 4 ? ' +' + (states.length - 4) : '');
+    var newest = g.members.reduce(function (m, x) { return Date.parse(x.time) > Date.parse(m.time) ? x : m; }, g.members[0]);
+    var title = g.members.length + ' ' + plural(e.title);
+    h.appendChild(el('span', 'rank', label));
+    h.appendChild(el('span', 'sev', SEVS[e.severity] || e.severity));
+    h.appendChild(el('span', 'typ', 'Weather'));
+    h.appendChild(el('span', 'title', title));
+    h.appendChild(el('span', 'place', placeTxt));
+    h.appendChild(el('span', 'src', 'NWS'));
+    var mt = el('span', 'meta'); mt.appendChild(el('b', '', SEVS[e.severity] || e.severity)); mt.appendChild(document.createTextNode(' \u00b7 Weather \u00b7 NWS \u00b7 ' + placeTxt)); h.appendChild(mt);
+    var wh = el('span', 'when', B.ago(newest.time, now)); wh.title = 'Newest of ' + g.members.length + ' alerts'; h.appendChild(wh);
+    h.onclick = function () { state.selGroup = open ? null : g.key; render(); };
+    li.appendChild(h);
+    if (open) { var ul = el('ul', 'subs'); g.members.forEach(function (m) { ul.appendChild(evRow(m, '', now, true)); }); li.appendChild(ul); }
+    return li;
+  }
+  function evRow(e, label, now, sub) {
+      var li = el('li', 'card s-' + e.severity + (sub ? ' sub' : '') + (state.sel === e.id ? ' sel' : '')); li.style.setProperty('--c', B.SEV[e.severity] || '#93a1b5'); li.id = 'ev-' + e.id;
       var h = el('button', 'head'); h.type = 'button'; h.setAttribute('aria-expanded', String(state.sel === e.id));
-      h.appendChild(el('span', 'rank', String(i + 1)));
+      h.appendChild(el('span', 'rank', label));
       e.source_short = e.source_short || SHORT[e.source_id] || e.source;
       var sv = el('span', 'sev', SEVS[e.severity] || e.severity); h.appendChild(sv);
       h.appendChild(el('span', 'typ', (B.TYPES[e.type] || B.TYPES.other).label));
@@ -94,7 +121,19 @@
         var cr = el('p', 'src'); var ca = el('a', '', 'Report an error or ask for a correction'); ca.href = 'corrections.html'; cr.appendChild(ca); m.appendChild(cr);
         li.appendChild(m);
       }
-      ol.appendChild(li);
+    return li;
+  }
+  var SEVS = { extreme: 'EXTREME', severe: 'SEVERE', moderate: 'MODERATE', minor: 'MINOR' };
+  function render() {
+    var now = Date.now();
+    var evs = B.filterEvents(state.events, state.f, now);
+    var ol = $('list'); ol.textContent = '';
+    $('count').textContent = evs.length + (evs.length === state.events.length ? ' events' : ' of ' + state.events.length + ' events');
+    if (!evs.length) ol.appendChild(el('li', 'empty', 'No events match these filters.'));
+    var rows = viewRows(evs).slice(0, 60); state.rankOf = {};
+    rows.forEach(function (g, i) {
+      state.rankOf[g.ev.id] = i;
+      ol.appendChild(g.members.length > 1 ? groupRow(g, String(i + 1), now) : evRow(g.ev, String(i + 1), now, false));
     });
     draw();
   }
@@ -133,7 +172,7 @@
       }
       ctx.fill(); ctx.stroke();
     });
-    var now = Date.now(), evs = B.filterEvents(state.events, state.f, now).slice(0, 60);
+    var now = Date.now(), vr = viewRows(B.filterEvents(state.events, state.f, now)).slice(0, 60), evs = []; vr.forEach(function (g) { g.members.forEach(function (m) { evs.push(m); }); });
     state.pts = [];
     evs.slice().reverse().forEach(function (e) {
       if (e.lat == null) return;
@@ -142,7 +181,7 @@
       ctx.beginPath(); ctx.arc(p.x, p.y, r * 1.5, 0, 7); ctx.fillStyle = col + "22"; ctx.fill();
       ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 7); ctx.fillStyle = col; ctx.fill();
       ctx.lineWidth = (on ? 3 : 1) * dpr; ctx.strokeStyle = on ? '#ffb020' : '#0b0f14'; ctx.stroke();
-      var rk = evs.indexOf(e);
+      var rk = state.rankOf && state.rankOf[e.id] != null ? state.rankOf[e.id] : 99;
       if (rk < 10) { ctx.fillStyle = '#0b0f14'; ctx.font = 'bold ' + Math.round(r * 1.2) + 'px ui-monospace,monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(rk + 1), p.x, p.y + dpr * 0.5); }
       state.pts.push({ id: e.id, x: p.x / dpr, y: p.y / dpr, r: Math.max(r / dpr * 1.9, 12) });
     });

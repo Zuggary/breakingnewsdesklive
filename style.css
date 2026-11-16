@@ -123,3 +123,8 @@ main.page.wide{max-width:1180px}main.page.wide #ev>*{max-width:760px}
 .illus-tag{background:#070c12;color:#fff;border-color:#fff}
 ol.list:empty{min-height:1600px}
 .tiles{display:inline-block;min-width:250px;min-height:20px}
+.subs{list-style:none;margin:0;padding:0 0 4px 0}
+.subs .card{border-bottom:0;border-top:1px dashed var(--line);background:none}
+.subs .rank{visibility:hidden}
+.card.group .title::before{content:"\25B8  ";color:var(--mute)}
+.card.group.sel .title::before{content:"\25BE  "}
