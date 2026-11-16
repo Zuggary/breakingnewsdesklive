@@ -459,6 +459,19 @@ FAA_KIND = {"ground_stop": ("Ground stop", "severe"), "closure": ("Airport close
             "ground_delay": ("Ground delay program", "moderate"), "delay": ("Delays", "moderate")}
 
 
+def delay_minutes(text):
+    """'2 hours and 46 minutes' -> 166. Numbers pass through. Anything else -> None."""
+    if text is None:
+        return None
+    if isinstance(text, (int, float)):
+        return int(text)
+    h = re.search(r"(\d+)\s*hour", str(text))
+    m = re.search(r"(\d+)\s*min", str(text))
+    if not (h or m):
+        return None
+    return (int(h.group(1)) * 60 if h else 0) + (int(m.group(1)) if m else 0)
+
+
 def parse_faa(d, src):
     airports = {}
     try:
@@ -478,9 +491,11 @@ def parse_faa(d, src):
             continue
         ap = airports.get(ev["code"]) or {}
         name = ap.get("name") or AIRPORT_NAMES.get(ev["code"]) or ev.get("name") or ev["code"]
-        mins = ev.get("avg") or ev.get("max") or 0
+        mins = delay_minutes(ev.get("avg")) or delay_minutes(ev.get("max")) or 0
         detail = {"kind": label, "airport_code": ev["code"], "reason": ev.get("reason") or "",
-                  "avg_delay_min": ev.get("avg"), "max_delay_min": ev.get("max"), "until": ev.get("end_time") or "",
+                  "avg_delay_min": delay_minutes(ev.get("avg")), "max_delay_min": delay_minutes(ev.get("max")),
+                  "avg_delay_text": str(ev["avg"]) if ev.get("avg") else "", "max_delay_text": str(ev["max"]) if ev.get("max") else "",
+                  "until": ev.get("end_time") or "",
                   "faa_status": ev.get("status") or ""}
         out.append(mk("faa-%s-%s" % (ev["kind"], ev["code"]), "transport", "%s at %s" % (label, ev["code"]),
                       name if name != ev["code"] else "Airport " + ev["code"], ap.get("lat"), ap.get("lon"), when, sev, mins, src,
@@ -726,9 +741,16 @@ def build(fixtures=None, now=None):
         return now - timedelta(hours=age) <= t <= now + timedelta(hours=1)
     events = [e for e in events if fresh_enough(e)]
     events = dedupe(events)
+    good = []
     for e in events:
-        e["score"] = score_event(e, now)
-        e["summary"] = summarize(e)
+        try:
+            e["score"] = score_event(e, now)
+            e["summary"] = summarize(e)
+            good.append(e)
+        except Exception as ex:  # noqa: BLE001
+            # One malformed item must never stop the data job. Drop it, and say which one.
+            print("dropped %s: %s %s" % (e.get("id"), type(ex).__name__, ex), file=sys.stderr)
+    events = good
     events.sort(key=lambda e: -e["score"])
     # Diversity: repeated US warnings of one kind drop 10 points per earlier copy, so they do not fill the top of the list.
     seen = {}

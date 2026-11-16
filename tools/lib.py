@@ -71,6 +71,10 @@ SEV_POINTS = {"extreme": 50, "severe": 38, "moderate": 24, "minor": 10}
 
 def size_points(e):
     t, s = e["type"], e.get("size") or 0
+    try:
+        s = float(s)
+    except (TypeError, ValueError):
+        s = 0.0
     if t == "earthquake":
         return max(0, min(30, (s - 4.5) * 10))
     if t == "storm":
@@ -144,7 +148,9 @@ def summarize(e):
         s = "FAA status for %s (%s): %s." % (e["place"], d["airport_code"], d["kind"].lower())
         if d.get("reason") and d["reason"].lower().rstrip(".") != d["kind"].lower():
             s += " Reason given: %s." % d["reason"].rstrip(".")
-        if d.get("avg_delay_min"):
+        if d.get("avg_delay_text"):
+            s += " Average delay reported: %s." % d["avg_delay_text"].rstrip(".")
+        elif d.get("avg_delay_min"):
             s += " Average delay reported: %d minutes." % d["avg_delay_min"]
         if d.get("until"):
             s += " Expected until: %s" % d["until"]

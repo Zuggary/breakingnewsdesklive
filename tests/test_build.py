@@ -236,6 +236,38 @@ class T(unittest.TestCase):
         got = cx.build_one(ev, NOW, lambda u: dab if "rest_v1" in u else {}, {})
         self.assertIsNone(got)  # nothing to show, so no context key at all
 
+    def test_faa_delay_text_does_not_break_scoring(self):
+        # 2026-11-16: the FAA feed sent '2 hours and 46 minutes' as the average delay; a str crashed the data job.
+        sf = next(x for x in build_data.SOURCES if x["id"] == "atd-faa")
+        d = {"updated_utc": "2026-11-16T04:00:00Z", "events": [
+            {"code": "SFO", "name": "SFO", "kind": "ground_delay", "reason": "low ceilings", "avg": "2 hours and 46 minutes",
+             "max": "14 hours and 55 minutes", "end_time": None, "status": "OFFICIAL"}]}
+        build_data.FIXTURE_MODE, build_data.FIXTURE_DIR = True, FIX
+        ev = build_data.parse_faa(d, sf)
+        self.assertEqual(ev[0]["detail"]["avg_delay_min"], 166)
+        self.assertEqual(ev[0]["size"], 166)
+        ev[0]["score"] = lib.score_event(ev[0], NOW.replace(day=16, hour=4, minute=5))
+        ev[0]["summary"] = lib.summarize(ev[0])
+        self.assertIn("2 hours and 46 minutes", ev[0]["summary"])
+        self.assertTrue(lib.guard_ok(ev[0]["summary"], ev[0]), ev[0]["summary"])
+        self.assertEqual(build_data.delay_minutes("45 minutes"), 45)
+        self.assertEqual(build_data.delay_minutes("1 hour"), 60)
+        self.assertIsNone(build_data.delay_minutes("n/a"))
+        bad = dict(ev[0], size="garbage")
+        self.assertIsInstance(lib.score_event(bad, NOW.replace(day=16, hour=4, minute=5)), float)
+
+    def test_one_bad_event_does_not_stop_the_build(self):
+        import tempfile, shutil
+        d = tempfile.mkdtemp()
+        for f in os.listdir(FIX):
+            shutil.copy(os.path.join(FIX, f), d)
+        bad = json.load(open(os.path.join(d, "atd-faa.json")))
+        bad["updated_utc"] = "2026-11-14T11:54:22Z"
+        bad["events"] = [{"code": "ATL", "name": "ATL", "kind": "ground_stop", "reason": "x", "avg": {"weird": 1}, "end_time": None, "status": "OFFICIAL"}]
+        json.dump(bad, open(os.path.join(d, "atd-faa.json"), "w"))
+        ev, st = build_data.build(d, NOW)
+        self.assertTrue(ev)
+
     def test_old_events_dropped(self):
         for e in self.events:
             self.assertLessEqual((NOW - lib.parse_time(e["time"])).total_seconds(), 168 * 3600)
