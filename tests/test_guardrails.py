@@ -151,3 +151,27 @@ class KillSwitch(unittest.TestCase):
     def test_approved_file_is_a_list(self):
         data = json.load(open(os.path.join(ROOT, "approved.json")))
         self.assertIsInstance(data, list)
+
+
+class IdentityLabel(unittest.TestCase):
+    def test_every_page_has_the_label(self):
+        pages = [f for f in os.listdir(ROOT) if f.endswith(".html")]
+        self.assertGreaterEqual(len(pages), 7)
+        for p in pages:
+            self.assertIn("AI-ASSISTED WIRE DESK", open(os.path.join(ROOT, p), encoding="utf-8").read(), p)
+
+    def test_non_affiliation_line_on_reading_pages(self):
+        for p in ("index.html", "event.html", "about.html", "privacy.html", "data.html", "corrections.html"):
+            self.assertIn("No agency is affiliated", open(os.path.join(ROOT, p), encoding="utf-8").read(), p)
+
+
+class Masthead(unittest.TestCase):
+    def test_about_has_masthead_and_contact(self):
+        t = open(os.path.join(ROOT, "about.html"), encoding="utf-8").read()
+        for need in ("Masthead", "contact@breakingnewsdesklive.com", "UNVERIFIED", "crisis switch", "Illustration"):
+            self.assertIn(need, t)
+
+    def test_corrections_page_has_process(self):
+        t = open(os.path.join(ROOT, "corrections.html"), encoding="utf-8").read()
+        for need in ("Report an error", "What we do", "Past corrections"):
+            self.assertIn(need, t)
