@@ -38,6 +38,11 @@ def step(state, services, minutes, fetch, last):
     return now
 
 
+def warm(state, services, last):
+    """One healthy probe 3 minutes before the onset. A service must have been reachable once before it can be called down."""
+    probes.run_cycle(state, services, T0 - timedelta(minutes=3), fetch_ok, last)
+
+
 class ProbeList(unittest.TestCase):
     def test_list_has_30_services_with_url_and_word(self):
         lst = json.load(open(os.path.join(ROOT, "tools", "probe_list.json")))
@@ -57,6 +62,7 @@ class ProbeList(unittest.TestCase):
 class Detection(unittest.TestCase):
     def test_503_produces_an_item_within_10_minutes_and_clears_after_3_healthy(self):
         services, state, last = [svc("chase")], {}, {}
+        warm(state, services, last)
         step(state, services, 0, fetch_503, last)      # onset: first failing probe
         step(state, services, 3, fetch_503, last)
         now = step(state, services, 6, fetch_503, last)
@@ -81,6 +87,7 @@ class Detection(unittest.TestCase):
 
     def test_timeout_counts_as_down(self):
         services, state, last = [svc("chase")], {}, {}
+        warm(state, services, last)
         for m in (0, 3, 6):
             now = step(state, services, m, fetch_timeout, last)
         self.assertEqual(probes.snapshot(state, services, now)["services"][0]["status"], "down")
@@ -145,6 +152,7 @@ class Grouping(unittest.TestCase):
         services = [svc(n, "bank", {"chase": "Chase", "bofa": "Bank of America", "wellsfargo": "Wells Fargo", "usbank": "U.S. Bank"}[n]) for n in names]
         services.append(svc("delta", "airline", "Delta Air Lines"))
         state, last = {}, {}
+        warm(state, services, last)
         def f(url, timeout):
             return (503, "", 80) if url.rsplit("/", 1)[1] in names else (200, "Hello", 100)
         for m in (0, 3, 6):
@@ -159,6 +167,7 @@ class Grouping(unittest.TestCase):
     def test_failures_far_apart_are_separate_items(self):
         a, b = svc("chase"), svc("bofa", name="Bank of America")
         state, last = {}, {}
+        warm(state, [a, b], last)
         fa = lambda u, t: (503, "", 80) if u.endswith("chase") else (200, "Hello", 100)
         for m in (0, 3, 6):
             step(state, [a, b], m, fa, last)
@@ -171,6 +180,7 @@ class Grouping(unittest.TestCase):
     def test_mixed_groups_title(self):
         services = [svc("chase", "bank", "Chase"), svc("venmo", "payment app", "Venmo"), svc("att", "carrier", "AT&T")]
         state, last = {}, {}
+        warm(state, services, last)
         for m in (0, 3, 6):
             now = step(state, services, m, fetch_503, last)
         ev = probes.events_from_snapshot(probes.snapshot(state, services, now), now)
@@ -199,6 +209,7 @@ class Spacing(unittest.TestCase):
 class Stale(unittest.TestCase):
     def test_a_stale_snapshot_makes_no_items(self):
         services, state, last = [svc("chase")], {}, {}
+        warm(state, services, last)
         for m in (0, 3, 6):
             now = step(state, services, m, fetch_503, last)
         snap = probes.snapshot(state, services, now)
@@ -225,9 +236,15 @@ class EndToEnd(unittest.TestCase):
     """A real local server that returns 503, probed through the runner."""
 
     def test_runner_against_a_503_server(self):
+        calls = {"n": 0}
+
         class H(http.server.BaseHTTPRequestHandler):
             def do_GET(self):
-                self.send_response(503); self.end_headers(); self.wfile.write(b"down")
+                calls["n"] += 1
+                if calls["n"] == 1:
+                    self.send_response(200); self.end_headers(); self.wfile.write(b"Hello")   # one healthy probe first
+                else:
+                    self.send_response(503); self.end_headers(); self.wfile.write(b"down")
             def log_message(self, *a):
                 pass
         srv = http.server.HTTPServer(("127.0.0.1", 0), H)
@@ -239,7 +256,7 @@ class EndToEnd(unittest.TestCase):
                 old = probes.INTERVAL_S
                 probes.INTERVAL_S = 0
                 try:
-                    for _ in range(3):
+                    for _ in range(4):
                         self.assertEqual(probe_runner.main(["--once", "--state", os.path.join(d, "s.json"), "--out", os.path.join(d, "p.json"), "--list", lst, "--log", os.path.join(d, "log.jsonl"), "--spacing", "0"]), 0)
                 finally:
                     probes.INTERVAL_S = old
@@ -247,7 +264,7 @@ class EndToEnd(unittest.TestCase):
                 self.assertEqual(snap["services"][0]["status"], "down")
                 ev = probes.events_from_snapshot(snap, datetime.now(timezone.utc))
                 self.assertEqual(ev[0]["title"], "Test Service login page returning errors")
-                self.assertEqual(len(open(os.path.join(d, "log.jsonl")).read().strip().split("\n")), 3)
+                self.assertEqual(len(open(os.path.join(d, "log.jsonl")).read().strip().split("\n")), 4)
         finally:
             srv.shutdown()
 
