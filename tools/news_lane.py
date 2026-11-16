@@ -21,6 +21,8 @@ OUTAGE_RE = re.compile(
     r"glitch(?:es)?|can(?:'|’)?t\s+log\s*in|cannot\s+log\s*in|unable\s+to\s+log\s*in|log-?in\s+(?:issues|problems|troubles?|errors?|failures?)|"
     r"technical\s+(?:issues?|glitch(?:es)?|problems?|bug)|service\s+disruptions?|disrupt(?:ed|ion)s?|down\s+for\s+(?:many|some|users|customers))\b", re.I)
 
+RESOLVED_RE = re.compile(r"\b(?:resum(?:e|ed|es|ing)|fixed|resolved|restored|back\s+to\s+normal|lifted|issue\s+(?:is\s+)?over)\b", re.I)
+
 # Names that are also common words need a second word, so "chase" the verb and "united" the adjective do not match.
 ALIASES = {
     "chase": [r"JPMorgan Chase", r"Chase Bank", r"Chase (?:customers|app|online|mobile|login|log-in|accounts?)", r"Chase\b(?=.*\b(?:bank|banking)\b)"],
@@ -51,7 +53,7 @@ ALIASES = {
     "cricket": [r"Cricket Wireless"],
     "american": [r"American Airlines"],
     "delta": [r"Delta Air Lines", r"Delta Airlines", r"Delta (?:flights|passengers|customers|outage)"],
-    "united": [r"United Airlines", r"United flights"],
+    "united": [r"United Airlines", r"United (?:flights|departures|planes|says|said|reports|confirms)\b"],
     "southwest": [r"Southwest Airlines"],
 }
 _COMPILED = {sid: [re.compile(p) for p in pats] for sid, pats in ALIASES.items()}
@@ -75,7 +77,7 @@ def seen_time(a):
 
 def match(title):
     """Return the list of probe-list service ids named in a headline that also holds an outage word. Empty when none."""
-    if not title or not OUTAGE_RE.search(title):
+    if not title or not (OUTAGE_RE.search(title) or RESOLVED_RE.search(title)):
         return []
     found = [sid for sid, pats in _COMPILED.items() if any(p.search(title) for p in pats)]
     if found:
@@ -89,7 +91,8 @@ def collect(articles):
     for a in articles:
         sids = match(a.get("title", ""))
         if sids and (a.get("url") or "").startswith("https://"):
-            out.append(dict(a, services=sids))
+            t = a.get("title", "")
+            out.append(dict(a, services=sids, outage=bool(OUTAGE_RE.search(t)), resolved=bool(RESOLVED_RE.search(t))))
     return out
 
 
@@ -104,11 +107,14 @@ def et_clock(dt):
 def build_items(matched, services, now, probe_snapshot=None, window_s=WINDOW_S):
     """matched: output of collect(). services: probe list. Returns event dicts of type outage with detail.lane == "news"."""
     by_id = {s["id"]: s for s in services}
-    per_service = {}
+    per_service, resolved_by = {}, {}
     for a in matched:
         for sid in a["services"]:
             if sid in by_id:
-                per_service.setdefault(sid, []).append(a)
+                if a.get("outage", True):
+                    per_service.setdefault(sid, []).append(a)
+                if a.get("resolved"):
+                    resolved_by.setdefault(sid, []).append(a)
     qualified = []
     for sid, arts in per_service.items():
         arts = sorted(arts, key=seen_time)
@@ -154,6 +160,12 @@ def build_items(matched, services, now, probe_snapshot=None, window_s=WINDOW_S):
         else:
             word = {"bank": "banks", "payment app": "payment apps", "card issuer": "card issuers", "carrier": "carriers", "airline": "airlines"}.get(next(iter(groups_in)), "services") if len(groups_in) == 1 else "services"
             title = "News reports: problems reported at %d %s, %d outlets" % (n, word, len(outlets))
+        # Resolution reports: outlets, later than the first report, whose headline says fixed, resumed or restored.
+        res_outlets = {}
+        for q in g:
+            for a in resolved_by.get(q["sid"], []):
+                if seen_time(a) > first:
+                    res_outlets.setdefault(a["domain"], a)
         probes_attached = []
         for q in g:
             p = probe_by_id.get(q["sid"])
@@ -161,6 +173,11 @@ def build_items(matched, services, now, probe_snapshot=None, window_s=WINDOW_S):
                 probes_attached.append({"service": p["name"], "status": p["status"], "since": p["since"], "measured_at": et_clock(parse(p["since"]))})
         summary = "%d outlets reported problems with %s between %s and %s. Headlines are the outlets' own words, linked below. %s." % (
             len(outlets), ", ".join(names), et_clock(first), et_clock(seen_time(arts[-1])), LABEL)
+        resolution = None
+        if len(res_outlets) >= MIN_OUTLETS:
+            rt = max(seen_time(a) for a in res_outlets.values())
+            resolution = {"outlets": len(res_outlets), "latest": et_clock(rt)}
+            summary += " %d outlets report the problem fixed or operations resuming, latest %s. This is a report, not confirmed by the desk." % (len(res_outlets), et_clock(rt))
         if probes_attached:
             summary += " The desk probe measured: " + "; ".join("%s %s since %s" % (p["service"], p["status"], p["measured_at"]) for p in probes_attached) + "."
         big = len(outlets) >= BIG_OUTLETS
@@ -169,7 +186,7 @@ def build_items(matched, services, now, probe_snapshot=None, window_s=WINDOW_S):
             "time": iso(first), "severity": "severe" if big else "moderate", "size": len(outlets),
             "source": "News reports (via GDELT)", "source_id": "news-lane", "source_url": ABOUT_URL,
             "detail": {"lane": "news", "label": LABEL, "open": True, "outlets": len(outlets), "services": names,
-                       "first_report": et_clock(first), "last_report": et_clock(seen_time(arts[-1])), "probes": probes_attached},
+                       "first_report": et_clock(first), "last_report": et_clock(seen_time(arts[-1])), "probes": probes_attached, "resolution": resolution},
             "links": [{"label": a["domain"], "title": " ".join(a["title"].split())[:140], "url": a["url"]} for a in arts[:MAX_LINKS]],
             "region": "Americas", "big": big, "summary_override": summary,
         })

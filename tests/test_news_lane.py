@@ -101,6 +101,34 @@ class Kinds(unittest.TestCase):
         self.assertTrue(all("United" in l["title"] for l in ua["links"]))
 
 
+class Resolution(unittest.TestCase):
+    def test_resolution_reports_from_2_outlets_are_noted(self):
+        air = [
+            {"url": "https://wire-two.example/ua1", "title": "United Airlines says it has a widespread system outage", "seendate": "20261116T145000Z", "domain": "wire-two.example"},
+            {"url": "https://metro-daily.example/ua2", "title": "United Airlines hit by widespread system outage", "seendate": "20261116T145500Z", "domain": "metro-daily.example"},
+            {"url": "https://wire-two.example/ua3", "title": "United says tech issue is fixed, departures resuming", "seendate": "20261116T153000Z", "domain": "wire-two.example"},
+            {"url": "https://radio-hub.example/ua4", "title": "United Airlines flights resuming after technical issue is resolved", "seendate": "20261116T153500Z", "domain": "radio-hub.example"}]
+        it = news_lane.build_items(news_lane.collect(air), SERVICES, NOW, None)[0]
+        self.assertEqual(it["detail"]["resolution"]["outlets"], 2)
+        self.assertIn("fixed or operations resuming", it["summary_override"])
+        self.assertIn(news_lane.LABEL, it["summary_override"])
+        ev = dict(it, summary=it["summary_override"])
+        self.assertTrue(lib.guard_ok(it["summary_override"], ev), it["summary_override"])
+
+    def test_one_resolution_report_is_not_enough(self):
+        air = [
+            {"url": "https://wire-two.example/ua1", "title": "United Airlines says it has a widespread system outage", "seendate": "20261116T145000Z", "domain": "wire-two.example"},
+            {"url": "https://metro-daily.example/ua2", "title": "United Airlines hit by widespread system outage", "seendate": "20261116T145500Z", "domain": "metro-daily.example"},
+            {"url": "https://wire-two.example/ua3", "title": "United says tech issue is fixed, departures resuming", "seendate": "20261116T153000Z", "domain": "wire-two.example"}]
+        it = news_lane.build_items(news_lane.collect(air), SERVICES, NOW, None)[0]
+        self.assertIsNone(it["detail"]["resolution"])
+
+    def test_resolution_headlines_alone_make_no_item(self):
+        only = [{"url": "https://a.example/x", "title": "United says tech issue is fixed, departures resuming", "seendate": "20261116T153000Z", "domain": "a.example"},
+                {"url": "https://b.example/x", "title": "United Airlines flights resuming after issue resolved", "seendate": "20261116T153500Z", "domain": "b.example"}]
+        self.assertEqual(news_lane.build_items(news_lane.collect(only), SERVICES, NOW, None), [])
+
+
 class TopSlot(unittest.TestCase):
     def test_replayed_event_takes_the_top_slot_in_the_built_data(self):
         from tools import build_data
