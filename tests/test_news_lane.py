@@ -86,6 +86,21 @@ class Lane(unittest.TestCase):
         self.assertTrue(lib.claims_ok(it["summary_override"]))
 
 
+class Kinds(unittest.TestCase):
+    def test_bank_and_airline_stories_are_separate_items(self):
+        air = [
+            {"url": "https://wire-two.example/ua1", "title": "United Airlines says it has a widespread system outage", "seendate": "20261116T145000Z", "domain": "wire-two.example"},
+            {"url": "https://metro-daily.example/ua2", "title": "United Airlines hit by widespread system outage, flights affected", "seendate": "20261116T145500Z", "domain": "metro-daily.example"},
+            {"url": "https://radio-hub.example/ua3", "title": "United Airlines faces systems outage", "seendate": "20261116T150000Z", "domain": "radio-hub.example"}]
+        items = news_lane.build_items(news_lane.collect(REPLAY + air), SERVICES, NOW, None)
+        self.assertEqual(len(items), 2)
+        titles = sorted(i["title"] for i in items)
+        self.assertEqual(titles, ["News reports: United Airlines problems reported by 3 outlets", "News reports: problems reported at 3 banks, 3 outlets"])
+        ua = next(i for i in items if "United" in i["title"])
+        self.assertTrue(ua["big"])
+        self.assertTrue(all("United" in l["title"] for l in ua["links"]))
+
+
 class TopSlot(unittest.TestCase):
     def test_replayed_event_takes_the_top_slot_in_the_built_data(self):
         from tools import build_data

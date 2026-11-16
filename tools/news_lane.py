@@ -3,7 +3,7 @@
 Input: article records {title, domain, url, seendate} from a news feed whose terms allow headline display (GDELT, see research/GD7-sources.md).
 A headline counts when it holds an outage word and the name of a service from tools/probe_list.json.
 A service qualifies when 2 or more different outlets report it within WINDOW_S.
-Services that qualify within the same window become one item. An item with 3 or more outlets is "big" and takes the top headline slot.
+Services of the same kind that qualify within the same window become one item. An item with 3 or more outlets is "big" and takes the top headline slot.
 The item shows the outlet's headline as a link. It never holds article text.
 """
 import re
@@ -123,10 +123,15 @@ def build_items(matched, services, now, probe_snapshot=None, window_s=WINDOW_S):
         if len(outlets) >= MIN_OUTLETS:
             qualified.append({"sid": sid, "arts": best, "first": seen_time(best[0]), "outlets": outlets})
     qualified.sort(key=lambda q: q["first"])
+    # Services of one kind (banks, airlines, carriers ...) that qualify within the same window make one item.
+    # A bank story and an airline story are never merged: they have different readers and different links.
     groups = []
     for q in qualified:
-        if groups and (q["first"] - groups[-1][0]["first"]).total_seconds() <= window_s:
-            groups[-1].append(q)
+        kind = by_id[q["sid"]]["group"]
+        for g in groups:
+            if by_id[g[0]["sid"]]["group"] == kind and (q["first"] - g[0]["first"]).total_seconds() <= window_s:
+                g.append(q)
+                break
         else:
             groups.append([q])
     probe_by_id = {s["id"]: s for s in (probe_snapshot or {}).get("services", [])}
