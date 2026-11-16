@@ -85,6 +85,36 @@
     if (!c.image && e) { var il = illustrationFor(e); if (il) box.appendChild(renderIllustration(il)); }
     return box;
   }
-  var api = { ILLUS: ILLUS, illustrationFor: illustrationFor, renderContext: renderContext, GROUPS: GROUPS, TYPES: TYPES, SEV: SEV, ago: ago, filterEvents: filterEvents, safeUrl: safeUrl };
+  var STOCK_TYPE = { earthquake: 'earthquake', wildfire: 'wildfire', smoke: 'wildfire', storm: 'storm', flood: 'flood', tsunami: 'flood', volcano: 'volcano', outage: 'outage', cyber: 'cyber', recall: 'recall', space: 'space', drought: 'heat' };
+  function stockTag(e) {
+    if (!e) return null;
+    if (e.type === 'weather') {
+      var t = (e.title || '').toLowerCase();
+      if (/heat|hot|fire weather|red flag/.test(t)) return 'heat';
+      if (/winter|blizzard|snow|freez|frost|ice|cold|chill/.test(t)) return 'winter';
+      if (/flood/.test(t)) return 'flood';
+      if (/hurricane|cyclone|tropical|storm|wind|gale|tornado/.test(t)) return 'storm';
+      return null;
+    }
+    return STOCK_TYPE[e.type] || null;
+  }
+  function pickStock(manifest, tag, key) {
+    var items = (manifest && manifest.items || []).filter(function (i) { return i.tag === tag; });
+    if (!items.length) return null;
+    var n = 0; String(key || '').split('').forEach(function (c) { n = (n + c.charCodeAt(0)) % 9973; });
+    return items[n % items.length];
+  }
+  function stockPicture(item, sizes, eager) {
+    var d = document, pic = d.createElement('picture');
+    ['avif', 'webp'].forEach(function (ext) {
+      var s = d.createElement('source'); s.type = 'image/' + ext;
+      s.srcset = [375, 768, 1440].map(function (w) { return 'assets/stock/web/' + item.id + '-' + w + '.' + ext + ' ' + w + 'w'; }).join(', ');
+      s.sizes = sizes || '100vw'; pic.appendChild(s);
+    });
+    var im = d.createElement('img'); im.src = 'assets/stock/web/' + item.id + '-768.jpg'; im.alt = item.alt; im.width = 1440; im.height = 810;
+    im.decoding = 'async'; if (!eager) im.loading = 'lazy'; pic.appendChild(im);
+    return pic;
+  }
+  var api = { stockTag: stockTag, pickStock: pickStock, stockPicture: stockPicture, ILLUS: ILLUS, illustrationFor: illustrationFor, renderContext: renderContext, GROUPS: GROUPS, TYPES: TYPES, SEV: SEV, ago: ago, filterEvents: filterEvents, safeUrl: safeUrl };
   if (typeof module !== 'undefined') module.exports = api; else root.BND = api;
 })(this);

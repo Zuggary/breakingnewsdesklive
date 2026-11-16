@@ -7,19 +7,26 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="tokens.css"><link rel="stylesheet" href="style.css"><meta name="robots" content="noindex"><meta name="theme-color" content="#0b0f14"></head><body>
 <header class="top"><a class="brand" href="./"><span>Breaking News Desk<small>Facts as they come in, from public sources</small></span></a><nav><a href="./">Map</a><a href="about.html">About</a><a href="privacy.html">Privacy</a></nav></header>
 <p class="notice">Automated alerts from public sources. Check official sources before you act. This site is not an emergency service.</p>
-<main class="page" style="display:block"><p><a href="./">&larr; All events</a></p><div id="ev"><p class="sub">Loading.</p></div></main>
+<section class="band ehero" id="ehero"><div class="wrap ehero-in"><p class="dateline"><a href="./">&larr; All events</a></p><h1 id="etitle">Loading</h1><p class="verdict" id="esum"></p><p class="srcline" id="esrc"></p></div></section>
+<main class="page wide" style="display:block"><div id="ev"></div></main>
 <script src="lib.js"></script>
 <script>
 (function(){var B=BND,box=document.getElementById('ev');
 function el(t,c,x){var n=document.createElement(t);if(c)n.className=c;if(x!=null)n.textContent=x;return n}
 var id=new URLSearchParams(location.search).get('id');
+function hero(e,d){var h=document.getElementById('ehero');h.style.setProperty('--c',B.SEV[e.severity]||'#93a1b5');
+ document.getElementById('etitle').textContent=e.title;
+ var tl=el('span','pill',e.severity);tl.style.background=B.SEV[e.severity]||'#93a1b5';
+ var sm=document.getElementById('esum');sm.textContent='';sm.appendChild(tl);sm.appendChild(document.createTextNode(' '+(B.TYPES[e.type]||B.TYPES.other).label+' \u00b7 '+e.place));
+ document.getElementById('esrc').textContent=e.summary+' Source: '+e.source+', '+B.ago(e.time)+'.';
+ var tag=B.stockTag(e);if(!tag)return;
+ fetch('assets/stock/manifest.json').then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(m){var it=B.pickStock(m,tag,e.id);if(!it)return;
+  var a=el('div','eart');a.appendChild(B.stockPicture(it,'(min-width:980px) 50vw, 100vw',true));a.appendChild(el('span','illus-tag','Illustration'));h.appendChild(a)}).catch(function(){})}
 fetch('data/events.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){
  box.textContent='';var e=d.events.filter(function(x){return x.id===id})[0];
  if(!e){box.appendChild(el('h1',null,'This event is no longer in the feeds'));box.appendChild(el('p',null,'Events leave the list after 3 days (7 days for fires, floods and volcanoes), or when the source removes them. Check the source agency for the record.'));return}
  document.title=e.title+': Breaking News Desk';
- box.appendChild(el('h1',null,e.title));
- var meta=el('p','sub',(B.TYPES[e.type]||B.TYPES.other).label+' · '+e.place+' · severity '+e.severity+' · score '+e.score+' of 100');box.appendChild(meta);
- box.appendChild(el('p',null,e.summary));
+  hero(e,d);
  var tb=el('table'),rows=[['Event time (UTC)',e.time.replace('T',' ').replace('Z','')],['Age',B.ago(e.time)],['Source',e.source],['Region',e.region]];
  if(e.lat!=null)rows.push(['Position',e.lat+', '+e.lon]);
  Object.keys(e.detail||{}).forEach(function(k){var v=e.detail[k];if(v==null||v===''||(Array.isArray(v)&&!v.length)||(typeof v==='object'&&!Array.isArray(v)))return;rows.push([k.replace(/_/g,' '),Array.isArray(v)?v.join(', '):String(v)])});
