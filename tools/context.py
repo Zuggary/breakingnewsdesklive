@@ -11,7 +11,7 @@ import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
 
-UA = "breakingnewsdesklive/1.0 (+https://breakingnewsdesklive.com/about.html)"
+UA = "breakingnewsdesklive/1.0 (+https://breakingnewsdesklive.com/about)"
 MAX_EVENTS = 25
 CACHE_DAYS = 7
 BAD_IMAGE = re.compile(r"flag|seal|coat[_ ]of|logo|emblem|insignia|banner|map[_ ]of|locator", re.I)

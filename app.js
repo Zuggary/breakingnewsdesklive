@@ -116,10 +116,10 @@
         s.appendChild(document.createTextNode('Source: ' + e.source + '. Event time: ' + e.time.replace('T', ' ').replace('Z', ' UTC') + '. '));
         if (u) { var a = el('a', '', 'Open the official page'); a.href = u; a.rel = 'noopener'; s.appendChild(a); }
         if (u) s.appendChild(document.createTextNode(' '));
-        var pl = el('a', '', 'Permalink'); pl.href = 'event.html?id=' + encodeURIComponent(e.id); s.appendChild(pl);
+        var pl = el('a', '', 'Permalink'); pl.href = '/event?id=' + encodeURIComponent(e.id); s.appendChild(pl);
         m.appendChild(s);
         m.appendChild(el('p', 'warn', (e.type === 'headline' || e.type === 'statement') ? 'Headlines and statements are claims by the named outlet or party. This site does not verify them. It is automated and may be wrong. Check official sources.' : 'Check official sources. This site is automated and may be wrong or late.'));
-        var cr = el('p', 'src'); var ca = el('a', '', 'Report an error or ask for a correction'); ca.href = 'corrections.html'; cr.appendChild(ca); m.appendChild(cr);
+        var cr = el('p', 'src'); var ca = el('a', '', 'Report an error or ask for a correction'); ca.href = '/corrections'; cr.appendChild(ca); m.appendChild(cr);
         li.appendChild(m);
       }
     return li;
@@ -238,7 +238,7 @@
     if (big && tl) {
       tl.hidden = false; tl.textContent = '';
       tl.appendChild(el('b', 'tl-label', 'TOP HEADLINE'));
-      var ta = el('a', 'tl-title', big.title); ta.href = 'event.html?id=' + encodeURIComponent(big.id); tl.appendChild(ta);
+      var ta = el('a', 'tl-title', big.title); ta.href = '/event?id=' + encodeURIComponent(big.id); tl.appendChild(ta);
       tl.appendChild(el('span', 'tl-meta', ((big.detail && big.detail.measured_at) ? 'Measured by the desk, first failure ' + big.detail.measured_at : big.source) + ' \u00b7 ' + B.ago(big.time)));
     } else if (tl) { tl.hidden = true; }
     var t = $('tiles'); t.textContent = '';
@@ -248,7 +248,7 @@
     });
     var old = (Date.now() - Date.parse(d.generated)) > 45 * 6e4;
     $('srcline').textContent = 'updated ' + B.ago(d.generated) + (old ? ', older than 45 minutes' : '') + ' \u00b7 ';
-    var l = el('a', '', 'every source and age'); l.href = 'data.html'; $('srcline').appendChild(l);
+    var l = el('a', '', 'every source and age'); l.href = '/data'; $('srcline').appendChild(l);
   }
   var hist = [];
   function drawHist(hours) {

@@ -14,7 +14,7 @@ WINDOW_S = 3600
 MIN_OUTLETS = 2
 BIG_OUTLETS = 3
 MAX_LINKS = 6
-ABOUT_URL = "https://breakingnewsdesklive.com/about.html#news-reports"
+ABOUT_URL = "https://breakingnewsdesklive.com/about#news-reports"
 
 OUTAGE_RE = re.compile(
     r"\b(outages?|(?:is|are|went|goes|was|were)\s+down|down\s+for|not\s+working|reporting\s+problems|report(?:ed|s)?\s+problems|"

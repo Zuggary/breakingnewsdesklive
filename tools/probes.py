@@ -20,7 +20,7 @@ import urllib.error
 import urllib.request
 from datetime import datetime, timedelta, timezone
 
-UA = "breakingnewsdesklive/1.0 (+https://breakingnewsdesklive.com/about.html; service status probe)"
+UA = "breakingnewsdesklive/1.0 (+https://breakingnewsdesklive.com/about; service status probe)"
 INTERVAL_S = 180
 TIMEOUT_S = 15
 SLOW_FACTOR = 3
@@ -32,7 +32,7 @@ HISTORY_KEEP = 480          # 24 hours at one probe per 3 minutes
 MEDIAN_MIN_SAMPLES = 20
 INCIDENT_KEEP_S = 24 * 3600
 STALE_AFTER_S = 30 * 60
-ABOUT_URL = "https://breakingnewsdesklive.com/data.html#probes"
+ABOUT_URL = "https://breakingnewsdesklive.com/data#probes"
 
 BLOCKED = (403, 429)
 
