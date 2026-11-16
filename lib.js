@@ -24,7 +24,7 @@
     transport: ['Transport', ['transport']], outages: ['Outages and cyber', ['outage', 'cyber']], recalls: ['Recalls and safety', ['recall']],
     world: ['World events', ['statement', 'headline']],
     notices: ['Official notices', ['notice']], space: ['Space', ['space', 'launch']] };
-  var SEV = { extreme: '#ff5c5c', severe: '#ff9340', moderate: '#f2d04b', minor: '#93a1b5' };
+  var SEV = { extreme: '#ff5c5c', severe: '#ff6a3d', moderate: '#f3cb45', minor: '#93a1b5' };
   function ago(iso, now) {
     var m = Math.max(1, Math.round(((now || Date.now()) - Date.parse(iso)) / 60000));
     if (m < 60) return m + 'm ago';

@@ -5,7 +5,7 @@
 @font-face{font-family:"Barlow Fallback";src:local("Arial Narrow"),local("Arial");size-adjust:78%;ascent-override:105%}
 /* Wire-desk look: hairlines, tight rows, condensed type. Colour is for severity only. */
 :root{--bg:#0a1017;--panel:#0f1822;--panel2:#142130;--line:#1f2d3b;--text:#d3dce5;--mute:#a9b8c7;--link:#93bde6;--accent:#93bde6;--on-accent:#06101a;
---c-extreme:#ff5252;--c-severe:#ff8a3d;--c-moderate:#e9b53a;--c-minor:#9cb0c4;--amber:#e9b53a;--red:#ff5252;--orange:#ff8a3d;--yellow:#e9b53a;--green:#4fd18b;--blue:var(--link);
+--c-extreme:#ff5252;--c-severe:#ff6a3d;--c-moderate:#f3cb45;--c-minor:#9cb0c4;--amber:#e9b53a;--red:#ff5252;--orange:#ff8a3d;--yellow:#e9b53a;--green:#4fd18b;--blue:var(--link);
 --disp:"Barlow Condensed","Barlow Fallback","Arial Narrow",sans-serif;--r:0}
 *{box-sizing:border-box}
 html{color-scheme:dark}
@@ -94,13 +94,13 @@ main.page.wide{max-width:1180px}main.page.wide #ev>*{max-width:760px}
 .eart .illus-tag{right:10px;left:auto;top:auto;bottom:10px}
 @media (max-width:979px){.eart{display:none}}
 @media (min-width:760px){
- .card button.head{grid-template-columns:26px 72px 124px minmax(0,1fr) 190px 54px 50px;grid-template-areas:"rank sev typ title place src when";gap:0 10px;padding:4px 0}
+ .card button.head{grid-template-columns:26px 72px 124px minmax(0,1fr) 190px 70px 50px;grid-template-areas:"rank sev typ title place src when";gap:0 10px;padding:4px 0}
  .head .sev,.head .typ,.head .place,.head .src{display:block}
  .meta{display:none}
  .head .sev{grid-area:sev;font:700 12px var(--disp);letter-spacing:.08em;color:var(--c,var(--mute))}
  .head .typ{grid-area:typ;font:600 13px var(--disp);letter-spacing:.04em;text-transform:uppercase;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
  .head .place{grid-area:place;color:var(--text);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
- .head .src{grid-area:src;font:600 12px var(--disp);letter-spacing:.06em;color:var(--mute);text-transform:uppercase}
+ .head .src{grid-area:src;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:600 12px var(--disp);letter-spacing:.06em;color:var(--mute);text-transform:uppercase}
  .title{font-size:16px}
 }
 @media (max-width:759px){

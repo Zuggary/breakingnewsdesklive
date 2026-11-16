@@ -136,10 +136,11 @@ class T(unittest.TestCase):
         src = next(s for s in build_data.SOURCES if s["id"] == "gdelt-doc")
         d = json.load(open(os.path.join(FIX, "gdelt-doc.json")))
         for a in d["articles"]:
-            a["title"] = a["title"].replace("a", "&#xE1;", 1)
+            a["title"] = "\u201c" + a["title"].replace("a", "&#xE1;", 1) + "\u201d"
         ev = build_data.parse_gdelt(d, src)
         for e in ev:
             self.assertNotIn("&#", e["title"])
+            self.assertNotIn("\u201c\u201c", e["title"])
             self.assertTrue(all("&#" not in l["title"] for l in e["links"]))
 
     def test_tv_excludes_world_events(self):
