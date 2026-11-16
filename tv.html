@@ -97,4 +97,5 @@ if(new URLSearchParams(location.search).get('tilt')==='1')document.body.classLis
 clocks();setInterval(clocks,1000);load();setInterval(load,300000);requestAnimationFrame(frame);
 setInterval(function(){if(!CTL.auto)return;var n=floorList().length;if(!n){S.i=0;aim();board();lower();return}S.i=(S.i+1)%n;aim();board();lower()},DWELL);
 })();
-</script></body></html>
+</script><script src="/count.js" defer></script>
+</body></html>

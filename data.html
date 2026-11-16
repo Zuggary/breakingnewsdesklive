@@ -38,4 +38,5 @@ fetch('data/sources.json',{cache:'no-cache'}).then(function(r){return r.json()})
   var l=td(s.licence+' '),ta=document.createElement('a');ta.href=s.terms;ta.textContent='(terms)';ta.rel='noopener';l.appendChild(ta);tr.appendChild(l);
   tr.appendChild(td(s.update||''));tr.appendChild(td(s.checked.replace('T',' ').replace('Z','')));tr.appendChild(td(String(s.count)));tr.appendChild(td(s.ok?'OK':'Last check failed'));tb.appendChild(tr)});
 }).catch(function(){document.querySelector('#t tbody').textContent='Could not load the source list.'});
-</script></body></html>
+</script><script src="/count.js" defer></script>
+</body></html>

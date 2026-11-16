@@ -25,4 +25,5 @@ fetch('data/events.json',{cache:'no-cache'}).then(function(r){return r.json()}).
  box.appendChild(el('p','warn',(e.type==='headline'||e.type==='statement')?'Headlines and statements are claims by the named outlet or party. This site does not verify them. It is automated and may be wrong. Check official sources.':'Check official sources. This site is automated and may be wrong or late.'));
  var cp=el('p'),ca=el('a',null,'Report an error or ask for a correction');ca.href='corrections.html';cp.appendChild(ca);box.appendChild(cp);
 }).catch(function(){box.textContent='Data could not be loaded. Try again in a minute.'});})();
-</script></body></html>
+</script><script src="/count.js" defer></script>
+</body></html>
