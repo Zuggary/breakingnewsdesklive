@@ -216,18 +216,6 @@
   "corner_check": "2026-11-14: bottom-left and bottom-right corners zoomed by eye; no lettering or signature"
  },
  {
-  "file": "recall-2.webp",
-  "category": "recall",
-  "variant": 2,
-  "prompt": "editorial illustration, deep navy and amber ink on cream paper, visible paper grain, flat simple shapes, calm composition, wide empty margins, open box shape with a tag, simple shelf lines, no brands, close view, no text, no letters, no people, no faces, no logos, no buildings, no flags, not a photo",
-  "model": "FLUX.1 schnell",
-  "host": "laptop RTX 5070 Ti",
-  "date": "2026-11-14",
-  "bytes": 67214,
-  "label": "Illustration",
-  "corner_check": "2026-11-14: bottom-left and bottom-right corners zoomed by eye; no lettering or signature"
- },
- {
   "file": "recall-3.webp",
   "category": "recall",
   "variant": 3,
