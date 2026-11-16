@@ -104,9 +104,9 @@ class KillSwitch(unittest.TestCase):
 
     def test_official_hazard_titles_are_not_held(self):
         from tools import killswitch
-        evs = [self.ev("q", "earthquake", "M 5.5 earthquake"), self.ev("w", "weather", "Flood Warning"), self.ev("t", "transport", "Airport closed at SAN")]
+        evs = [self.ev("q", "earthquake", "M 5.5 earthquake"), self.ev("w", "weather", "Flood Warning"), self.ev("t", "transport", "Airport closed at SAN"), self.ev("r", "recall", "CPSC recall: Rugs due to risk of injury or death from fire")]
         out, held = killswitch.apply(evs, set())
-        self.assertEqual((len(out), len(held)), (3, 0))
+        self.assertEqual((len(out), len(held)), (4, 0))
 
     def test_global_stop_by_env_and_file(self):
         import tempfile

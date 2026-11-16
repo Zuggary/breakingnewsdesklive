@@ -11,7 +11,7 @@ import os
 import re
 
 TRIGGER_RE = re.compile(
-    r"\b(mass[- ]casualt\w*|casualt\w+|death toll|killed|shot dead|shooting|gunman|massacre|bomb\w*|explosion|blast|"
+    r"\b(mass[- ]casualt\w*|casualt\w+|death toll|deaths?|dead|died|fatal\w*|wounded|killed|shot dead|shooting|gunman|massacre|bomb\w*|explosion|blast|"
     r"plane crash|crash(?:es|ed)?|derail\w*|collision|terror\w*|hostages?|airstrike|air strike|missile|invasion|offensive|war|"
     r"attack(?:s|ed)?|assassinat\w*|coup|genocide|chemical attack)\b", re.I)
 # Official hazard feeds use fixed titles; a trigger inside them is a hazard word, not a crisis claim.
@@ -20,7 +20,7 @@ OFFICIAL_TYPES = {"earthquake", "weather", "volcano", "storm", "flood", "wildfir
 
 def trigger_of(e):
     """Return the matched trigger word, or None."""
-    if e.get("type") in OFFICIAL_TYPES and e.get("type") != "recall":
+    if e.get("type") in OFFICIAL_TYPES:
         return None
     m = TRIGGER_RE.search("%s %s" % (e.get("title", ""), e.get("place", "")))
     return m.group(0).lower() if m else None
