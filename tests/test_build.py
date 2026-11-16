@@ -27,6 +27,11 @@ class T(unittest.TestCase):
         keys = [build_data.rank_key(e) for e in self.events]
         self.assertEqual(keys, sorted(keys))
 
+    def test_headlines_stay_out_of_the_top_15(self):
+        others = [e for e in self.events if e["type"] != "headline"]
+        if len(others) >= 15:
+            self.assertTrue(all(e["type"] != "headline" for e in self.events[:15]))
+
     def test_severity_ranks_first(self):
         order = [build_data.SEV_ORDER[e["severity"]] for e in self.events]
         self.assertEqual(order, sorted(order), "a lower severity tier appears above a higher one")

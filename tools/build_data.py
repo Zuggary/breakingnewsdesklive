@@ -770,7 +770,8 @@ SEV_ORDER = {"extreme": 0, "severe": 1, "moderate": 2, "minor": 3}
 
 def rank_key(e):
     """Severity tier first, then score. A minor event never ranks above a severe one."""
-    return (SEV_ORDER.get(e["severity"], 4), -e["score"])
+    # Outlet headlines (GDELT) sort after every other event of the same tier, so they stay out of the top of the list.
+    return (SEV_ORDER.get(e["severity"], 4), e["type"] == "headline", -e["score"])
 
 
 def track_seen(events, out_dir, now):
