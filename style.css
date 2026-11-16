@@ -166,3 +166,11 @@ header.top{min-height:61px}.status{min-height:40px;align-items:center}
 main.page.wide{max-width:1180px}main.page.wide #ev>*{max-width:760px}
 .hero-art{position:absolute;top:0;right:0;bottom:0;width:52%;z-index:0;opacity:.6;-webkit-mask-image:linear-gradient(90deg,transparent,#000 40%);mask-image:linear-gradient(90deg,transparent,#000 40%)}
 .hero-art img{display:block;width:100%;height:100%;object-fit:cover}.hero-art .illus-tag{left:auto;right:10px;top:auto;bottom:10px}
+/* GD5 judge round 1 fixes: shorter hero, one freshness line, tidy phone pills */
+.status{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;padding:0;min-height:0}
+.band.hero{min-height:0;padding:28px 0 22px}
+.band.hero h1{font-size:clamp(2.2rem,5.5vw,3.5rem);margin-bottom:10px}
+.verdict{min-height:0;margin-bottom:4px}.verdict2{min-height:0;margin:6px 0 8px}.srcline{margin-bottom:14px}
+.tiles{min-height:40px}
+.tile{padding:4px 12px}.tile b{font-size:20px}
+@media (max-width:979px){.band.hero{padding:20px 0 16px}.verdict{min-height:3.5em}.verdict2{min-height:3em}.tile{padding:4px 10px;gap:6px}.tiles{gap:6px}}

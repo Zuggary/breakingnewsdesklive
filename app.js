@@ -188,7 +188,7 @@
     try { $('dateline').textContent = now.toLocaleString(undefined, { weekday: 'long', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }); } catch (e) { $('dateline').textContent = ''; }
     $('verdict').textContent = hi.length + ' of ' + evs.length + ' events are rated severe or extreme by their sources right now.';
     if (top) $('verdict2').textContent = 'Top of the list: ' + top.title + ', ' + top.place + ', ' + B.ago(top.time) + '.';
-    $('srcline').textContent = 'Data updated ' + B.ago(d.generated) + '. ';
+    $('srcline').textContent = evs.length + ' events from public sources, updated ' + B.ago(d.generated) + (Date.now() - Date.parse(d.generated) > 45 * 6e4 ? '. This data is older than 45 minutes' : '') + '. ';
     var l = el('a', '', 'Every source and its age'); l.href = 'data.html'; $('srcline').appendChild(l);
     if (window.matchMedia && window.matchMedia('(min-width:980px)').matches) {
       fetch('assets/stock/manifest.json').then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (m) {
