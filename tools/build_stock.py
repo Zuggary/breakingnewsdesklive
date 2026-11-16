@@ -1,6 +1,6 @@
 """Build the stock art library (GD5): web sizes, stream size and manifest.json.
 
-Input : design/keep.json  {"<id>": {"raw": "<repo path to PNG>", "tag": "...", "region": "...", "alt": "...", "prompt": "...", "seed": N, "host": "...", "date": "...", "judge_notes": "...", "corner_check": "..."}}
+Input : a keep file given as the first argument (JSON)  {"<id>": {"raw": "<repo path to PNG>", "tag": "...", "region": "...", "alt": "...", "prompt": "...", "seed": N, "host": "...", "date": "...", "judge_notes": "...", "corner_check": "..."}}
 Output: assets/stock/web/<id>-{375,768,1440}.{avif,webp,jpg}, assets/stock/stream/<id>.webp (1920x1080), assets/stock/manifest.json
 Rules : no text in images, label 'Illustration', licence 'generated in-house'.
 """
@@ -57,6 +57,8 @@ def build(keep):
 
 
 if __name__ == "__main__":
-    keep = json.load(open(sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "design", "keep.json")))
+    if len(sys.argv) < 2:
+        sys.exit("usage: build_stock.py <keep.json>")
+    keep = json.load(open(sys.argv[1]))
     m = build(keep)
     print("built %d stills" % len(m))
