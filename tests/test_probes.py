@@ -122,6 +122,23 @@ class Detection(unittest.TestCase):
         self.assertEqual(probes.events_from_snapshot(snap, now), [])
 
 
+class NeverReachable(unittest.TestCase):
+    def test_a_service_never_reachable_is_unprobeable_not_down(self):
+        services, state, last = [svc("united", "airline")], {}, {}
+        for m in (0, 3, 6, 9):
+            now = step(state, services, m, fetch_timeout, last)
+        snap = probes.snapshot(state, services, now)
+        self.assertEqual(snap["services"][0]["status"], "unprobeable")
+        self.assertEqual(probes.events_from_snapshot(snap, now), [])
+
+    def test_a_service_that_was_healthy_before_is_down_after_3_timeouts(self):
+        services, state, last = [svc("united", "airline")], {}, {}
+        step(state, services, 0, fetch_ok, last)
+        for m in (3, 6, 9):
+            now = step(state, services, m, fetch_timeout, last)
+        self.assertEqual(probes.snapshot(state, services, now)["services"][0]["status"], "down")
+
+
 class Grouping(unittest.TestCase):
     def test_four_banks_failing_together_make_one_big_item(self):
         names = ["chase", "bofa", "wellsfargo", "usbank"]

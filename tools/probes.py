@@ -10,7 +10,8 @@ Rules (specs/GD7-service-outage-probes.md):
 - down      = DOWN_RUN probes in a row that are hard bad.
 - degraded  = DOWN_RUN probes in a row that are bad (hard or soft), not all hard.
 - healthy again = CLEAR_RUN healthy probes in a row.
-- unprobeable = the first BASELINE_N probes were all blocked. It stays out of outage detection until a healthy probe appears.
+- unprobeable = the first BASELINE_N probes were all blocked, or never reachable (timeout or error), and nothing healthy was ever seen.
+  It stays out of outage detection until a healthy probe appears. This stops a service that blocks us from showing as a false outage.
 """
 import json
 import statistics
@@ -116,7 +117,8 @@ def update(state, svc, res):
     h = st["history"]
     kinds = [x["kind"] for x in h]
     # Unprobeable: all of the first probes were blocked and nothing healthy was ever seen.
-    if not st["ever_healthy"] and len(h) >= BASELINE_N and all(k == "blocked" for k in kinds[:BASELINE_N]) and all(k == "blocked" for k in kinds):
+    # A service that was never reachable cannot be told from one that refuses plain probes, so it never makes an item.
+    if not st["ever_healthy"] and len(h) >= BASELINE_N and all(k in ("blocked", "hard") for k in kinds[:BASELINE_N]) and all(k in ("blocked", "hard") for k in kinds):
         st["status"], st["since"] = "unprobeable", st["since"] or res["t"]
         return st["status"]
     last = kinds[-DOWN_RUN:]

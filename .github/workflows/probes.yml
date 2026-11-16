@@ -48,7 +48,8 @@ jobs:
             if [ "$cur" != "$prev" ] || [ $(( now - lastpush )) -ge 900 ]; then
               cp work/state.json pd/state.json
               cp work/probes.json pd/probes.json
-              git -C pd add state.json probes.json
+              tail -n 3000 work/probe-log.jsonl > pd/probe-log.jsonl 2>/dev/null || true
+              git -C pd add state.json probes.json probe-log.jsonl
               git -C pd commit -q -m "probes $(date -u +%H:%M)" || true
               git -C pd push -q origin HEAD:probe-data --force || true
               lastpush=$now
