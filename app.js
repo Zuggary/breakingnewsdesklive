@@ -190,6 +190,13 @@
     if (top) $('verdict2').textContent = 'Top of the list: ' + top.title + ', ' + top.place + ', ' + B.ago(top.time) + '.';
     $('srcline').textContent = 'Data updated ' + B.ago(d.generated) + '. ';
     var l = el('a', '', 'Every source and its age'); l.href = 'data.html'; $('srcline').appendChild(l);
+    if (window.matchMedia && window.matchMedia('(min-width:980px)').matches) {
+      fetch('assets/stock/manifest.json').then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (m) {
+        var it = B.pickStock(m, 'world', new Date().toISOString().slice(0, 10)); if (!it) return;
+        var box = el('div', 'hero-art'); box.appendChild(B.stockPicture(it, '50vw', false)); box.appendChild(el('span', 'illus-tag', 'Illustration'));
+        document.querySelector('.band.hero').appendChild(box);
+      }).catch(function () {});
+    }
     var t = $('tiles'); t.textContent = '';
     ['extreme', 'severe', 'moderate', 'minor'].forEach(function (k) {
       var n = evs.filter(function (e) { return e.severity === k; }).length; if (!n) return;
