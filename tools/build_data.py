@@ -82,7 +82,7 @@ SOURCES = [
     {"id": "cisa-kev", "update": "several times a week", "name": "CISA Known Exploited Vulnerabilities catalog",
      "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
      "page": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog", "licence": "CC0 (public domain)",
-     "terms": "https://www.cisa.gov/license"},
+     "terms": "https://www.cisa.gov/sites/default/files/licenses/kev/license.txt"},
     {"id": "status-github", "update": "live (provider status page)", "name": "GitHub public status page", "provider": "GitHub",
      "url": "https://www.githubstatus.com/api/v2/summary.json", "page": "https://www.githubstatus.com/",
      "licence": "Provider's public status page; headline and link only", "terms": "https://www.githubstatus.com/"},
@@ -98,7 +98,7 @@ SOURCES = [
     {"id": "fedreg-presidential", "update": "daily (business days)", "name": "Federal Register: presidential documents",
      "url": "https://www.federalregister.gov/api/v1/documents.json?per_page=15&order=newest&conditions%5Btype%5D%5B%5D=PRESDOCU",
      "page": "https://www.federalregister.gov/presidential-documents", "licence": "US Government work, public domain; headline and link only",
-     "terms": "https://www.federalregister.gov/reader-aids/policy"},
+     "terms": "https://www.federalregister.gov/reader-aids/government-policy-and-ofr-procedures"},
     {"id": "fcdo", "update": "as published", "name": "UK Foreign, Commonwealth & Development Office (GOV.UK)", "xml": True,
      "url": "https://www.gov.uk/government/organisations/foreign-commonwealth-development-office.atom",
      "page": "https://www.gov.uk/government/organisations/foreign-commonwealth-development-office",
@@ -124,7 +124,7 @@ SOURCES = [
      "url": "https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH?eventlist=EQ;TC;FL;VO;DR;WF&alertlevel=Green;Orange;Red",
      "page": "https://www.gdacs.org/",
      "licence": "GDACS terms of use; credit GDACS",
-     "terms": "https://www.gdacs.org/About/termsofuse.aspx"},
+     "terms": "https://www.gdacs.org/About/termofuse.aspx"},
 ]
 
 
