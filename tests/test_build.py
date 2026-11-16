@@ -132,6 +132,16 @@ class T(unittest.TestCase):
         self.assertTrue(0 < len(st) <= 6)
         self.assertTrue(all(e["title"].startswith("UK Foreign Office: ") and e["source_url"].startswith("https://") for e in st))
 
+    def test_gdelt_titles_have_no_html_entities(self):
+        src = next(s for s in build_data.SOURCES if s["id"] == "gdelt-doc")
+        d = json.load(open(os.path.join(FIX, "gdelt-doc.json")))
+        for a in d["articles"]:
+            a["title"] = a["title"].replace("a", "&#xE1;", 1)
+        ev = build_data.parse_gdelt(d, src)
+        for e in ev:
+            self.assertNotIn("&#", e["title"])
+            self.assertTrue(all("&#" not in l["title"] for l in e["links"]))
+
     def test_tv_excludes_world_events(self):
         root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.assertIn("e.type!=='statement'&&e.type!=='headline'", open(os.path.join(root, "tv.html")).read())
