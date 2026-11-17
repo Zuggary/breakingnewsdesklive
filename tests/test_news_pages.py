@@ -89,7 +89,7 @@ class NewsPages(unittest.TestCase):
             self.assertTrue(any('/boundary/' in u for u in locs))
             self.assertEqual(len(tree.findall('s:url/n:news/n:publication/n:name', ns)), 2)
             pages = ET.parse(Path(out) / 'news-pages.xml')
-            self.assertEqual(len(pages.findall('s:url/s:lastmod', ns)), 6)
+            self.assertEqual(len(pages.findall('s:url/s:lastmod', ns)), 5)  # the corrected item has a page but is not in this sitemap
             saved = json.loads((Path(out) / 'news/events.json').read_text())
             news.build_news([], saved, out, NOW + timedelta(days=4))
             self.assertTrue(path.exists())
@@ -106,6 +106,15 @@ class NewsPages(unittest.TestCase):
         e = event()
         e["detail"] = dict(e["detail"], sources=[{"source": "Bad", "url": "https://[invalid"}])
         self.assertIn("Bad", news.render_page(e, NOW))
+
+    def test_title_change_removes_the_old_page_and_corrected_is_off_pages_sitemap(self):
+        with tempfile.TemporaryDirectory() as d:
+            news.build_news([event()], [], d, NOW)
+            news.build_news([event(title="A different title", confidence="Corrected")], [], d, NOW)
+            pages = list(Path(d, "news", "desk-1").glob("*/index.html"))
+            self.assertEqual(len(pages), 1)
+            self.assertIn("a-different-title", str(pages[0]))
+            self.assertNotIn("desk-1", Path(d, "news-pages.xml").read_text())
 
     def test_changed_since(self):
         item = event()

@@ -2,6 +2,7 @@
 import html
 import json
 import re
+import shutil
 import unicodedata
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -137,13 +138,17 @@ def build_news(events, expired_events, out_dir, now):
     urls = []
     for event in all_events.values():
         path = out / _path(event) / "index.html"
+        for stale in path.parent.parent.glob("*/"):  # an older slug of the same id must not stay published
+            if stale != path.parent and stale.is_dir():
+                shutil.rmtree(stale)
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(render_page(event, now), encoding="utf-8")
         url = BASE + "/" + _path(event)
         urls.append(url)
-        entry = node(pages, "url")
-        node(entry, "loc", url)
-        node(entry, "lastmod", _modified(event))
+        if not (event.get("confidence") == "Corrected" or _withdrawn(event)):
+            entry = node(pages, "url")
+            node(entry, "loc", url)
+            node(entry, "lastmod", _modified(event))
         if _time(now) - timedelta(hours=48) <= _time(event["time"]) <= _time(now) and not _withdrawn(event):
             entry = node(news, "url")
             node(entry, "loc", url)
