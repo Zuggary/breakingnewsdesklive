@@ -89,6 +89,81 @@ class Lifecycle(unittest.TestCase):
         self.assertEqual(q.entries, {})
 
 
+class Lessons(unittest.TestCase):
+    """CoS lessons from the Agenda-Free TV coverage of the 16 Nov United outage."""
+
+    def test_evidence_keeps_source_intermediary_time_scope_and_verification_apart(self):
+        c = claim()
+        claims.add_evidence(c, "official", "United Airlines", "https://united.example/s", NOW, intermediary="CBS News correspondent",
+                            published="2026-11-16T23:02:00Z", scope="departures only", verification="attributed", text="Technology issue resolved")
+        ev = c["evidence"][0]
+        for k in ("source", "intermediary", "published", "observed", "scope", "verification", "kind", "url"):
+            self.assertIn(k, ev)
+        self.assertEqual(ev["source"], "United Airlines")
+        self.assertEqual(ev["intermediary"], "CBS News correspondent")
+        self.assertEqual(ev["scope"], "departures only")
+        self.assertEqual(ev["verification"], "attributed")
+        self.assertEqual(ev["published"], "2026-11-16T23:02:00Z")
+        self.assertEqual(ev["observed"], "2026-11-16T23:00:00Z")
+
+    def test_two_intermediaries_relaying_one_source_are_one_chain(self):
+        c = claim()
+        claims.add_evidence(c, "official", "United Airlines", "https://a", NOW, intermediary="CBS", verification="attributed")
+        claims.add_evidence(c, "official", "United Airlines", "https://b", NOW, intermediary="Reuters", verification="attributed")
+        self.assertEqual(claims.chains(c), {"United Airlines"})
+        self.assertEqual(claims.label(c), claims.UNVERIFIED)
+
+    def test_an_attributed_statement_stays_a_lead_until_read_directly(self):
+        c = claim()
+        claims.add_evidence(c, "official", "United Airlines", "https://a", NOW, intermediary="CBS", verification="attributed")
+        self.assertEqual(c["label"], claims.UNVERIFIED)
+        claims.add_evidence(c, "official", "United Airlines", "https://united.example/newsroom", NOW, verification="direct")
+        self.assertEqual(c["label"], claims.OFFICIAL)
+        claims.add_evidence(c, "outlet", "bbc.co.uk", "https://bbc.example", NOW)
+        self.assertEqual(c["label"], claims.CORROBORATED)
+
+    def test_user_reports_such_as_downdetector_are_never_proof(self):
+        c = claim(evidence=[("user-reports", "downdetector-style"), ("user-reports", "social-complaints")])
+        self.assertEqual(claims.chains(c), set())
+        self.assertEqual(claims.label(c), claims.UNVERIFIED)
+        c = claim(evidence=[("outlet", "nbc.com"), ("user-reports", "downdetector-style")])
+        self.assertEqual(claims.label(c), claims.UNVERIFIED)
+
+    def test_a_disappeared_notice_is_not_a_resolution(self):
+        c = claim(ctype="page-error", evidence=[("official", "United Airlines"), ("outlet", "bbc.co.uk")])
+        before = c["label"]
+        self.assertTrue(claims.note_disappeared(c, "United Airlines", NOW))
+        claims.revise(c, NOW, "recheck")
+        self.assertEqual(c["label"], before)
+        self.assertFalse(c["flags"].get("resolved"))
+        self.assertIn("A removed notice is not a resolution.", " ".join(c["notes"]))
+        self.assertTrue(any("not a resolution" in h["why"] for h in c["history"]))
+        self.assertFalse(claims.note_disappeared(claim(), "Nobody", NOW))
+
+    def test_chat_and_stream_tips_wait_and_never_air(self):
+        q = claims.TipQueue()
+        q.queue("t1", "viewer says Nashville departure left at 4:41", "chat", NOW)
+        q.queue("t2", "United says issue fixed", "live-stream", NOW)
+        self.assertEqual(q.airable(), [])
+        self.assertEqual(q.tips["t1"]["state"], "queued")
+        c = claim(cid="c9", ctype="page-error")
+        with self.assertRaises(ValueError):
+            q.promote("t2", c, "lead", "live-stream", "", NOW)
+        q.promote("t2", c, "official", "United Airlines", "https://united.example/newsroom", NOW, verification="direct")
+        self.assertEqual(q.tips["t2"]["state"], "checked")
+        self.assertEqual(c["label"], claims.OFFICIAL)
+        self.assertEqual(q.airable(), [])
+        qq = claims.Queue()
+        qq.sync([c], NOW)
+        self.assertEqual(qq.entries, {})            # one official chain does not pass the strict ticker
+
+    def test_watch_plan_checks_social_newsroom_and_wires_together(self):
+        p = claims.watch_plan("united")
+        self.assertTrue(p["social"] and p["newsroom"] and p["wires"] and p["official_status"])
+        self.assertIn("hub.united.com", p["newsroom"])
+        self.assertEqual(claims.watch_plan("unknown-service")["wires"], ["AP", "Reuters"])
+
+
 class Gate(unittest.TestCase):
     def test_only_corroborated_claims_pass_the_strict_ticker(self):
         labels = {claims.UNVERIFIED: False, claims.OFFICIAL: False, claims.CORROBORATED: True, claims.CONTESTED: False, claims.CORRECTED: False, claims.RESOLVED: False}

@@ -23,7 +23,7 @@ RESOLVED = "Resolved"
 PRECEDENCE = [CORRECTED, CONTESTED, RESOLVED, CORROBORATED, OFFICIAL, UNVERIFIED]
 
 EVIDENCE_KINDS = ("official", "outlet", "measurement")      # these can be a chain
-LEAD_KINDS = ("lead",)                                      # these never can
+LEAD_KINDS = ("lead", "user-reports")                        # these never can. user-reports covers Downdetector-style counts: reports by users, never proof
 
 # Outlets that share one newsroom, wire or owner. Their stories are one chain.
 ORIGIN_GROUPS = {
@@ -75,7 +75,9 @@ def label(claim):
     if len(cs) >= 2:
         return CORROBORATED
     if len(cs) == 1:
-        official = [e for e in claim.get("evidence", []) if not e.get("withdrawn") and e.get("kind") == "official"]
+        # One official chain counts as "Official single source" only when we read the primary source ourselves.
+        # "United says it is fixed, via CBS" stays a lead until the airline's own statement is read.
+        official = [e for e in claim.get("evidence", []) if not e.get("withdrawn") and e.get("kind") == "official" and e.get("verification", "direct") == "direct"]
         return OFFICIAL if official else UNVERIFIED
     return UNVERIFIED
 
@@ -91,9 +93,40 @@ def revise(claim, now, why=""):
     return False
 
 
-def add_evidence(claim, kind, origin, url, now, text=""):
-    claim.setdefault("evidence", []).append({"kind": kind, "origin": origin or "unknown", "url": url, "t": now.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "text": text})
+def stamp(dt):
+    return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def make_evidence(kind, source, url, observed, intermediary=None, published=None, scope=None, verification=None, text=""):
+    """One piece of evidence with its fields kept apart (CoS lesson from the Agenda-Free coverage):
+    source        the ORIGINAL source of the statement or fact (United Airlines, the FAA, a company, a person)
+    intermediary  who passed it on (a Reuters reporter posting United's statement). May be None.
+    published     when the source said it. observed is when we saw it.
+    scope         what the statement covers ("departures only", "all operations", "one airport").
+    verification  direct (we read the primary source), attributed (an intermediary says the source said it), tentative.
+    The chain is the SOURCE. Two intermediaries who relay one source are one chain."""
+    return {"kind": kind, "origin": (source or "unknown"), "source": source or "unknown", "intermediary": intermediary, "url": url,
+            "published": published, "observed": stamp(observed), "scope": scope, "verification": verification or ("direct" if kind == "official" and not intermediary else "attributed"),
+            "text": text}
+
+
+def add_evidence(claim, kind, origin, url, now, text="", intermediary=None, published=None, scope=None, verification=None):
+    claim.setdefault("evidence", []).append(make_evidence(kind, origin, url, now, intermediary, published, scope, verification, text))
     return revise(claim, now, "evidence added (%s)" % kind)
+
+
+def note_disappeared(claim, source, now):
+    """A notice that was removed from an airline page or newsroom. This is NOT a resolution.
+    The statement existed, so the chain stays. The claim gets a note and a history record, and its label does not change."""
+    hit = False
+    for ev in claim.get("evidence", []):
+        if (ev.get("source") or ev.get("origin")) == source and not ev.get("disappeared"):
+            ev["disappeared"] = stamp(now)
+            hit = True
+    if hit:
+        claim.setdefault("notes", []).append("A notice from %s was removed at %s. A removed notice is not a resolution." % (source, now.strftime("%H:%M UTC")))
+        claim.setdefault("history", []).append({"t": stamp(now), "from": claim.get("label"), "to": claim.get("label"), "why": "notice from %s disappeared (not a resolution)" % source})
+    return hit
 
 
 def withdraw(claim, origin, now):
@@ -180,3 +213,40 @@ def confidence_for_event(e):
     if e.get("type") in OFFICIAL_TYPES or e.get("source_id") in ("ms365",) or str(e.get("source_id", "")).startswith("status-"):
         return OFFICIAL
     return UNVERIFIED
+
+
+class TipQueue:
+    """Chat and stream tips wait here until a person or a check has verified them. Nothing in this queue airs.
+    A tip becomes evidence only through promote(), which needs a primary or independent source."""
+
+    def __init__(self):
+        self.tips = {}
+
+    def queue(self, tid, text, channel, now):
+        self.tips[tid] = {"id": tid, "text": text, "channel": channel, "queued": stamp(now), "state": "queued", "claim": None}
+
+    def promote(self, tid, claim, kind, source, url, now, **kw):
+        """Attach a checked, independent piece of evidence for the tip's claim. The tip itself is not evidence."""
+        t = self.tips[tid]
+        if kind in LEAD_KINDS:
+            raise ValueError("a lead cannot be promoted as evidence")
+        add_evidence(claim, kind, source, url, now, **kw)
+        t["state"], t["claim"] = "checked", claim["id"]
+
+    def airable(self):
+        return []     # tips never air. Claims air, through the ticker gate.
+
+
+# Where to look for one service together: airline social, the newsroom and the wires. Names only. Our own code reads
+# newsrooms and feeds that allow it; social accounts are read by a person or through a permitted API.
+WATCH = {
+    "united": {"social": ["United Airlines official account"], "newsroom": ["united.com/en/us/newsroom", "hub.united.com"], "wires": ["AP", "Reuters"], "official_status": ["FAA NAS status"]},
+    "delta": {"social": ["Delta official account"], "newsroom": ["news.delta.com"], "wires": ["AP", "Reuters"], "official_status": ["FAA NAS status"]},
+    "american": {"social": ["American Airlines official account"], "newsroom": ["news.aa.com"], "wires": ["AP", "Reuters"], "official_status": ["FAA NAS status"]},
+    "southwest": {"social": ["Southwest official account"], "newsroom": ["swamedia.com"], "wires": ["AP", "Reuters"], "official_status": ["FAA NAS status"]},
+}
+
+
+def watch_plan(service_id):
+    """Everything to check together for one service. Unknown services get the wires only."""
+    return WATCH.get(service_id, {"social": [], "newsroom": [], "wires": ["AP", "Reuters"], "official_status": []})
