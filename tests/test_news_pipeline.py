@@ -389,3 +389,25 @@ class ControlTests(unittest.TestCase):
             again = nl.acquire_lock(Path(d) / 'loop.lock')
             self.assertIsNotNone(again)
             again.close()
+
+    def test_remote_rows_without_id_do_not_stop_a_takedown(self):
+        import tempfile, json, subprocess
+        from pathlib import Path
+        from tools import news_loop as nl
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            (d / 'PUSH_APPROVED').write_text('x')
+            clone = d / 'news-data-clone'
+            clone.mkdir()
+            subprocess.run(['git', '-C', str(clone), 'init', '-q', '-b', 'news-data'], check=True)
+            subprocess.run(['git', 'init', '-q', '--bare', str(d / 'bare.git')], check=True)
+            subprocess.run(['git', '-C', str(clone), 'remote', 'add', 'origin', str(d / 'bare.git')], check=True)
+            (clone / 'auto_items.json').write_text(json.dumps([{'id': 'auto-1'}, {'title': 'no id'}, 'junk', {'id': 'auto-2'}]))
+            g = ['git', '-C', str(clone), '-c', 'user.name=t', '-c', 'user.email=t@t']
+            subprocess.run(g + ['add', '.'], check=True)
+            subprocess.run(g + ['commit', '-q', '-m', 'b'], check=True)
+            subprocess.run(g + ['push', '-q', 'origin', 'HEAD:news-data'], check=True)
+            (d / 'PULL').write_text('auto-1\n')
+            with patch.object(nl, 'control_dir', return_value=d):
+                self.assertEqual(nl.publish(d, removals_only=True), 'pushed')  # HOLD path
+            self.assertEqual([i['id'] for i in json.loads((clone / 'auto_items.json').read_text())], ['auto-2'])

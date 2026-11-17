@@ -10,6 +10,11 @@ from tools.news_sweep import run_sweep, dedupe, default_runner, confirm_prompt, 
 from tools.news_judge import candidate_id, judge_prompt, parse_verdict, gates, default_judge_runner, meets_bar
 
 
+def read_rows(path):
+    """Rows of an items file that are dicts with an id. Anything else is dropped."""
+    return [i for i in ledger.read(path) if isinstance(i, dict) and i.get('id')]
+
+
 def read_lines(path):
     """Whitespace-separated words of a control file. A missing file is empty; any other read error raises (fail closed)."""
     try:
@@ -133,8 +138,8 @@ def apply_pulls(out_dir, pull_path, ledger_path, now):
         except OSError:
             pass  # the takedown below still runs; the PULL file itself keeps blocking in publish
     path = out / 'auto_items.json'
-    items = ledger.read(path) if path.exists() else []
-    pulled = [i['id'] for i in items if i.get('id') in pulls]
+    items = read_rows(path) if path.exists() else []
+    pulled = [i['id'] for i in items if isinstance(i, dict) and i.get('id') in pulls]
     if pulled:
         ledger.write(path, [i for i in items if i.get('id') not in pulls])
         with (out / 'corrections.log').open('a') as f:
@@ -145,7 +150,7 @@ def apply_pulls(out_dir, pull_path, ledger_path, now):
 
 
 def new_published_lines(items, seen_path):
-    """(lines, ids) for items not yet marked seen: headline and source names only."""
+    """(lines, ids) for items not yet marked seen: headline and source names with links (public outlet URLs)."""
     seen = set(read_lines(seen_path))
     lines, ids = [], []
     for i in items:
@@ -204,9 +209,9 @@ def publish(out_dir, clone_url=None, removals_only=False):
     if not removals_only:
         # Merge: remote items plus local items, local wins by id. Expired items drop out. Pulled and blocked ids drop out below.
         now = datetime.now(timezone.utc)
-        remote = ledger.read(clone / 'auto_items.json') if (clone / 'auto_items.json').exists() else []
-        merged = {i['id']: i for i in remote if isinstance(i, dict) and 'id' in i}
-        merged.update({i['id']: i for i in ledger.read(out / 'auto_items.json')})
+        remote = read_rows(clone / 'auto_items.json') if (clone / 'auto_items.json').exists() else []
+        merged = {i['id']: i for i in remote}
+        merged.update({i['id']: i for i in read_rows(out / 'auto_items.json')})
         live = []
         for i in merged.values():
             try:
@@ -219,9 +224,9 @@ def publish(out_dir, clone_url=None, removals_only=False):
     elif not (clone / 'auto_items.json').exists():
         return 'held: no live file to take down from'
     if late:
-        ledger.write(clone / 'auto_items.json', [i for i in ledger.read(clone / 'auto_items.json') if i['id'] not in late])
+        ledger.write(clone / 'auto_items.json', [i for i in read_rows(clone / 'auto_items.json') if i['id'] not in late])
         if (out / 'auto_items.json').exists():
-            ledger.write(out / 'auto_items.json', [i for i in ledger.read(out / 'auto_items.json') if i['id'] not in late])
+            ledger.write(out / 'auto_items.json', [i for i in read_rows(out / 'auto_items.json') if i['id'] not in late])
     git = ['git', '-C', str(clone), '-c', 'user.name=Zuggary', '-c', 'user.email=Zuggary@users.noreply.github.com']
     subprocess.run(git + ['add', 'auto_items.json'], check=True)
     if subprocess.run(git + ['diff', '--cached', '--quiet']).returncode == 0:
