@@ -191,6 +191,9 @@ def publish(out_dir, clone_url=None, removals_only=False):
         if ls.returncode != 0 or ls.stdout.strip():
             return 'held: cannot read the remote'  # unreachable, or the branch exists but the fetch failed
         # rc 0 and no heads: the branch does not exist yet, so this is the first push
+        if removals_only or (control_dir() / 'HOLD').exists():
+            return 'held: no live branch yet, nothing to take down'
+        subprocess.run(['git', '-C', str(clone), 'update-ref', '-d', 'HEAD'], capture_output=True)  # drop any failed first commit; the file is copied fresh below
     if (control_dir() / 'HOLD').exists():  # HOLD may arrive during the fetch
         removals_only = True
     if removals_only:  # HOLD: push only what is already live, minus pulls; no new item goes out
