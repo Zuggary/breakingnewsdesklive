@@ -349,3 +349,30 @@ class ControlTests(unittest.TestCase):
                 self.assertEqual(nl.publish(d), 'pushed')
             got = {i['id']: i['title'] for i in json.loads((clone / 'auto_items.json').read_text())}
             self.assertEqual(got, {'auto-1': 'old', 'auto-2': 'new'})  # remote kept, local wins, pulled and expired dropped
+
+    def test_pull_applies_before_the_cap(self):
+        import tempfile, json, subprocess
+        from pathlib import Path
+        from tools import news_loop as nl
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            (d / 'PUSH_APPROVED').write_text('x')
+            clone = d / 'news-data-clone'
+            clone.mkdir()
+            subprocess.run(['git', '-C', str(clone), 'init', '-q', '-b', 'news-data'], check=True)
+            subprocess.run(['git', 'init', '-q', '--bare', str(d / 'bare.git')], check=True)
+            subprocess.run(['git', '-C', str(clone), 'remote', 'add', 'origin', str(d / 'bare.git')], check=True)
+            mk = lambda n: {'id': 'auto-%02d' % n, 'time': '2026-11-17T%02d:00:00Z' % n, 'expires': '2099-01-01T00:00:00Z'}
+            (clone / 'auto_items.json').write_text(json.dumps([mk(n) for n in range(1, 11)]))
+            g = ['git', '-C', str(clone), '-c', 'user.name=t', '-c', 'user.email=t@t']
+            subprocess.run(g + ['add', '.'], check=True)
+            subprocess.run(g + ['commit', '-q', '-m', 'b'], check=True)
+            subprocess.run(g + ['push', '-q', 'origin', 'HEAD:news-data'], check=True)
+            (d / 'auto_items.json').write_text(json.dumps([mk(11)]))
+            (d / 'PULL').write_text('auto-10\n')
+            with patch.object(nl, 'control_dir', return_value=d):
+                nl.publish(d)
+            ids = [i['id'] for i in json.loads((clone / 'auto_items.json').read_text())]
+            self.assertEqual(len(ids), 10)
+            self.assertNotIn('auto-10', ids)
+            self.assertIn('auto-01', ids)

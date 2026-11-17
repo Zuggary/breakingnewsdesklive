@@ -196,6 +196,11 @@ def publish(out_dir, clone_url=None, removals_only=False):
         subprocess.run(['git', '-C', str(clone), 'update-ref', '-d', 'HEAD'], capture_output=True)  # drop any failed first commit; the file is copied fresh below
     if (control_dir() / 'HOLD').exists():  # HOLD may arrive during the fetch
         removals_only = True
+    late = set(read_pull(control_dir() / 'PULL'))  # a pull that arrived during the fetch still wins
+    try:
+        late |= set(read_lines(out / 'blocklist.txt'))  # a blocked id never goes back live
+    except (OSError, ValueError):
+        pass
     if not removals_only:
         # Merge: remote items plus local items, local wins by id. Expired items drop out. Pulled and blocked ids drop out below.
         now = datetime.now(timezone.utc)
@@ -205,7 +210,7 @@ def publish(out_dir, clone_url=None, removals_only=False):
         live = []
         for i in merged.values():
             try:
-                if parse_time(i['expires']) > now:
+                if i['id'] not in late and parse_time(i['expires']) > now:
                     live.append(i)
             except (KeyError, ValueError, TypeError):
                 continue
@@ -213,11 +218,6 @@ def publish(out_dir, clone_url=None, removals_only=False):
         ledger.write(clone / 'auto_items.json', live[-10:])
     elif not (clone / 'auto_items.json').exists():
         return 'held: no live file to take down from'
-    late = set(read_pull(control_dir() / 'PULL'))  # a pull that arrived during the fetch still wins
-    try:
-        late |= set(read_lines(out / 'blocklist.txt'))  # a blocked id never goes back live
-    except (OSError, ValueError):
-        pass
     if late:
         ledger.write(clone / 'auto_items.json', [i for i in ledger.read(clone / 'auto_items.json') if i['id'] not in late])
         if (out / 'auto_items.json').exists():
