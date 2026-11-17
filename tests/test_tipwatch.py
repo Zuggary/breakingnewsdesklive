@@ -157,3 +157,42 @@ class NeverPublished(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SecurityLane(unittest.TestCase):
+    def leads(self):
+        st = {"items": [], "robots": {}}
+        items = [
+            {"feed": "cnn", "title": "US intelligence: Iran weighing dirty bomb or chemical attack on officials in Washington", "link": "https://c.example/1", "time": "2026-11-16T23:30:00Z"},
+            {"feed": "guardian", "title": "Iran weighing dirty bomb or chemical attack on US officials in Washington, report says", "link": "https://g.example/1", "time": "2026-11-16T23:50:00Z"},
+            {"feed": "nbc", "title": "White House says no credible threats after report Iran weighing dirty bomb attack on officials in Washington", "link": "https://n.example/1", "time": "2026-11-17T00:10:00Z"},
+            {"feed": "bbc", "title": "Storm hits coast", "link": "https://b.example/1", "time": "2026-11-17T00:00:00Z"}]
+        tipwatch.add_items(st, items, datetime(2026, 11, 17, 1, 0, tzinfo=timezone.utc))
+        return tipwatch.build_leads(st, datetime(2026, 11, 17, 1, 0, tzinfo=timezone.utc))
+
+    def test_a_security_story_from_2_or_more_outlets_becomes_a_candidate(self):
+        leads = self.leads()
+        self.assertEqual(leads[0]["topic"], "security")
+        cands = tipwatch.security_candidates(leads)
+        self.assertEqual(len(cands), 1)
+        self.assertEqual(cands[0]["n_outlets"], 3)
+        self.assertTrue(cands[0]["official_response_found"])
+        self.assertIn("White House says", cands[0]["response_hints"][0])
+
+    def test_a_candidate_never_publishes_itself_and_lists_what_is_missing(self):
+        c = tipwatch.security_candidates(self.leads())[0]
+        self.assertIn("Never automatic", c["publish"])
+        self.assertTrue(any("official response line" in n for n in c["needs"]))
+        self.assertTrue(any("DC not Washington State" in n for n in c["needs"]))
+
+    def test_non_security_leads_are_not_candidates(self):
+        st = {"items": [], "robots": {}}
+        now = datetime(2026, 11, 17, 1, 0, tzinfo=timezone.utc)
+        tipwatch.add_items(st, [{"feed": "a", "title": "Council approves new library budget plan", "link": "https://a.example/1", "time": "2026-11-17T00:00:00Z"},
+                                {"feed": "b", "title": "Library budget plan approved by council vote", "link": "https://b.example/1", "time": "2026-11-17T00:05:00Z"}], now)
+        self.assertEqual(tipwatch.security_candidates(tipwatch.build_leads(st, now)), [])
+
+    def test_security_terms_tag_the_topic(self):
+        for t in ("Explosion reported near stadium", "Cyberattack hits hospital network", "Evacuation ordered after threat", "Ground stop at airport after alarm"):
+            self.assertEqual(tipwatch.tag_topic(t), "security", t)
+        self.assertEqual(tipwatch.tag_topic("United Airlines outage grounds flights"), "aviation")

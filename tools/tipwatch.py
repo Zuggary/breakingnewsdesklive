@@ -49,6 +49,9 @@ STOP = set("""about after again also amid back been before being between could d
 new news over says said than that their them then there these they this those through today under until very what when where which while
 will with would your live update updates video watch breaking report reports reported""".split())
 
+SECURITY_RX = re.compile(r"\b(dirty bomb|chemical attack|radiological|explosion|explosions|blast|bomb threat|bombing|evacuat\w+|shooting|gunman|cyberattack|cyber attack|ransomware|hostage|hostages|terror\w*|attack on|plot against|threat(?:s)? (?:to|against)|ground stop|lockdown|shelter in place|state of emergency|missile|airstrike|drone attack)\b", re.I)
+RESPONSE_RX = re.compile(r"\b(white house|pentagon|state department|fbi|dhs|homeland security|cia|nsa|secret service|spokesperson|spokesman|officials? say|denies|denied|no credible|statement)\b", re.I)
+
 TOPICS = [
     ("aviation", r"\b(airline|airlines|flight|flights|airport|airports|faa|plane|planes|pilot|aircraft|departures|ground stop|united airlines|delta|southwest|american airlines|boeing|airbus)\b"),
     ("finance", r"\b(bank|banks|banking|jpmorgan|chase|wells fargo|bank of america|stocks|markets|fed|inflation|dollar|zelle|venmo|paypal|sec filing)\b"),
@@ -59,6 +62,7 @@ TOPICS = [
     ("health", r"\b(outbreak|virus|vaccine|hospital|disease|health|measles|cdc|who)\b"),
 ]
 _TOPIC_RX = [(t, re.compile(p, re.I)) for t, p in TOPICS]
+_AVIATION_RX = dict(_TOPIC_RX)["aviation"]
 
 
 def now_utc():
@@ -206,6 +210,8 @@ def similar(a, b):
 
 
 def tag_topic(title, local_model=None):
+    if SECURITY_RX.search(title):
+        return "security"
     for topic, rx in _TOPIC_RX:
         if rx.search(title):
             return topic
@@ -259,6 +265,22 @@ def build_leads(store, now, local_model=None):
     return leads
 
 
+def security_candidates(leads):
+    """Major security and national-news candidates: 2 or more outlets on a security story. INTERNAL.
+    A candidate never publishes itself. It lists what a person must add before an item can show:
+    an official response line, a primary-source link, and calm wording. Headlines that carry a response are shown as hints only."""
+    out = []
+    for l in leads:
+        if l["topic"] != "security":
+            continue
+        hints = [i["title"] for i in l["items"] if RESPONSE_RX.search(i["title"])][:3]
+        out.append({"lead": l["id"], "n_outlets": l["n_outlets"], "outlets": l["outlets"], "first_seen": l["first_seen"], "items": l["items"][:6],
+                    "response_hints": hints, "official_response_found": bool(hints),
+                    "needs": ["official response line (from the agency or office, read directly)", "primary-source link", "calm wording, DC not Washington State, no alarm words"],
+                    "publish": "Only through manual_items.json after a person adds the needs. Never automatic."})
+    return out
+
+
 # ---------- one round ----------
 
 def run_round(store, feeds, now, fetch=http_fetch, local_model=None):
@@ -295,14 +317,15 @@ def main(argv=None):
     a = ap.parse_args(argv)
     refuse_published_path(a.dir)
     os.makedirs(a.dir, exist_ok=True)
-    store_path, leads_path, av_path = (os.path.join(a.dir, n) for n in ("store.json", "leads.json", "aviation-leads.json"))
+    store_path, leads_path, av_path, sec_path = (os.path.join(a.dir, n) for n in ("store.json", "leads.json", "aviation-leads.json", "security-candidates.json"))
     end = time.time() + a.loop
     while True:
         now = now_utc()
         store = load(store_path)
         leads, status = run_round(store, FEEDS, now, local_model=apfel_tag if a.apfel else None)
         for path, obj in ((store_path, store), (leads_path, {"generated": iso(now), "note": "INTERNAL. Never publish.", "leads": leads, "feeds": status}),
-                          (av_path, {"generated": iso(now), "note": "INTERNAL. For Lane 5 (Air Travel Desk). Never publish.", "leads": [l for l in leads if l["topic"] == "aviation"]})):
+                          (av_path, {"generated": iso(now), "note": "INTERNAL. For Lane 5 (Air Travel Desk). Never publish.", "leads": [l for l in leads if l["topic"] == "aviation" or (l["topic"] == "security" and _AVIATION_RX.search(l["items"][0]["title"]))]}),
+                          (sec_path, {"generated": iso(now), "note": "INTERNAL. Candidates for a curated Reported item. Never publish.", "candidates": security_candidates(leads)})):
             with open(path + ".tmp", "w", encoding="utf-8") as f:
                 json.dump(obj, f, indent=1)
             os.replace(path + ".tmp", path)
