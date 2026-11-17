@@ -129,8 +129,7 @@ def apply_pulls(out_dir, pull_path, ledger_path, now):
     if new_ids:  # block first, so a failure after this line can only over-block
         try:
             with (out / 'blocklist.txt').open('a') as f:
-                for cid in new_ids:
-                    f.write(cid + '\n')
+                f.write('\n' + '\n'.join(new_ids) + '\n')
         except OSError:
             pass  # the takedown below still runs; the PULL file itself keeps blocking in publish
     path = out / 'auto_items.json'
@@ -187,7 +186,7 @@ def publish(out_dir, clone_url=None, removals_only=False):
     fetched = subprocess.run(['git', '-C', str(clone), 'fetch', '-q', 'origin', 'news-data'], capture_output=True)
     if fetched.returncode == 0:
         subprocess.run(['git', '-C', str(clone), 'reset', '-q', '--hard', 'FETCH_HEAD'], check=True)
-    elif removals_only:
+    elif removals_only or (control_dir() / 'HOLD').exists():
         return 'held: cannot read the remote'
     if (control_dir() / 'HOLD').exists():  # HOLD may arrive during the fetch
         removals_only = True
@@ -213,6 +212,9 @@ def publish(out_dir, clone_url=None, removals_only=False):
         pass
     if late:
         ledger.write(clone / 'auto_items.json', [i for i in ledger.read(clone / 'auto_items.json') if i['id'] not in late])
+        local = out / 'auto_items.json'
+        if local.exists():
+            ledger.write(local, [i for i in ledger.read(local) if i['id'] not in late])
     git = ['git', '-C', str(clone), '-c', 'user.name=Zuggary', '-c', 'user.email=Zuggary@users.noreply.github.com']
     subprocess.run(git + ['add', 'auto_items.json'], check=True)
     if subprocess.run(git + ['diff', '--cached', '--quiet']).returncode == 0:
