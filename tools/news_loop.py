@@ -121,7 +121,10 @@ def apply_pulls(out_dir, pull_path, ledger_path, now):
     if not pulls:
         return []
     out = Path(out_dir)
-    known = set(read_lines(out / 'blocklist.txt'))
+    try:
+        known = set(read_lines(out / 'blocklist.txt'))
+    except OSError:
+        known = set()  # an unreadable blocklist never blocks a takedown; the ids are appended again
     new_ids = [cid for cid in pulls if cid not in known]
     if new_ids:  # block first, so a failure after this line can only over-block
         with (out / 'blocklist.txt').open('a') as f:
@@ -198,6 +201,9 @@ def publish(out_dir, clone_url=None, removals_only=False):
                                                  if i['id'] not in blocked and (local_ids is None or i['id'] in local_ids)])
     else:
         shutil.copy(out / 'auto_items.json', clone / 'auto_items.json')
+    late = set(read_pull(control_dir() / 'PULL'))  # a pull that arrived during the fetch still wins
+    if late:
+        ledger.write(clone / 'auto_items.json', [i for i in ledger.read(clone / 'auto_items.json') if i['id'] not in late])
     git = ['git', '-C', str(clone), '-c', 'user.name=Zuggary', '-c', 'user.email=Zuggary@users.noreply.github.com']
     subprocess.run(git + ['add', 'auto_items.json'], check=True)
     if subprocess.run(git + ['diff', '--cached', '--quiet']).returncode == 0:
