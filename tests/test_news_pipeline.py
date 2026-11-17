@@ -319,5 +319,7 @@ class ControlTests(unittest.TestCase):
             subprocess.run(g + ['push', '-q', 'origin', 'HEAD:news-data'], check=True)
             (clone / 'auto_items.json').write_text(json.dumps([{'id': 'auto-1'}, {'id': 'auto-2'}, {'id': 'auto-4'}]))  # stray local edit
             (d / 'auto_items.json').write_text(json.dumps([{'id': 'auto-2'}, {'id': 'auto-3'}]))  # 1 pulled, 3 queued
-            self.assertEqual(nl.publish(d, removals_only=True), 'pushed')
-            self.assertEqual([i['id'] for i in json.loads((clone / 'auto_items.json').read_text())], ['auto-2'])
+            (d / 'PULL').write_text('auto-1\n')
+            with patch.object(nl, 'control_dir', return_value=d):
+                self.assertEqual(nl.publish(d, removals_only=True), 'pushed')
+            self.assertEqual([i['id'] for i in json.loads((clone / 'auto_items.json').read_text())], ['auto-2'])  # remote minus the pull only

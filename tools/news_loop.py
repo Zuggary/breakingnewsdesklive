@@ -196,21 +196,10 @@ def publish(out_dir, clone_url=None, removals_only=False):
         subprocess.run(['git', '-C', str(clone), 'update-ref', '-d', 'HEAD'], capture_output=True)  # drop any failed first commit; the file is copied fresh below
     if (control_dir() / 'HOLD').exists():  # HOLD may arrive during the fetch
         removals_only = True
-    if removals_only:  # HOLD: push only what is already live, minus pulls; no new item goes out
-        try:
-            live_ids = {i['id'] for i in ledger.read(clone / 'auto_items.json')}
-        except Exception:  # noqa: BLE001
-            return 'held: live file unreadable'
-        try:
-            blocked = set(read_lines(out / 'blocklist.txt'))
-        except OSError:
-            return 'held: blocklist unreadable'
-        local = out / 'auto_items.json'
-        local_ids = {i['id'] for i in ledger.read(local)} if local.exists() else None
-        ledger.write(clone / 'auto_items.json', [i for i in ledger.read(clone / 'auto_items.json')
-                                                 if i['id'] not in blocked and (local_ids is None or i['id'] in local_ids)])
-    else:
+    if not removals_only:
         shutil.copy(out / 'auto_items.json', clone / 'auto_items.json')
+    elif not (clone / 'auto_items.json').exists():
+        return 'held: no live file to take down from'
     late = set(read_pull(control_dir() / 'PULL'))  # a pull that arrived during the fetch still wins
     try:
         late |= set(read_lines(out / 'blocklist.txt'))  # a blocked id never goes back live
@@ -218,9 +207,8 @@ def publish(out_dir, clone_url=None, removals_only=False):
         pass
     if late:
         ledger.write(clone / 'auto_items.json', [i for i in ledger.read(clone / 'auto_items.json') if i['id'] not in late])
-        local = out / 'auto_items.json'
-        if local.exists():
-            ledger.write(local, [i for i in ledger.read(local) if i['id'] not in late])
+        if (out / 'auto_items.json').exists():
+            ledger.write(out / 'auto_items.json', [i for i in ledger.read(out / 'auto_items.json') if i['id'] not in late])
     git = ['git', '-C', str(clone), '-c', 'user.name=Zuggary', '-c', 'user.email=Zuggary@users.noreply.github.com']
     subprocess.run(git + ['add', 'auto_items.json'], check=True)
     if subprocess.run(git + ['diff', '--cached', '--quiet']).returncode == 0:
@@ -275,22 +263,26 @@ def main():
     last_hour = None
     while True:
         now = datetime.now(timezone.utc)
-        status = cycle(now, path, out, args.publish)
-        if status:
-            with (out / 'ALERTS.md').open('a') as f:
-                f.write(status + '\n')
-        lines = ledger.alert_lines(path, now)
-        out.mkdir(parents=True, exist_ok=True)
-        if lines:
-            with (out / 'ALERTS.md').open('a') as f:
-                f.write('\n'.join(lines) + '\n')
-        else:
-            (out / 'ALERTS.md').touch(exist_ok=True)
-        hour = now.strftime('%Y-%m-%dT%H')
-        if hour != last_hour:
-            with (out / 'hourly.md').open('a') as f:
-                f.write(ledger.hourly_line(path, now) + '\n')
+        try:
+            status = cycle(now, path, out, args.publish)
+        except Exception as exc:  # noqa: BLE001  nothing may stop the loop
+            status = 'ALERT: cycle failed: %s' % exc
+        lines = ([status] if status else [])
+        try:
+            lines += ledger.alert_lines(path, now)
+            hour = now.strftime('%Y-%m-%dT%H')
+            hourly = ledger.hourly_line(path, now) if hour != last_hour else None
             last_hour = hour
+        except Exception as exc:  # noqa: BLE001
+            lines.append('ALERT: ledger failed: %s' % exc)
+            hourly = None
+        for name, text in (('ALERTS.md', lines), ('hourly.md', [hourly] if hourly else [])):
+            if text:
+                try:
+                    with (out / name).open('a') as f:
+                        f.write('\n'.join(text) + '\n')
+                except OSError:
+                    pass
         if args.once:
             return
         time.sleep(args.every)
