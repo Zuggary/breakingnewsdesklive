@@ -123,7 +123,7 @@ def apply_pulls(out_dir, pull_path, ledger_path, now):
     out = Path(out_dir)
     try:
         known = set(read_lines(out / 'blocklist.txt'))
-    except OSError:
+    except (OSError, ValueError):
         known = set()  # an unreadable blocklist never blocks a takedown; the ids are appended again
     new_ids = [cid for cid in pulls if cid not in known]
     if new_ids:  # block first, so a failure after this line can only over-block
@@ -203,7 +203,7 @@ def publish(out_dir, clone_url=None, removals_only=False):
     late = set(read_pull(control_dir() / 'PULL'))  # a pull that arrived during the fetch still wins
     try:
         late |= set(read_lines(out / 'blocklist.txt'))  # a blocked id never goes back live
-    except OSError:
+    except (OSError, ValueError):
         pass
     if late:
         ledger.write(clone / 'auto_items.json', [i for i in ledger.read(clone / 'auto_items.json') if i['id'] not in late])
@@ -214,6 +214,8 @@ def publish(out_dir, clone_url=None, removals_only=False):
     if subprocess.run(git + ['diff', '--cached', '--quiet']).returncode == 0:
         return 'no change'
     subprocess.run(git + ['commit', '-q', '-m', 'auto items'], check=True)
+    if not removals_only and (control_dir() / 'HOLD').exists():
+        return 'held: HOLD arrived before the push'  # the local commit is dropped by the next fetch and reset
     subprocess.run(git + ['push', '-q', 'origin', 'HEAD:news-data'], check=True, timeout=120)
     return 'pushed'
 
