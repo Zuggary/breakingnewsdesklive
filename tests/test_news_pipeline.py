@@ -196,3 +196,23 @@ class ConfirmationSearch(unittest.TestCase):
             counts = run_once(now, sweep, lambda p: verdict, os.path.join(d, "ledger.json"), d, [])
         self.assertEqual(counts["published"], 0)
         self.assertEqual(counts["held"], 1)
+
+
+class ConfirmationRunsWhenTheJudgeHolds(unittest.TestCase):
+    def test_a_judge_hold_for_one_origin_still_gets_the_confirmation_search(self):
+        import tempfile
+        now = datetime(2026, 11, 17, 18, 30, tzinfo=timezone.utc)
+        first = json.dumps({"candidates": [{"beat": "Tech, outages and cyber", "what_happened": "CNN reports the NSA classified network is down.", "first_seen_utc": "2026-11-17T16:15:00Z", "scope": "six people familiar",
+                                            "outlets": [{"name": "CNN", "url": "https://www.cnn.com/2026/11/17/us/nsa-net", "role": "original", "own_sources": True, "sourcing": "six people familiar"}],
+                                            "official_response": [], "notes": ""}]})
+        asked = []
+
+        def sweep(prompt):
+            if "OTHER major outlets" in prompt:
+                asked.append(1)
+                return json.dumps({"outlets": [], "official_response": []})
+            return first if "Tech, outages" in prompt else json.dumps({"candidates": []})
+        hold = json.dumps({"decision": "hold", "reasons": ["only one origin"], "headline": "x", "summary": "x. The desk has not confirmed it.", "responses": []})
+        with tempfile.TemporaryDirectory() as d:
+            run_once(now, sweep, lambda p: hold, os.path.join(d, "ledger.json"), d, [])
+        self.assertEqual(len(asked), 1)
