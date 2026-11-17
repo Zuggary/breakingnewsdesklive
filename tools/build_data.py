@@ -985,6 +985,8 @@ def main():
                                  "auto-items.json" if a.fixtures else "auto_items.json")
         manual = probes.load_json(manual_path, [])
         auto = auto_items.load(auto_path)
+        manual = [it for it in manual if isinstance(it, dict) and it.get("id")]
+        auto = [it for it in auto if isinstance(it, dict) and it.get("id")]
         manual_ids = {it["id"] for it in manual}
         for it, is_auto in [(it, False) for it in manual] + [(it, True) for it in auto if it.get("id") not in manual_ids]:
             if is_auto:
@@ -998,7 +1000,7 @@ def main():
             ev = manual_items.to_event(it, now)
             ev["summary"] = ev.pop("summary_override")
             ev["confidence"] = claims.confidence_for_event(ev)
-            expired.setdefault(ev["id"], ev)
+            expired[ev["id"]] = ev  # current data beats the archive, so a later correction wins
         active_ids = {str(e["id"]) for e in events}
         expired = [e for key, e in expired.items() if key not in active_ids]
     track_seen(events, a.out, now)
