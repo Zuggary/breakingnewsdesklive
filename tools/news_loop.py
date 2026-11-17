@@ -172,6 +172,14 @@ def log_published(out_dir, items, seen_path, pushed):
     return []
 
 
+def public_reason(note):
+    """The public reason for a pull. The operator note stays private unless it starts with 'public:'."""
+    note = (note or '').strip()
+    if note.lower().startswith('public:') and note[7:].strip():
+        return note[7:].strip()
+    return 'It did not meet our sourcing standard.'
+
+
 def publish(out_dir, clone_url=None, removals_only=False):
     """Push out_dir/auto_items.json to the data-only branch news-data. Runs only when the file PUSH_APPROVED exists in out_dir.
     That file is created by whoever added the standing approvals line for this exact push. Without it nothing is pushed (dry mode)."""
@@ -241,7 +249,7 @@ def publish(out_dir, clone_url=None, removals_only=False):
     notes = read_pull(control_dir() / 'PULL')
     today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
     for cid in sorted(known | late):
-        before.setdefault(cid, {'date': today, 'reason': notes.get(cid) or 'found wrong'})
+        before.setdefault(cid, {'date': today, 'reason': public_reason(notes.get(cid, ''))})
     pulled_path.write_text(json.dumps(before, sort_keys=True))
     git = ['git', '-C', str(clone), '-c', 'user.name=Zuggary', '-c', 'user.email=Zuggary@users.noreply.github.com']
     subprocess.run(git + ['add', 'auto_items.json', 'pulled.json'], check=True)

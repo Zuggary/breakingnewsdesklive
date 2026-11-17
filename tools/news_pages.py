@@ -92,7 +92,7 @@ def render_notice(event):
     esc = lambda v: html.escape(str(v), quote=True)
     n = event.get("notice") or {}
     date = esc(n.get("date") or _modified(event)[:10])
-    reason = esc(n.get("reason") or "found wrong")
+    reason = esc((n.get("reason") or "It did not meet our sourcing standard.").rstrip("."))
     return '''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Item withdrawn | Breaking News Desk</title><meta name="robots" content="noindex">

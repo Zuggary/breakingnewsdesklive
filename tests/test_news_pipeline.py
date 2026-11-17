@@ -411,3 +411,9 @@ class ControlTests(unittest.TestCase):
             with patch.object(nl, 'control_dir', return_value=d):
                 self.assertEqual(nl.publish(d, removals_only=True), 'pushed')  # HOLD path
             self.assertEqual([i['id'] for i in json.loads((clone / 'auto_items.json').read_text())], ['auto-2'])
+
+    def test_public_reason_hides_the_operator_note(self):
+        from tools import news_loop as nl
+        self.assertEqual(nl.public_reason('source was a rumor, see Slack'), 'It did not meet our sourcing standard.')
+        self.assertEqual(nl.public_reason(''), 'It did not meet our sourcing standard.')
+        self.assertEqual(nl.public_reason('public: The date was wrong'), 'The date was wrong')
