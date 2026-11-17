@@ -13,6 +13,7 @@
 <h1>Data and sources</h1>
 <p>Every feed this site reads, with its licence, how often the source updates, and the result of the last check. The site reads each feed about every 10 minutes. A failed check keeps the last good data and is shown below.</p>
 <p class="warn">Check official sources. This site is automated and may be wrong or late.</p>
+<p id="fresh" class="note"></p>
 <table id="t"><thead><tr><th>Feed</th><th>Licence</th><th>Source updates</th><th>Last checked (UTC)</th><th>Events now</th><th>Status</th></tr></thead><tbody></tbody></table>
 <h2>Not used</h2>
 <ul>
@@ -49,7 +50,9 @@ fetch('data/sources.json',{cache:'no-cache'}).then(function(r){return r.json()})
  d.sources.forEach(function(s){var tr=document.createElement('tr'),c=document.createElement('td'),a=document.createElement('a');
   a.href=s.page;a.textContent=s.name;a.rel='noopener';c.appendChild(a);tr.appendChild(c);
   var l=td(s.licence+' '),ta=document.createElement('a');ta.href=s.terms;ta.textContent='(terms)';ta.rel='noopener';l.appendChild(ta);tr.appendChild(l);
-  tr.appendChild(td(s.update||''));tr.appendChild(td(s.checked.replace('T',' ').replace('Z','')));tr.appendChild(td(String(s.count)));tr.appendChild(td(s.ok?'OK':'Last check failed'));tb.appendChild(tr)});
+  tr.appendChild(td(s.update||''));tr.appendChild(td(s.checked.replace('T',' ').replace('Z','')));tr.appendChild(td(String(s.count)));tr.appendChild(td(s.freshness==='stale'?'Stale: '+s.missed+' missed polls':(s.ok?'OK':'Last check failed')));tb.appendChild(tr)});
+ var st=d.sources.filter(function(s){return s.freshness==='stale'}).length,sm=document.getElementById('fresh');
+ if(sm)sm.textContent=st?st+' of '+d.sources.length+' sources are stale (3 or more missed polls).':'All '+d.sources.length+' sources are fresh.';
 }).catch(function(){document.querySelector('#t tbody').textContent='Could not load the source list.'});
 </script><script src="/count.js" defer></script>
 </body></html>

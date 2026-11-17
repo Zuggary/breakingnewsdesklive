@@ -1017,6 +1017,17 @@ def main():
         json.dump(lead_story.build(events, iso_utc(now)), f, indent=1)
     with open(os.path.join(a.out, "held.json"), "w", encoding="utf-8") as f:
         json.dump({"generated": iso_utc(now), "count": len(HELD), "items": HELD}, f, indent=1)
+    miss_path = os.path.join(a.out, "source-misses.json")
+    misses = probes.load_json(miss_path, {})
+    misses = misses if isinstance(misses, dict) else {}
+    for s in status:  # consecutive failed polls per source; stale after 3
+        misses[s["id"]] = 0 if s.get("ok") else int(misses.get(s["id"], 0)) + 1
+        s["missed"] = misses[s["id"]]
+    from tools import news_pages as _np
+    for s, f in zip(status, _np.source_freshness(status, now)):
+        s["freshness"] = f["state"]
+    with open(miss_path, "w", encoding="utf-8") as f:
+        json.dump(misses, f)
     with open(os.path.join(a.out, "sources.json"), "w", encoding="utf-8") as f:
         json.dump({"generated": iso_utc(now), "sources": status}, f, indent=1)
     if a.news_pages:

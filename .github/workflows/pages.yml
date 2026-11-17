@@ -39,6 +39,7 @@ jobs:
             data/gdelt-last.json
             data/context-cache.json
             data/news
+            data/source-misses.json
           key: bnd-history-${{ github.run_id }}
           restore-keys: bnd-history-
       - name: Fetch the probe snapshot

@@ -192,3 +192,14 @@ class NewsPages(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class FreshnessBuild(unittest.TestCase):
+    def test_build_writes_freshness_and_counts_failed_polls(self):
+        import subprocess
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, "source-misses.json").write_text(json.dumps({"usgs-quakes": 2}))
+            subprocess.run([sys.executable, "tools/build_data.py", "--out", d, "--fixtures", "tests/fixtures"], check=True, capture_output=True, cwd=Path(__file__).resolve().parents[1])
+            rows = json.loads(Path(d, "sources.json").read_text())["sources"]
+            self.assertTrue(all(r["freshness"] in ("fresh", "stale") and "missed" in r for r in rows))
+            self.assertEqual(json.loads(Path(d, "source-misses.json").read_text())["usgs-quakes"], 0)  # a good poll resets the count
