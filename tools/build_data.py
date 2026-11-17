@@ -16,7 +16,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from tools import feed_terms, killswitch, probes, news_lane, claims, manual_items  # noqa: E402
+from tools import feed_terms, killswitch, probes, news_lane, claims, manual_items, lead_story  # noqa: E402
 from tools.lib import (REGIONS, region_of, score_event, summarize, STATE_CENTROIDS, claims_ok, status_label, SAFE_SUMMARY,  # noqa: E402
                        iso_utc, parse_time, haversine_km)
 
@@ -948,6 +948,8 @@ def main():
         print("context on %d events" % n)
     with open(prev, "w", encoding="utf-8") as f:
         json.dump({"generated": iso_utc(now), "count": len(events), "events": events}, f, separators=(",", ":"))
+    with open(os.path.join(a.out, "lead-story.json"), "w", encoding="utf-8") as f:
+        json.dump(lead_story.build(events, iso_utc(now)), f, indent=1)
     with open(os.path.join(a.out, "held.json"), "w", encoding="utf-8") as f:
         json.dump({"generated": iso_utc(now), "count": len(HELD), "items": HELD}, f, indent=1)
     with open(os.path.join(a.out, "sources.json"), "w", encoding="utf-8") as f:
