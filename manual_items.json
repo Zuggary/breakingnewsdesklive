@@ -1,0 +1,46 @@
+[
+ {
+  "id": "cnn-iran-dc-officials-20261116",
+  "title": "CNN reports US intelligence on possible Iranian plans against officials in Washington, DC",
+  "place": "Washington, DC, United States",
+  "lat": 38.9,
+  "lon": -77.04,
+  "time": "2026-11-17T00:00:00Z",
+  "expires": "2026-11-19T00:00:00Z",
+  "severity": "moderate",
+  "region": "Americas",
+  "summary": "CNN reports, citing 7 US officials, that US intelligence indicates Iran has been weighing plans or options for a possible dirty-bomb or chemical attack on senior US officials in Washington, DC. The officials describe this as a contingency, not an imminent attack. The White House says there are no credible threats. Iran's UN mission calls the report fabricated. Other outlets carry the story and cite CNN. The desk has not confirmed it.",
+  "sources": [
+   {
+    "source": "CNN",
+    "intermediary": null,
+    "url": "https://www.cnn.com/",
+    "published": "2026-11-16T23:30:00Z",
+    "scope": "US officials",
+    "verification": "attributed",
+    "kind": "outlet"
+   }
+  ],
+  "responses": [
+   {
+    "who": "White House",
+    "text": "no credible threats",
+    "verification": "attributed"
+   },
+   {
+    "who": "Iran",
+    "text": "denies; its UN mission calls the report fabricated",
+    "verification": "attributed"
+   }
+  ],
+  "carried_by": [
+   "Times of Israel",
+   "Jerusalem Post",
+   "Iran International",
+   "WBTV",
+   "Mediaite",
+   "Yahoo"
+  ],
+  "note": "Source URL points at CNN's site root: the lane could not fetch the CNN article. Replace with the article link when known."
+ }
+]

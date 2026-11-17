@@ -204,6 +204,8 @@ def confidence_for_event(e):
     lane = d.get("lane")
     if lane == "news":
         return label(claim_from_news_item(e))
+    if lane == "curated":
+        return d.get("label") or UNVERIFIED
     if lane == "probes":
         return UNVERIFIED if e.get("detail", {}).get("open", True) else RESOLVED
     if e.get("type") == "headline":

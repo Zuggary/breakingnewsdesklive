@@ -16,7 +16,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from tools import feed_terms, killswitch, probes, news_lane, claims  # noqa: E402
+from tools import feed_terms, killswitch, probes, news_lane, claims, manual_items  # noqa: E402
 from tools.lib import (REGIONS, region_of, score_event, summarize, STATE_CENTROIDS, claims_ok, status_label, SAFE_SUMMARY,  # noqa: E402
                        iso_utc, parse_time, haversine_km)
 
@@ -820,6 +820,24 @@ def build(fixtures=None, now=None):
     except Exception as ex:  # noqa: BLE001
         nrec["error"] = type(ex).__name__
     status.append(nrec)
+    # Curated items (GD8): short items a person wrote from named sources. They need an official response line and calm wording.
+    mrec = {"id": "curated", "update": "when a person adds an item", "name": "Desk (curated from named sources)", "url": "https://breakingnewsdesklive.com/about",
+            "page": "https://breakingnewsdesklive.com/about", "licence": "Our own wording from named sources; no copied headline", "terms": "https://breakingnewsdesklive.com/about",
+            "checked": iso_utc(now), "ok": False, "count": 0}
+    try:
+        items = probes.load_json(os.path.join(fixtures if fixtures else ROOT_DIR, "manual_items.json" if not fixtures else "manual-items.json"), [])
+        cev = []
+        for it in manual_items.active(items, now):
+            ev = manual_items.to_event(it, now)
+            cev.append(mk(ev["id"], ev["type"], ev["title"], ev["place"], ev["lat"], ev["lon"], parse_time(ev["time"]), ev["severity"], ev["size"],
+                          {"name": ev["source"], "id": ev["source_id"], "page": ev["source_url"]}, ev["source_url"], detail=ev["detail"], links=ev["links"],
+                          region=ev["region"], summary_override=ev["summary_override"], curated=True))
+        events += cev
+        mrec["ok"], mrec["count"] = True, len(cev)
+        mrec["rejected"] = sum(1 for it in items if manual_items.validate(it))
+    except Exception as ex:  # noqa: BLE001
+        mrec["error"] = type(ex).__name__
+    status.append(mrec)
     def fresh_enough(e):
         age = MAX_AGE_LONG_H if e["type"] in ("wildfire", "volcano", "drought", "flood", "recall", "notice") else MAX_AGE_H
         t = parse_time(e["time"])
