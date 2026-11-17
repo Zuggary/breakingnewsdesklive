@@ -161,7 +161,7 @@ def log_published(out_dir, items, seen_path, pushed):
     return []
 
 
-def publish(out_dir, clone_url=None):
+def publish(out_dir, clone_url=None, removals_only=False):
     """Push out_dir/auto_items.json to the data-only branch news-data. Runs only when the file PUSH_APPROVED exists in out_dir.
     That file is created by whoever added the standing approvals line for this exact push. Without it nothing is pushed (dry mode)."""
     import shutil
@@ -177,7 +177,14 @@ def publish(out_dir, clone_url=None):
             clone.mkdir(parents=True)
             subprocess.run(['git', '-C', str(clone), 'init', '-q', '-b', 'news-data'], check=True)
             subprocess.run(['git', '-C', str(clone), 'remote', 'add', 'origin', url], check=True)
-    shutil.copy(out / 'auto_items.json', clone / 'auto_items.json')
+    if removals_only:  # HOLD: push only what is already live, minus pulls; no new item goes out
+        try:
+            live_ids = {i['id'] for i in ledger.read(clone / 'auto_items.json')}
+        except Exception:  # noqa: BLE001
+            return 'held: live file unreadable'
+        ledger.write(clone / 'auto_items.json', [i for i in ledger.read(out / 'auto_items.json') if i['id'] in live_ids])
+    else:
+        shutil.copy(out / 'auto_items.json', clone / 'auto_items.json')
     git = ['git', '-C', str(clone), '-c', 'user.name=Zuggary', '-c', 'user.email=Zuggary@users.noreply.github.com']
     subprocess.run(git + ['add', 'auto_items.json'], check=True)
     if subprocess.run(git + ['diff', '--cached', '--quiet']).returncode == 0:
@@ -200,7 +207,10 @@ def cycle(now, ledger_path, out, do_publish, sweep_runner=default_runner, judge_
                      hold=lambda: (cdir / 'HOLD').exists())
     except Exception as exc:  # noqa: BLE001  fail closed: no new items this cycle
         alert = '%s ALERT: control files or sweep failed, no new items: %s' % (now.strftime('%Y-%m-%dT%H:%M:%SZ'), exc)
-    result = publish(out) if do_publish else 'dry'
+    if alert:
+        result = 'alert: nothing pushed'
+    else:
+        result = publish(out, removals_only=(cdir / 'HOLD').exists()) if do_publish else 'dry'
     if (out / 'auto_items.json').exists() and result in ('pushed', 'no change'):
         log_published(out, ledger.read(out / 'auto_items.json'), out / 'published.seen', True)
     return alert
