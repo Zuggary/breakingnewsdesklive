@@ -216,3 +216,18 @@ class ConfirmationRunsWhenTheJudgeHolds(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             run_once(now, sweep, lambda p: hold, os.path.join(d, "ledger.json"), d, [])
         self.assertEqual(len(asked), 1)
+
+
+class LiveItems(unittest.TestCase):
+    def test_live_events_become_duplicate_gate_input(self):
+        from tools import news_loop
+        live = news_loop.live_items_from_events([{"title": "CNN and CBS report NSA's classified internal network is down", "source_url": "https://www.cnn.com/x",
+                                                   "links": [{"url": "https://www.cbsnews.com/news/nsa-network-down-classified-fort-meade/"}]}])
+        self.assertEqual(live[0]["sources"][0]["url"], "https://www.cnn.com/x")
+        self.assertEqual(live[0]["links"][0]["url"], "https://www.cbsnews.com/news/nsa-network-down-classified-fort-meade/")
+
+    def test_a_failed_fetch_gives_no_live_items(self):
+        from tools import news_loop
+        def boom(url, timeout=0):
+            raise OSError("down")
+        self.assertEqual(news_loop.load_live_items(opener=boom), [])

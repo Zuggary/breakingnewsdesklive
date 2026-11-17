@@ -58,6 +58,29 @@ def run_once(now, sweep_runner, judge_runner, ledger_path, out_dir, live_items, 
     return counts
 
 
+LIVE_EVENTS_URL = 'https://breakingnewsdesklive.com/data/events.json'
+
+
+def live_items_from_events(events):
+    """Shape live events like items for the duplicate gate: title plus every source and link URL."""
+    out = []
+    for e in events if isinstance(events, list) else []:
+        d = e.get('detail') or {}
+        out.append({'title': e.get('title', ''), 'sources': [{'url': e.get('source_url')}], 'links': [{'url': l.get('url')} for l in e.get('links', []) if isinstance(l, dict)]})
+    return out
+
+
+def load_live_items(url=LIVE_EVENTS_URL, opener=None):
+    """The items now on the site, so a story that is already live is not published twice. An error returns []."""
+    import json
+    import urllib.request
+    try:
+        with (opener or urllib.request.urlopen)(url, timeout=30) as r:
+            return live_items_from_events(json.load(r).get('events', []))
+    except Exception:  # noqa: BLE001
+        return []
+
+
 def publish(out_dir, clone_url=None):
     """Push out_dir/auto_items.json to the data-only branch news-data. Runs only when the file PUSH_APPROVED exists in out_dir.
     That file is created by whoever added the standing approvals line for this exact push. Without it nothing is pushed (dry mode)."""
@@ -101,7 +124,7 @@ def main():
     last_hour = None
     while True:
         now = datetime.now(timezone.utc)
-        run_once(now, default_runner, default_judge_runner, path, out, [])
+        run_once(now, default_runner, default_judge_runner, path, out, load_live_items())
         if args.publish:
             publish(out)
         lines = ledger.alert_lines(path, now)
