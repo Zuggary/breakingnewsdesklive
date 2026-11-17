@@ -41,8 +41,20 @@ def default_judge_runner(prompt):
                           capture_output=True, text=True, check=True, timeout=300).stdout
 
 
+def cites_another(o, outlets):
+    """True when the outlet's own sourcing note names another listed outlet ("citing CNN", "according to CBS News"): it re-reports that outlet."""
+    note = (o.get('sourcing') or '').lower()
+    for other in outlets:
+        name = (other.get('name') or '').lower().strip()
+        if other is not o and name and len(name) >= 3 and re.search(r'\b' + re.escape(name) + r'\b', note):
+            return True
+    return False
+
+
 def own_outlets(c):
-    return [o for o in c.get('outlets', []) if o.get('own_sources') is True and o.get('role') in ('original', 'confirming')]
+    """Outlets that did their own reporting. An outlet whose sourcing note names another listed outlet is a re-report, not a new origin."""
+    outlets = c.get('outlets', [])
+    return [o for o in outlets if o.get('own_sources') is True and o.get('role') in ('original', 'confirming') and not cites_another(o, outlets)]
 
 
 def origin_groups(candidate):

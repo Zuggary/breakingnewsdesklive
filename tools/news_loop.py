@@ -23,9 +23,15 @@ def run_once(now, sweep_runner, judge_runner, ledger_path, out_dir, live_items, 
         except (KeyError, ValueError, TypeError):
             continue
     counts = dict(found=0, published=0, held=0, rejected=0)
+    try:
+        blocked = set((Path(out_dir) / 'blocklist.txt').read_text().split())
+    except OSError:
+        blocked = set()
     candidates = dedupe(run_sweep(sweep_runner, now))
     for c in candidates:
         cid = candidate_id(c)
+        if cid in blocked:
+            continue
         ledger.record(ledger_path, cid, 'found', now)
         counts['found'] += 1
         try:
@@ -81,12 +87,71 @@ def load_live_items(url=LIVE_EVENTS_URL, opener=None):
         return []
 
 
+def control_dir():
+    return Path.home() / 'factory-scratch' / 'bnd'
+
+
+def read_pull(path):
+    """Ids to pull, one per line ('id' or 'id | note')."""
+    out = {}
+    try:
+        for line in Path(path).read_text().splitlines():
+            line = line.strip()
+            if line and not line.startswith('#'):
+                cid, _, note = line.partition('|')
+                out[cid.strip()] = note.strip()
+    except OSError:
+        pass
+    return out
+
+
+def apply_pulls(out_dir, pull_path, ledger_path, now):
+    """Correction path: remove pulled ids from auto_items.json within one cycle, remember them, log the correction."""
+    pulls = read_pull(pull_path)
+    if not pulls:
+        return []
+    out = Path(out_dir)
+    path = out / 'auto_items.json'
+    items = ledger.read(path) if path.exists() else []
+    kept = [i for i in items if i.get('id') not in pulls]
+    pulled = [i['id'] for i in items if i.get('id') in pulls]
+    if pulled:
+        ledger.write(path, kept)
+        with (out / 'corrections.log').open('a') as f:
+            for cid in pulled:
+                f.write('%s pulled %s: %s\n' % (now.strftime('%Y-%m-%dT%H:%M:%SZ'), cid, pulls[cid] or 'found wrong'))
+                ledger.record(ledger_path, cid, 'answered', now, 'pulled: ' + (pulls[cid] or 'found wrong'))
+    with (out / 'blocklist.txt').open('a') as f:
+        for cid in pulls:
+            f.write(cid + '\n')
+    return pulled
+
+
+def log_published(out_dir, items, seen_path):
+    """One line per newly published item: headline and sources, for the CoS spot-check."""
+    out = Path(out_dir)
+    seen = set(seen_path.read_text().split()) if seen_path.exists() else set()
+    lines = []
+    for i in items:
+        if i['id'] not in seen:
+            seen.add(i['id'])
+            lines.append('%s | %s | sources: %s | response: %s' % (i['id'], i['title'], '; '.join('%s %s' % (s['source'], s['url']) for s in i['sources']),
+                                                                    '; '.join('%s %s' % (r['who'], r['text']) for r in i['responses'])))
+    if lines:
+        with (out / 'published.md').open('a') as f:
+            f.write('\n'.join(lines) + '\n')
+        seen_path.write_text('\n'.join(sorted(seen)))
+    return lines
+
+
 def publish(out_dir, clone_url=None):
     """Push out_dir/auto_items.json to the data-only branch news-data. Runs only when the file PUSH_APPROVED exists in out_dir.
     That file is created by whoever added the standing approvals line for this exact push. Without it nothing is pushed (dry mode)."""
     import shutil
     import subprocess
     out = Path(out_dir)
+    if (control_dir() / 'HOLD').exists():
+        return 'held: HOLD file present'
     if not (out / 'PUSH_APPROVED').exists():
         return 'dry: PUSH_APPROVED missing'
     clone = out / 'news-data-clone'
@@ -124,7 +189,12 @@ def main():
     last_hour = None
     while True:
         now = datetime.now(timezone.utc)
-        run_once(now, default_runner, default_judge_runner, path, out, load_live_items())
+        hold = (control_dir() / 'HOLD').exists()
+        if not hold:
+            run_once(now, default_runner, default_judge_runner, path, out, load_live_items())
+        apply_pulls(out, control_dir() / 'PULL', path, now)
+        if (out / 'auto_items.json').exists():
+            log_published(out, ledger.read(out / 'auto_items.json'), out / 'published.seen')
         if args.publish:
             publish(out)
         lines = ledger.alert_lines(path, now)

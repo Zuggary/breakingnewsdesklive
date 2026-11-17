@@ -231,3 +231,39 @@ class LiveItems(unittest.TestCase):
         def boom(url, timeout=0):
             raise OSError("down")
         self.assertEqual(news_loop.load_live_items(opener=boom), [])
+
+
+class ControlTests(unittest.TestCase):
+    def test_cites_another_outlet_is_not_independent(self):
+        from tools import news_judge as j
+        c = {'outlets': [
+            {'name': 'CNN', 'url': 'https://www.cnn.com/a', 'role': 'original', 'own_sources': True, 'sourcing': 'two officials'},
+            {'name': 'CBS News', 'url': 'https://www.cbsnews.com/b', 'role': 'confirming', 'own_sources': True, 'sourcing': 'citing CNN and one official'}]}
+        self.assertEqual([o['name'] for o in j.own_outlets(c)], ['CNN'])
+        self.assertFalse(j.meets_bar(c)[0])
+
+    def test_pull_removes_item_and_blocks_republish(self):
+        import tempfile, json
+        from pathlib import Path
+        from datetime import datetime, timezone
+        from tools import news_loop as nl
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            (d / 'auto_items.json').write_text(json.dumps([{'id': 'auto-1'}, {'id': 'auto-2'}]))
+            (d / 'PULL').write_text('auto-1 | wrong date\n')
+            now = datetime(2026, 11, 17, tzinfo=timezone.utc)
+            self.assertEqual(nl.apply_pulls(d, d / 'PULL', str(d / 'l.json'), now), ['auto-1'])
+            self.assertEqual([i['id'] for i in json.loads((d / 'auto_items.json').read_text())], ['auto-2'])
+            self.assertIn('auto-1', (d / 'blocklist.txt').read_text())
+            self.assertIn('wrong date', (d / 'corrections.log').read_text())
+
+    def test_hold_file_stops_publish(self):
+        import tempfile
+        from pathlib import Path
+        from unittest import mock
+        from tools import news_loop as nl
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / 'HOLD').write_text('x')
+            (Path(d) / 'PUSH_APPROVED').write_text('x')
+            with mock.patch.object(nl, 'control_dir', return_value=Path(d)):
+                self.assertTrue(nl.publish(d).startswith('held'))
