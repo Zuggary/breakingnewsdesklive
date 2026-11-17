@@ -24,8 +24,12 @@ import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
 import zipfile
+
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from tools import auto_news  # noqa: E402
 
 UA = "breakingnewsdesklive-tips/1.0 (+https://breakingnewsdesklive.com/about; internal headline reader)"
 KEEP_HOURS = 48
@@ -270,6 +274,17 @@ def tag_topic(title, local_model=None):
     return "other"
 
 
+def apfel_sentence(titles, timeout=40):
+    """Optional: one neutral factual sentence from the on-device model, built only from the headlines. None on any failure."""
+    try:
+        prompt = ("Write ONE neutral factual sentence of at most 25 words that says what is reported. Use only facts in these headlines. "
+                  "No adjectives, no opinion, no new names or numbers. Headlines: " + " | ".join(t[:140] for t in titles[:4]))
+        out = subprocess.run(["apfel", prompt], capture_output=True, text=True, timeout=timeout, check=True).stdout.strip().split("\n")[0]
+        return out if 3 <= len(out.split()) <= 40 else None
+    except Exception:  # noqa: BLE001
+        return None
+
+
 def apfel_tag(title, timeout=20):
     """Optional: ask the on-device model for one word. Returns None when apfel is missing or fails."""
     try:
@@ -384,7 +399,9 @@ def main(argv=None):
         leads, status = run_round(store, FEEDS, now, local_model=apfel_tag if a.apfel else None, gdelt_bytes=None if a.no_gdelt else http_bytes)
         for path, obj in ((store_path, store), (leads_path, {"generated": iso(now), "note": "INTERNAL. Never publish.", "leads": leads, "feeds": status}),
                           (av_path, {"generated": iso(now), "note": "INTERNAL. For Lane 5 (Air Travel Desk). Never publish.", "leads": [l for l in leads if l["topic"] == "aviation" or (l["topic"] == "security" and _AVIATION_RX.search(l["items"][0]["title"]))]}),
-                          (sec_path, {"generated": iso(now), "note": "INTERNAL. Candidates for a curated Reported item. Never publish.", "candidates": security_candidates(leads)})):
+                          (sec_path, {"generated": iso(now), "note": "INTERNAL. Candidates for a curated Reported item. Never publish.", "candidates": security_candidates(leads)}),
+                          (os.path.join(a.dir, "proposed-items.json"), {"generated": iso(now), "note": "INTERNAL. Proposed curated items. A ready one still goes live only through manual_items.json and the guarded push.",
+                                                                           "proposals": [auto_news.propose(c, now, apfel_sentence if a.apfel else None) for c in security_candidates(leads)]})):
             with open(path + ".tmp", "w", encoding="utf-8") as f:
                 json.dump(obj, f, indent=1)
             os.replace(path + ".tmp", path)

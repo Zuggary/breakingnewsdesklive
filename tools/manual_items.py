@@ -13,7 +13,7 @@ from datetime import datetime, timezone
 from tools import claims, lib
 
 ALARM_RE = re.compile(r"\b(plot(?:s|ting|ted)?|terrifying|terrify\w*|imminent|breaking|shock\w*|panic|chaos|massive|horrific|bombshell|explosive)\b", re.I)
-REQUIRED = ("id", "title", "place", "lat", "lon", "time", "expires", "severity", "summary", "sources", "responses")
+REQUIRED = ("id", "title", "place", "time", "expires", "severity", "summary", "sources", "responses")   # lat and lon are optional
 
 
 def parse(s):
@@ -64,7 +64,7 @@ def to_event(it, now):
         claims.add_evidence(cl, s.get("kind", "outlet"), s["source"], s.get("url", ""), now, intermediary=s.get("intermediary"),
                             published=s.get("published"), scope=s.get("scope"), verification=s.get("verification"))
     ev = {
-        "id": it["id"], "type": "security", "title": it["title"], "place": it["place"], "lat": it["lat"], "lon": it["lon"],
+        "id": it["id"], "type": "security", "title": it["title"], "place": it["place"], "lat": it.get("lat"), "lon": it.get("lon"),
         "time": it["time"], "severity": it["severity"], "size": len(set(s["source"] for s in it["sources"])),
         "source": "Desk (curated from named sources)", "source_id": "curated", "source_url": it["sources"][0].get("url") or "https://breakingnewsdesklive.com/about",
         "detail": {"lane": "curated", "open": True, "reported_line": reported_line(it), "label": cl["label"],
