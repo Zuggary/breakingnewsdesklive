@@ -1,5 +1,42 @@
 [
   {
+    "id": "auto-8daba76854bb",
+    "title": "AP reports rallies against Fico\u2019s government across Slovakia on Velvet Revolution anniversary",
+    "place": "United States",
+    "time": "2026-11-17T16:15:00Z",
+    "expires": "2026-11-19T16:15:00Z",
+    "severity": "moderate",
+    "summary": "People rallied against Prime Minister Robert Fico\u2019s government across Slovakia on the anniversary of the Velvet Revolution, according to the Associated Press. TASR reported that Fico urged fair political competition and said he hoped the opposition would not use public gatherings to spread hatred. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Aktuality.sk",
+        "intermediary": null,
+        "url": "https://www.aktuality.sk/clanok/6RI46NG/protesty-online-17-november-nezna-revolucia/",
+        "published": "2026-11-17T16:15:00Z",
+        "scope": "Live reporting and photographs from protest locations",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/13da4dadf4057826343481e2e9c5c47c",
+        "published": "2026-11-17T16:15:00Z",
+        "scope": "Reporting from Bratislava and remarks by protest participants",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Slovak Prime Minister Robert Fico",
+        "text": "According to TASR, Fico said he hoped the opposition would not use public gatherings to spread hatred and called for fair political competition.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
+  },
+  {
     "id": "auto-c26c0ddcf76d",
     "title": "Senate Democrats seek pause in air traffic control router replacements, AP reports",
     "place": "United States",
