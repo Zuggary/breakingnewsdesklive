@@ -188,8 +188,14 @@ def publish(out_dir, clone_url=None, removals_only=False):
             live_ids = {i['id'] for i in ledger.read(clone / 'auto_items.json')}
         except Exception:  # noqa: BLE001
             return 'held: live file unreadable'
-        local_ids = {i['id'] for i in ledger.read(out / 'auto_items.json')}
-        ledger.write(clone / 'auto_items.json', [i for i in ledger.read(clone / 'auto_items.json') if i['id'] in local_ids])
+        try:
+            blocked = set(read_lines(out / 'blocklist.txt'))
+        except OSError:
+            return 'held: blocklist unreadable'
+        local = out / 'auto_items.json'
+        local_ids = {i['id'] for i in ledger.read(local)} if local.exists() else None
+        ledger.write(clone / 'auto_items.json', [i for i in ledger.read(clone / 'auto_items.json')
+                                                 if i['id'] not in blocked and (local_ids is None or i['id'] in local_ids)])
     else:
         shutil.copy(out / 'auto_items.json', clone / 'auto_items.json')
     git = ['git', '-C', str(clone), '-c', 'user.name=Zuggary', '-c', 'user.email=Zuggary@users.noreply.github.com']
@@ -212,12 +218,16 @@ def cycle(now, ledger_path, out, do_publish, sweep_runner=default_runner, judge_
         if not (cdir / 'HOLD').exists():
             run_once(now, sweep_runner, judge_runner, ledger_path, out, load_live_items() if live is None else live,
                      hold=lambda: (cdir / 'HOLD').exists())
+        apply_pulls(out, cdir / 'PULL', ledger_path, now)  # again, in case a pull arrived while the sweep ran
     except Exception as exc:  # noqa: BLE001  fail closed: no new items this cycle
         alert = '%s ALERT: control files or sweep failed, no new items: %s' % (now.strftime('%Y-%m-%dT%H:%M:%SZ'), exc)
     if alert:
         result = 'alert: nothing pushed'
     else:
-        result = publish(out, removals_only=(cdir / 'HOLD').exists()) if do_publish else 'dry'
+        try:
+            result = publish(out, removals_only=(cdir / 'HOLD').exists()) if do_publish else 'dry'
+        except Exception as exc:  # noqa: BLE001
+            result, alert = 'alert: publish failed', '%s ALERT: publish failed: %s' % (now.strftime('%Y-%m-%dT%H:%M:%SZ'), exc)
     if (out / 'news-data-clone' / 'auto_items.json').exists() and result in ('pushed', 'no change'):
         log_published(out, ledger.read(out / 'news-data-clone' / 'auto_items.json'), out / 'published.seen', True)
     return alert
