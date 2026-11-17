@@ -177,12 +177,19 @@ def publish(out_dir, clone_url=None, removals_only=False):
             clone.mkdir(parents=True)
             subprocess.run(['git', '-C', str(clone), 'init', '-q', '-b', 'news-data'], check=True)
             subprocess.run(['git', '-C', str(clone), 'remote', 'add', 'origin', url], check=True)
+    # The remote branch is the baseline: drop any unpushed local commit or edit left by a failed earlier push.
+    fetched = subprocess.run(['git', '-C', str(clone), 'fetch', '-q', 'origin', 'news-data'], capture_output=True)
+    if fetched.returncode == 0:
+        subprocess.run(['git', '-C', str(clone), 'reset', '-q', '--hard', 'FETCH_HEAD'], check=True)
+    elif removals_only:
+        return 'held: cannot read the remote'
     if removals_only:  # HOLD: push only what is already live, minus pulls; no new item goes out
         try:
             live_ids = {i['id'] for i in ledger.read(clone / 'auto_items.json')}
         except Exception:  # noqa: BLE001
             return 'held: live file unreadable'
-        ledger.write(clone / 'auto_items.json', [i for i in ledger.read(out / 'auto_items.json') if i['id'] in live_ids])
+        local_ids = {i['id'] for i in ledger.read(out / 'auto_items.json')}
+        ledger.write(clone / 'auto_items.json', [i for i in ledger.read(clone / 'auto_items.json') if i['id'] in local_ids])
     else:
         shutil.copy(out / 'auto_items.json', clone / 'auto_items.json')
     git = ['git', '-C', str(clone), '-c', 'user.name=Zuggary', '-c', 'user.email=Zuggary@users.noreply.github.com']
@@ -211,8 +218,8 @@ def cycle(now, ledger_path, out, do_publish, sweep_runner=default_runner, judge_
         result = 'alert: nothing pushed'
     else:
         result = publish(out, removals_only=(cdir / 'HOLD').exists()) if do_publish else 'dry'
-    if (out / 'auto_items.json').exists() and result in ('pushed', 'no change'):
-        log_published(out, ledger.read(out / 'auto_items.json'), out / 'published.seen', True)
+    if (out / 'news-data-clone' / 'auto_items.json').exists() and result in ('pushed', 'no change'):
+        log_published(out, ledger.read(out / 'news-data-clone' / 'auto_items.json'), out / 'published.seen', True)
     return alert
 
 

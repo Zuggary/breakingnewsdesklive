@@ -46,7 +46,7 @@ def cites_another(o, outlets):
     note = (o.get('sourcing') or '').lower()
     for other in outlets:
         name = (other.get('name') or '').lower().strip()
-        if other is not o and name and len(name) >= 3 and re.search(r'\b(?:citing|cites|cited|according to|per|reported by|reporting by|reports? from|based on|following|matching|relaying)\s+(?:\w+\s+){0,2}' + re.escape(name) + r'\b', note):
+        if other is not o and name and len(name) >= 2 and re.search(r'\b(?:citing|cites|cited|according to|per|reported by|reporting by|reports? from|based on|following|matching|relaying)\s+(?:\w+\s+){0,2}' + re.escape(name) + r'\b', note):
             return True
     return False
 

@@ -313,6 +313,11 @@ class ControlTests(unittest.TestCase):
             subprocess.run(['git', 'init', '-q', '--bare', str(bare)], check=True)
             subprocess.run(['git', '-C', str(clone), 'remote', 'add', 'origin', str(bare)], check=True)
             (clone / 'auto_items.json').write_text(json.dumps([{'id': 'auto-1'}, {'id': 'auto-2'}]))
+            g = ['git', '-C', str(clone), '-c', 'user.name=t', '-c', 'user.email=t@t']
+            subprocess.run(g + ['add', '.'], check=True)
+            subprocess.run(g + ['commit', '-q', '-m', 'base'], check=True)
+            subprocess.run(g + ['push', '-q', 'origin', 'HEAD:news-data'], check=True)
+            (clone / 'auto_items.json').write_text(json.dumps([{'id': 'auto-1'}, {'id': 'auto-2'}, {'id': 'auto-4'}]))  # stray local edit
             (d / 'auto_items.json').write_text(json.dumps([{'id': 'auto-2'}, {'id': 'auto-3'}]))  # 1 pulled, 3 queued
             self.assertEqual(nl.publish(d, removals_only=True), 'pushed')
             self.assertEqual([i['id'] for i in json.loads((clone / 'auto_items.json').read_text())], ['auto-2'])
