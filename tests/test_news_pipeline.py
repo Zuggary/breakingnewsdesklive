@@ -255,15 +255,45 @@ class ControlTests(unittest.TestCase):
             self.assertEqual(nl.apply_pulls(d, d / 'PULL', str(d / 'l.json'), now), ['auto-1'])
             self.assertEqual([i['id'] for i in json.loads((d / 'auto_items.json').read_text())], ['auto-2'])
             self.assertIn('auto-1', (d / 'blocklist.txt').read_text())
-            self.assertIn('wrong date', (d / 'corrections.log').read_text())
 
-    def test_hold_file_stops_publish(self):
+    def test_unreadable_pull_fails_closed(self):
         import tempfile
         from pathlib import Path
-        from unittest import mock
+        from datetime import datetime, timezone
         from tools import news_loop as nl
         with tempfile.TemporaryDirectory() as d:
-            (Path(d) / 'HOLD').write_text('x')
-            (Path(d) / 'PUSH_APPROVED').write_text('x')
-            with mock.patch.object(nl, 'control_dir', return_value=Path(d)):
-                self.assertTrue(nl.publish(d).startswith('held'))
+            d = Path(d)
+            (d / 'PULL').mkdir()  # a directory cannot be read as a file
+            calls = []
+            alert = nl.cycle(datetime(2026, 11, 17, tzinfo=timezone.utc), str(d / 'l.json'), d, False,
+                             sweep_runner=lambda p: calls.append(p) or '', live=[], cdir=d)
+            self.assertIn('ALERT', alert)
+            self.assertEqual(calls, [])
+
+    def test_hold_skips_sweep_but_pulls_still_apply(self):
+        import tempfile, json
+        from pathlib import Path
+        from datetime import datetime, timezone
+        from tools import news_loop as nl
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            (d / 'HOLD').write_text('x')
+            (d / 'PULL').write_text('auto-1\n')
+            (d / 'auto_items.json').write_text(json.dumps([{'id': 'auto-1'}, {'id': 'auto-2'}]))
+            calls = []
+            nl.cycle(datetime(2026, 11, 17, tzinfo=timezone.utc), str(d / 'l.json'), d, False,
+                     sweep_runner=lambda p: calls.append(p) or '', live=[], cdir=d)
+            self.assertEqual(calls, [])
+            self.assertEqual([i['id'] for i in json.loads((d / 'auto_items.json').read_text())], ['auto-2'])
+
+    def test_seen_marked_only_after_push(self):
+        import tempfile
+        from pathlib import Path
+        from tools import news_loop as nl
+        item = {'id': 'auto-9', 'title': 'T', 'sources': [{'source': 'CNN', 'url': 'https://cnn.com/x'}]}
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            self.assertEqual(nl.log_published(d, [item], d / 'seen', False), [])
+            self.assertFalse((d / 'seen').exists())
+            self.assertEqual(len(nl.log_published(d, [item], d / 'seen', True)), 1)
+            self.assertEqual(nl.log_published(d, [item], d / 'seen', True), [])

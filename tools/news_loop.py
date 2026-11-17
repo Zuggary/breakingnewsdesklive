@@ -10,7 +10,15 @@ from tools.news_sweep import run_sweep, dedupe, default_runner, confirm_prompt, 
 from tools.news_judge import candidate_id, judge_prompt, parse_verdict, gates, default_judge_runner, meets_bar
 
 
-def run_once(now, sweep_runner, judge_runner, ledger_path, out_dir, live_items, push=False):
+def read_lines(path):
+    """Whitespace-separated words of a control file. A missing file is empty; any other read error raises (fail closed)."""
+    try:
+        return Path(path).read_text().split()
+    except FileNotFoundError:
+        return []
+
+
+def run_once(now, sweep_runner, judge_runner, ledger_path, out_dir, live_items, push=False, hold=None):
     if push:
         raise NotImplementedError('push is done by the guarded wrapper')
     path = Path(out_dir) / 'auto_items.json'
@@ -23,12 +31,11 @@ def run_once(now, sweep_runner, judge_runner, ledger_path, out_dir, live_items, 
         except (KeyError, ValueError, TypeError):
             continue
     counts = dict(found=0, published=0, held=0, rejected=0)
-    try:
-        blocked = set((Path(out_dir) / 'blocklist.txt').read_text().split())
-    except OSError:
-        blocked = set()
+    blocked = set(read_lines(Path(out_dir) / 'blocklist.txt'))
     candidates = dedupe(run_sweep(sweep_runner, now))
     for c in candidates:
+        if hold and hold():
+            break
         cid = candidate_id(c)
         if cid in blocked:
             continue
@@ -52,6 +59,8 @@ def run_once(now, sweep_runner, judge_runner, ledger_path, out_dir, live_items, 
         except Exception as exc:
             verdict, ok, reasons, item = None, False, ['judge error: ' + str(exc)], None
             ledger.record(ledger_path, cid, 'judged', now, reasons[0])
+        if ok and hold and hold():
+            ok, reasons = False, ['HOLD file present']
         if ok:
             active.append(item)
             state = 'published'
@@ -95,13 +104,14 @@ def read_pull(path):
     """Ids to pull, one per line ('id' or 'id | note')."""
     out = {}
     try:
-        for line in Path(path).read_text().splitlines():
-            line = line.strip()
-            if line and not line.startswith('#'):
-                cid, _, note = line.partition('|')
-                out[cid.strip()] = note.strip()
-    except OSError:
-        pass
+        text = Path(path).read_text()
+    except FileNotFoundError:
+        return out
+    for line in text.splitlines():
+        line = line.strip()
+        if line and not line.startswith('#'):
+            cid, _, note = line.partition('|')
+            out[cid.strip()] = note.strip()
     return out
 
 
@@ -111,37 +121,44 @@ def apply_pulls(out_dir, pull_path, ledger_path, now):
     if not pulls:
         return []
     out = Path(out_dir)
+    known = set(read_lines(out / 'blocklist.txt'))
+    new_ids = [cid for cid in pulls if cid not in known]
+    if new_ids:  # block first, so a failure after this line can only over-block
+        with (out / 'blocklist.txt').open('a') as f:
+            for cid in new_ids:
+                f.write(cid + '\n')
     path = out / 'auto_items.json'
     items = ledger.read(path) if path.exists() else []
-    kept = [i for i in items if i.get('id') not in pulls]
     pulled = [i['id'] for i in items if i.get('id') in pulls]
     if pulled:
-        ledger.write(path, kept)
+        ledger.write(path, [i for i in items if i.get('id') not in pulls])
         with (out / 'corrections.log').open('a') as f:
             for cid in pulled:
-                f.write('%s pulled %s: %s\n' % (now.strftime('%Y-%m-%dT%H:%M:%SZ'), cid, pulls[cid] or 'found wrong'))
-                ledger.record(ledger_path, cid, 'answered', now, 'pulled: ' + (pulls[cid] or 'found wrong'))
-    with (out / 'blocklist.txt').open('a') as f:
-        for cid in pulls:
-            f.write(cid + '\n')
+                f.write('%s pulled %s\n' % (now.strftime('%Y-%m-%dT%H:%M:%SZ'), cid))
+                ledger.record(ledger_path, cid, 'answered', now, 'pulled')
     return pulled
 
 
-def log_published(out_dir, items, seen_path):
-    """One line per newly published item: headline and sources, for the CoS spot-check."""
-    out = Path(out_dir)
-    seen = set(seen_path.read_text().split()) if seen_path.exists() else set()
-    lines = []
+def new_published_lines(items, seen_path):
+    """(lines, ids) for items not yet marked seen: headline and source names only."""
+    seen = set(read_lines(seen_path))
+    lines, ids = [], []
     for i in items:
         if i['id'] not in seen:
-            seen.add(i['id'])
-            lines.append('%s | %s | sources: %s | response: %s' % (i['id'], i['title'], '; '.join('%s %s' % (s['source'], s['url']) for s in i['sources']),
-                                                                    '; '.join('%s %s' % (r['who'], r['text']) for r in i['responses'])))
-    if lines:
-        with (out / 'published.md').open('a') as f:
+            ids.append(i['id'])
+            lines.append('%s | %s | sources: %s' % (i['id'], i['title'], '; '.join(s['source'] + ' ' + s['url'] for s in i['sources'])))
+    return lines, ids
+
+
+def log_published(out_dir, items, seen_path, pushed):
+    """Write the lines for new items to published.md and mark them seen, only after a successful push."""
+    lines, ids = new_published_lines(items, seen_path)
+    if lines and pushed:
+        with (Path(out_dir) / 'published.md').open('a') as f:
             f.write('\n'.join(lines) + '\n')
-        seen_path.write_text('\n'.join(sorted(seen)))
-    return lines
+        Path(seen_path).write_text('\n'.join(sorted(set(read_lines(seen_path)) | set(ids))))
+        return lines
+    return []
 
 
 def publish(out_dir, clone_url=None):
@@ -150,8 +167,6 @@ def publish(out_dir, clone_url=None):
     import shutil
     import subprocess
     out = Path(out_dir)
-    if (control_dir() / 'HOLD').exists():
-        return 'held: HOLD file present'
     if not (out / 'PUSH_APPROVED').exists():
         return 'dry: PUSH_APPROVED missing'
     clone = out / 'news-data-clone'
@@ -172,6 +187,25 @@ def publish(out_dir, clone_url=None):
     return 'pushed'
 
 
+def cycle(now, ledger_path, out, do_publish, sweep_runner=default_runner, judge_runner=default_judge_runner, live=None, cdir=None):
+    """One loop pass. Pulls first. HOLD stops new items only; removals still push. A control-file error stops new items and returns an alert line."""
+    cdir = Path(cdir) if cdir else control_dir()
+    out = Path(out)
+    alert = None
+    try:
+        apply_pulls(out, cdir / 'PULL', ledger_path, now)
+        read_lines(out / 'blocklist.txt')
+        if not (cdir / 'HOLD').exists():
+            run_once(now, sweep_runner, judge_runner, ledger_path, out, load_live_items() if live is None else live,
+                     hold=lambda: (cdir / 'HOLD').exists())
+    except Exception as exc:  # noqa: BLE001  fail closed: no new items this cycle
+        alert = '%s ALERT: control files or sweep failed, no new items: %s' % (now.strftime('%Y-%m-%dT%H:%M:%SZ'), exc)
+    result = publish(out) if do_publish else 'dry'
+    if (out / 'auto_items.json').exists() and result in ('pushed', 'no change'):
+        log_published(out, ledger.read(out / 'auto_items.json'), out / 'published.seen', True)
+    return alert
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--every', type=float, default=900)
@@ -189,14 +223,10 @@ def main():
     last_hour = None
     while True:
         now = datetime.now(timezone.utc)
-        hold = (control_dir() / 'HOLD').exists()
-        if not hold:
-            run_once(now, default_runner, default_judge_runner, path, out, load_live_items())
-        apply_pulls(out, control_dir() / 'PULL', path, now)
-        if (out / 'auto_items.json').exists():
-            log_published(out, ledger.read(out / 'auto_items.json'), out / 'published.seen')
-        if args.publish:
-            publish(out)
+        status = cycle(now, path, out, args.publish)
+        if status:
+            with (out / 'ALERTS.md').open('a') as f:
+                f.write(status + '\n')
         lines = ledger.alert_lines(path, now)
         out.mkdir(parents=True, exist_ok=True)
         if lines:
