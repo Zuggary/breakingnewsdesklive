@@ -83,6 +83,43 @@
     "carried_by": []
   },
   {
+    "id": "auto-0960511a2bc0",
+    "title": "Apple reports iCloud sign-in outage as users report problems with other services",
+    "place": "United States",
+    "time": "2026-11-17T17:33:00Z",
+    "expires": "2026-11-19T17:33:00Z",
+    "severity": "moderate",
+    "summary": "Apple's system status page listed an iCloud Account & Sign In outage and said access could be slow or unavailable, according to Yahoo. Users also reported problems with services including the App Store and Apple Pay, according to 9to5Mac and Yahoo; those reports do not confirm separate outages. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "9to5Mac",
+        "intermediary": null,
+        "url": "https://9to5mac.com/2026/11/17/icloud-app-store-and-other-apple-services-hit-by-ongoing-outage/",
+        "published": "2026-11-17T17:33:00Z",
+        "scope": "User reports of connection and sign-in failures.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Yahoo",
+        "intermediary": null,
+        "url": "https://tech.yahoo.com/general/breaking-news/article/apple-confirms-icloud-outage-as-users-report-issues-with-apple-pay-app-store-and-other-services-175614284.html",
+        "published": "2026-11-17T17:33:00Z",
+        "scope": "Apple's outage notice and user reports.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Apple",
+        "text": "Apple's system status page listed an iCloud Account & Sign In outage and said the service could be slow or unavailable.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
+  },
+  {
     "id": "auto-35147e1b2be8",
     "title": "Apple status page listed account and service disruptions, MacRumors reports",
     "place": "United States",
