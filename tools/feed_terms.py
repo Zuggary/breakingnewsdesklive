@@ -65,7 +65,7 @@ def ads_blockers(sources):
 # Terms were not all read first-hand. Read each outlet's terms before any use that goes beyond internal reading.
 TIP_FEEDS = {
     "aljazeera": {"terms_read": False, "note": "Public RSS. Internal tip reading only. Terms not read."},
-    "cnn": {"terms_read": False, "note": "Public RSS. Internal tip reading only. The RSS page returned HTTP 451 in our browser, so its terms were not read."},
+    "cnn": {"terms_read": False, "note": "CNN RSS is stale since April 2023. CNN headlines are read from GDELT titles. Internal tip reading only. Terms not read."},
     "bbc": {"terms_read": False, "note": "Public RSS. Internal tip reading only. Terms page could not be fetched."},
     "npr": {"terms_read": True, "note": "NPR terms allow content feeds on personal or 501(c)(3) non-news sites. We do not display them. Internal tip reading only."},
     "guardian": {"terms_read": False, "note": "Public RSS. Internal tip reading only. Terms not read."},

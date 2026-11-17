@@ -104,6 +104,33 @@ class Robots(unittest.TestCase):
 
 
 class Round(unittest.TestCase):
+    def test_feed_freshness_uses_newest_item_and_drops_expired_items(self):
+        feed = {"id": "example", "url": "https://news.example/rss"}
+        for hours, stale in ((24, False), (25, True), (49, True)):
+            with self.subTest(hours=hours):
+                rows = []
+                for i, age in enumerate((72, hours)):
+                    rows.append("<item><title>Made up library news</title>"
+                                "<link>https://news.example/%d</link><pubDate>%s</pubDate></item>"
+                                % (i, tipwatch.iso(NOW - timedelta(hours=age))))
+                body = "<rss><channel>%s</channel></rss>" % "".join(rows)
+                store = {"items": [], "robots": {}}
+                _, status = tipwatch.run_round(store, [feed], NOW,
+                                              fake_fetch({feed["url"]: body}))
+                self.assertEqual(status[0]["ok"], not stale)
+                self.assertEqual(status[0].get("stale", False), stale)
+                if stale:
+                    self.assertEqual(status[0]["error"],
+                                     "stale feed (newest item %d h old)" % hours)
+                self.assertEqual(len(store["items"]), int(hours <= 48))
+
+    def test_cnn_uses_gdelt_instead_of_stale_rss(self):
+        self.assertFalse(any("rss.cnn.com" in f["url"] for f in tipwatch.FEEDS))
+        self.assertFalse(any(f["id"] == "cnn" for f in tipwatch.FEEDS))
+        self.assertIn("GDELT", feed_terms.TIP_FEEDS["cnn"]["note"])
+        self.assertIn("stale", feed_terms.TIP_FEEDS["cnn"]["note"])
+        self.assertFalse(feed_terms.TIP_FEEDS["cnn"]["terms_read"])
+
     def test_a_full_round_with_fake_feeds(self):
         feeds = [{"id": "a", "name": "A", "url": "https://a.example/rss"}, {"id": "b", "name": "B", "url": "https://b.example/atom"}]
         fetch = fake_fetch({"https://a.example/rss": read("tip-rss-a.xml"), "https://b.example/atom": read("tip-atom-b.xml")})
@@ -220,6 +247,29 @@ class GdeltSecurity(unittest.TestCase):
         self.assertEqual(items[0]["time"], "2026-11-17T00:30:00Z")
         self.assertEqual(set(items[0]), {"feed", "title", "link", "time"})
 
+    def test_cnn_non_security_titles_reach_store_with_cnn_feed_id(self):
+        rows = [("20261117003000", domain, "https://news.example/%d" % i,
+                 "Made up library opens new reading room")
+                for i, domain in enumerate(("cnn.com", "edition.cnn.com", "www.cnn.com"))]
+        z = self.gkg(rows)
+        fetch = lambda url: (b"x https://data.gdeltproject.org/gdeltv2/20261117003000.gkg.csv.zip"
+                             if url.endswith("lastupdate.txt") else z)
+        store = {"items": [], "robots": {}}
+        tipwatch.run_round(store, [], datetime(2026, 11, 17, 1, tzinfo=timezone.utc),
+                          gdelt_bytes=fetch)
+        self.assertEqual([i["feed"] for i in store["items"]], ["cnn"] * 3)
+        self.assertEqual(store["items"][0]["title"], rows[0][3])
+        self.assertEqual(store["items"][0]["time"], "2026-11-17T00:30:00Z")
+
+    def test_cnn_limit_is_per_file_and_does_not_limit_other_security_titles(self):
+        rows = [("20261117003000", "cnn.com", "https://news.example/%d" % i,
+                 "Made up library opens reading room") for i in range(61)]
+        rows.append(("20261117003000", "other.example", "https://other.example/1",
+                     "Explosion reported near fictional stadium"))
+        items = tipwatch.read_gkg_security(self.gkg(rows))
+        self.assertEqual([i["feed"] for i in items], ["cnn"] * 60 + ["other.example"])
+        self.assertTrue(all(set(i) == {"feed", "title", "link", "time"} for i in items))
+
     def test_a_gkg_file_is_read_once(self):
         z = self.gkg([("20261117003000", "a.example", "https://a.example/1", "Explosion reported near stadium")])
         calls = []
@@ -243,14 +293,17 @@ class GdeltSecurity(unittest.TestCase):
         self.assertEqual(c[0]["distinct_headlines"], 2)
 
     def test_a_round_can_include_gdelt_and_it_stays_internal(self):
-        z = self.gkg([("20261117003000", "a.example", "https://a.example/1", "Explosion reported near stadium"),
+        z = self.gkg([("20261117003000", "cnn.com", "https://news.example/1", "Explosion reported near stadium"),
                       ("20261117003000", "b.example", "https://b.example/1", "Explosion near stadium reported by police")])
         fetch = lambda url: (b"x https://data.gdeltproject.org/gdeltv2/20261117003000.gkg.csv.zip" if url.endswith("lastupdate.txt") else z)
         st = {"items": [], "robots": {}}
         leads, status = tipwatch.run_round(st, [], datetime(2026, 11, 17, 1, 0, tzinfo=timezone.utc), gdelt_bytes=fetch)
         self.assertTrue(status[-1]["ok"])
         self.assertEqual(status[-1]["id"], "gdelt-security")
-        self.assertEqual(len(tipwatch.security_candidates(leads)), 1)
+        candidates = tipwatch.security_candidates(leads)
+        self.assertEqual(len(candidates), 1)
+        self.assertIn("cnn", candidates[0]["outlets"])
+        self.assertIn("cnn", tipwatch.auto_news.TOP_OUTLETS)
 
 
 class Alerts(unittest.TestCase):

@@ -42,7 +42,6 @@ DEFAULT_DIR = os.path.expanduser("~/factory-scratch/tipwatch")
 
 FEEDS = [
     {"id": "aljazeera", "name": "Al Jazeera", "url": "https://www.aljazeera.com/xml/rss/all.xml"},
-    {"id": "cnn", "name": "CNN", "url": "http://rss.cnn.com/rss/cnn_topstories.rss"},
     {"id": "bbc", "name": "BBC News", "url": "https://feeds.bbci.co.uk/news/rss.xml"},
     {"id": "npr", "name": "NPR", "url": "https://feeds.npr.org/1001/rss.xml"},
     {"id": "guardian", "name": "The Guardian", "url": "https://www.theguardian.com/world/rss"},
@@ -173,14 +172,15 @@ def http_fetch(url, headers=None):
 
 
 
-# ---------- GDELT as a tip source (security stories only) ----------
-# CNN's public RSS has been stale since 2023, so a CNN scoop reaches us only when other outlets carry it. GDELT lists page titles
-# from thousands of outlets every 15 minutes. We keep titles that match the security words and nothing else. Internal only.
+# ---------- GDELT as a tip source (CNN and security stories) ----------
+# CNN's public RSS has been stale since April 2023. GDELT lists page titles every 15 minutes.
+# Keep up to 60 CNN titles per file, plus security titles from other outlets. Internal only.
 
 def read_gkg_security(zip_bytes):
-    """Return [{feed (domain), title, link, time}] for titles that match SECURITY_RX. Headline, link and time only."""
+    """Return CNN titles (feed cnn, at most 60) and other domains' security titles. Headline, link and time only."""
     z = zipfile.ZipFile(io.BytesIO(zip_bytes))
     out = []
+    cnn_count = 0
     for line in z.read(z.namelist()[0]).decode("utf-8", "replace").splitlines():
         f = line.split("\t")
         if len(f) < 27 or f[25] or not f[4].startswith("http"):
@@ -189,8 +189,13 @@ def read_gkg_security(zip_bytes):
         if not m:
             continue
         title = " ".join(m.group(1).split())
-        if SECURITY_RX.search(title):
-            out.append({"feed": f[3].lower().replace("www.", ""), "title": title[:200], "link": f[4],
+        domain = f[3].lower()
+        is_cnn = domain in {"cnn.com", "edition.cnn.com", "www.cnn.com"}
+        if is_cnn and cnn_count >= 60:
+            continue
+        if is_cnn or SECURITY_RX.search(title):
+            cnn_count += int(is_cnn)
+            out.append({"feed": "cnn" if is_cnn else domain.replace("www.", ""), "title": title[:200], "link": f[4],
                         "time": f[1][:4] + "-" + f[1][4:6] + "-" + f[1][6:8] + "T" + f[1][8:10] + ":" + f[1][10:12] + ":" + f[1][12:14] + "Z"})
     return out
 
@@ -373,8 +378,14 @@ def run_round(store, feeds, now, fetch=http_fetch, local_model=None, gdelt_bytes
                 status.append(rec)
                 continue
             before = len(store["items"])
-            add_items(store, parse_feed(body, f["id"]), now)
+            items = parse_feed(body, f["id"])
+            add_items(store, items, now)
             rec["ok"], rec["new"] = True, len(store["items"]) - before
+            if items:
+                age_hours = (now - max(parse_iso(i["time"]) for i in items)).total_seconds() / 3600
+                if age_hours > 24:
+                    rec["stale"], rec["ok"] = True, False
+                    rec["error"] = "stale feed (newest item %d h old)" % age_hours
         except Exception as e:  # noqa: BLE001
             rec["error"] = type(e).__name__
         status.append(rec)
@@ -397,7 +408,7 @@ def main(argv=None):
     ap.add_argument("--once", action="store_true")
     ap.add_argument("--loop", type=int, default=0)
     ap.add_argument("--every", type=int, default=180)
-    ap.add_argument("--no-gdelt", action="store_true", help="skip the GDELT security titles")
+    ap.add_argument("--no-gdelt", action="store_true", help="skip the GDELT CNN and security titles")
     ap.add_argument("--apfel", action="store_true", help="tag headlines the rules cannot place with the on-device model")
     a = ap.parse_args(argv)
     refuse_published_path(a.dir)
