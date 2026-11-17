@@ -197,7 +197,20 @@ def publish(out_dir, clone_url=None, removals_only=False):
     if (control_dir() / 'HOLD').exists():  # HOLD may arrive during the fetch
         removals_only = True
     if not removals_only:
-        shutil.copy(out / 'auto_items.json', clone / 'auto_items.json')
+        # Merge: remote items plus local items, local wins by id. Expired items drop out. Pulled and blocked ids drop out below.
+        now = datetime.now(timezone.utc)
+        remote = ledger.read(clone / 'auto_items.json') if (clone / 'auto_items.json').exists() else []
+        merged = {i['id']: i for i in remote}
+        merged.update({i['id']: i for i in ledger.read(out / 'auto_items.json')})
+        live = []
+        for i in merged.values():
+            try:
+                if parse_time(i['expires']) > now:
+                    live.append(i)
+            except (KeyError, ValueError, TypeError):
+                continue
+        live.sort(key=lambda i: i['time'])
+        ledger.write(clone / 'auto_items.json', live[-10:])
     elif not (clone / 'auto_items.json').exists():
         return 'held: no live file to take down from'
     late = set(read_pull(control_dir() / 'PULL'))  # a pull that arrived during the fetch still wins
