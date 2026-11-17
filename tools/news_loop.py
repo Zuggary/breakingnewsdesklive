@@ -240,6 +240,8 @@ def cycle(now, ledger_path, out, do_publish, sweep_runner=default_runner, judge_
         result = publish(out, removals_only=removals_only) if do_publish else 'dry'
     except Exception as exc:  # noqa: BLE001
         result, alert = 'alert: publish failed', '%s ALERT: publish failed: %s' % (now.strftime('%Y-%m-%dT%H:%M:%SZ'), exc)
+    if str(result).startswith('held') and not alert:
+        alert = '%s ALERT: %s' % (now.strftime('%Y-%m-%dT%H:%M:%SZ'), result)
     try:
         if (out / 'news-data-clone' / 'auto_items.json').exists() and result in ('pushed', 'no change'):
             log_published(out, ledger.read(out / 'news-data-clone' / 'auto_items.json'), out / 'published.seen', True)
