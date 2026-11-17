@@ -193,7 +193,7 @@ def build_items(matched, services, now, probe_snapshot=None, window_s=WINDOW_S):
             "time": iso(first), "severity": "severe" if big else "moderate", "size": len(outlets),
             "source": "News reports (via GDELT)", "source_id": "news-lane", "source_url": ABOUT_URL,
             "detail": {"lane": "news", "label": LABEL, "open": True, "outlets": len(outlets), "services": names,
-                       "first_report": et_clock(first), "last_report": et_clock(seen_time(arts[-1])), "probes": probes_attached, "resolution": resolution},
+                       "outlet_domains": sorted(outlets), "first_report": et_clock(first), "last_report": et_clock(seen_time(arts[-1])), "probes": probes_attached, "resolution": resolution},
             "links": [{"label": a["domain"], "title": " ".join(a["title"].split())[:140], "url": a["url"]} for a in arts[:MAX_LINKS]],
             "region": "Americas", "big": big, "summary_override": summary,
         })

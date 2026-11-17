@@ -19,6 +19,7 @@ function hero(e,d){var h=document.getElementById('ehero');h.style.setProperty('-
  var tl=el('span','pill',e.severity);tl.style.background=B.SEV[e.severity]||'#93a1b5';
  var sm=document.getElementById('esum');sm.textContent='';sm.appendChild(tl);sm.appendChild(document.createTextNode(' '+(B.TYPES[e.type]||B.TYPES.other).label+' \u00b7 '+e.place));
  document.getElementById('esrc').textContent=e.summary+' Source: '+e.source+', '+B.ago(e.time)+'.';
+ if(e.confidence){var cl=el('span','pill');cl.style.background='#fff';cl.style.marginLeft='8px';cl.textContent=e.confidence;sm.appendChild(cl)}
  if(e.status){var sl=el('span','pill');sl.style.background='#fff';sl.style.marginLeft='8px';sl.textContent=e.status;sm.appendChild(sl)}
  var tag=B.stockTag(e);if(!tag)return;
  fetch('assets/stock/manifest.json').then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(m){var it=B.pickStock(m,tag,e.id);if(!it)return;

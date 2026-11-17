@@ -16,7 +16,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from tools import feed_terms, killswitch, probes, news_lane  # noqa: E402
+from tools import feed_terms, killswitch, probes, news_lane, claims  # noqa: E402
 from tools.lib import (REGIONS, region_of, score_event, summarize, STATE_CENTROIDS, claims_ok, status_label, SAFE_SUMMARY,  # noqa: E402
                        iso_utc, parse_time, haversine_km)
 
@@ -834,6 +834,8 @@ def build(fixtures=None, now=None):
             if not claims_ok(e["summary"]):
                 e["summary"], e["claims_blocked"] = SAFE_SUMMARY, True
             e["status"] = status_label(e, now)
+            e["confidence"] = claims.confidence_for_event(e)
+            e["ticker_ok"] = claims.ticker_ok({"label": e["confidence"]}, claims.STRICT_TICKER)
             good.append(e)
         except Exception as ex:  # noqa: BLE001
             # One malformed item must never stop the data job. Drop it, and say which one.

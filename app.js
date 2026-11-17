@@ -104,6 +104,7 @@
       li.appendChild(h);
       if (state.sel === e.id) {
         var m = el('div', 'more');
+        if (e.confidence) { var cfp = el('p', 'stat-line'); cfp.appendChild(el('b', '', e.confidence)); cfp.appendChild(document.createTextNode(e.confidence === 'Corroborated' ? ' Two or more independent sources support this.' : e.confidence === 'Official single source' ? ' One official source. Not yet corroborated.' : ' Not yet verified by the desk.')); m.appendChild(cfp); }
         if (e.status) { var stp = el('p', 'stat-line'); stp.appendChild(el('b', '', e.status)); stp.appendChild(document.createTextNode(e.status === 'UNVERIFIED' ? ' A claim by the named outlet or party. This site does not verify it.' : ' New in the feeds. Details may change.')); m.appendChild(stp); }
         m.appendChild(el('p', '', e.summary));
         var ctxBox = B.renderContext(e.context || {}, e); if (e.context || ctxBox.querySelector('figure')) m.appendChild(ctxBox);
