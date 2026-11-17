@@ -116,6 +116,12 @@ class NewsPages(unittest.TestCase):
             self.assertIn("a-different-title", str(pages[0]))
             self.assertNotIn("desk-1", Path(d, "news-pages.xml").read_text())
 
+    def test_dotted_id_and_null_history_are_safe(self):
+        with tempfile.TemporaryDirectory() as d:
+            urls = news.build_news([event(id="desk.1", history=None)], [], d, NOW)
+            self.assertEqual(len(urls), 1)
+            self.assertTrue((Path(d) / urls[0].replace(news.BASE + "/", "") / "index.html").exists())
+
     def test_changed_since(self):
         item = event()
         self.assertEqual(news.changed_since(item), 'No changes since first published at 12:00 UTC.')

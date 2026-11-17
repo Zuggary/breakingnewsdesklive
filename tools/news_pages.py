@@ -26,14 +26,14 @@ def slugify(title):
 
 
 def _path(event):
-    return "news/%s/%s/" % (quote(str(event["id"]), safe="").replace(".", "%2E"), slugify(event["title"]))
+    return "news/%s/%s/" % (re.sub(r"[^A-Za-z0-9_-]+", "-", str(event["id"])).strip("-") or "item", slugify(event["title"]))
 
 
 def _modified(event):
     times = [event["time"]]
     if event.get("updated"):
         times.append(event["updated"])
-    times.extend(h["t"] for h in event.get("history", []) if h.get("t"))
+    times.extend(h["t"] for h in (event.get("history") or []) if isinstance(h, dict) and h.get("t"))
     return max(times, key=_time)
 
 
