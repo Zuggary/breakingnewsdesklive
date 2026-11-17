@@ -127,9 +127,12 @@ def apply_pulls(out_dir, pull_path, ledger_path, now):
         known = set()  # an unreadable blocklist never blocks a takedown; the ids are appended again
     new_ids = [cid for cid in pulls if cid not in known]
     if new_ids:  # block first, so a failure after this line can only over-block
-        with (out / 'blocklist.txt').open('a') as f:
-            for cid in new_ids:
-                f.write(cid + '\n')
+        try:
+            with (out / 'blocklist.txt').open('a') as f:
+                for cid in new_ids:
+                    f.write(cid + '\n')
+        except OSError:
+            pass  # the takedown below still runs; the PULL file itself keeps blocking in publish
     path = out / 'auto_items.json'
     items = ledger.read(path) if path.exists() else []
     pulled = [i['id'] for i in items if i.get('id') in pulls]
@@ -186,6 +189,8 @@ def publish(out_dir, clone_url=None, removals_only=False):
         subprocess.run(['git', '-C', str(clone), 'reset', '-q', '--hard', 'FETCH_HEAD'], check=True)
     elif removals_only:
         return 'held: cannot read the remote'
+    if (control_dir() / 'HOLD').exists():  # HOLD may arrive during the fetch
+        removals_only = True
     if removals_only:  # HOLD: push only what is already live, minus pulls; no new item goes out
         try:
             live_ids = {i['id'] for i in ledger.read(clone / 'auto_items.json')}
@@ -202,6 +207,10 @@ def publish(out_dir, clone_url=None, removals_only=False):
     else:
         shutil.copy(out / 'auto_items.json', clone / 'auto_items.json')
     late = set(read_pull(control_dir() / 'PULL'))  # a pull that arrived during the fetch still wins
+    try:
+        late |= set(read_lines(out / 'blocklist.txt'))  # a blocked id never goes back live
+    except OSError:
+        pass
     if late:
         ledger.write(clone / 'auto_items.json', [i for i in ledger.read(clone / 'auto_items.json') if i['id'] not in late])
     git = ['git', '-C', str(clone), '-c', 'user.name=Zuggary', '-c', 'user.email=Zuggary@users.noreply.github.com']
