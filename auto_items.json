@@ -155,5 +155,51 @@
       }
     ],
     "carried_by": []
+  },
+  {
+    "id": "auto-2a7b1193be4f",
+    "title": "Apple says internal update caused outages affecting its online services",
+    "place": "United States",
+    "time": "2026-11-17T18:15:00Z",
+    "expires": "2026-11-19T18:15:00Z",
+    "severity": "moderate",
+    "summary": "The Associated Press reported that Apple attributed outages affecting services including the App Store, Apple Music and iCloud sign-ins to an internal update. Engadget reported observing service disruptions, while Apple told AP that many systems were back up and work continued to restore the remainder. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Engadget",
+        "intermediary": null,
+        "url": "https://www.engadget.com/2319504/icloud-and-other-apple-services-are-down-in-an-apparent-outage/",
+        "published": "2026-11-17T18:15:00Z",
+        "scope": "Observed disruption affecting Apple services; published at 18:15 UTC.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/apple-marriott-technology-outages-ff097d2a0bec767baf38a1bd8eff5829",
+        "published": "2026-11-17T18:15:00Z",
+        "scope": "Apple system status page and an emailed statement from Apple.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "NBC10 Philadelphia",
+        "intermediary": null,
+        "url": "https://www.nbcphiladelphia.com/news/tech/apple-reports-outages-for-multiple-services/4498868/",
+        "published": "2026-11-17T18:15:00Z",
+        "scope": "Apple service reports and a customer who visited a Philadelphia Apple store.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Apple",
+        "text": "Apple told the Associated Press that an internal update caused the outages, many systems were back up, and it was working to restore the remainder.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
   }
 ]
