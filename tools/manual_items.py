@@ -51,10 +51,9 @@ def validate(it):
 
 
 def reported_line(it):
-    """One plain line: who reported it, then each official response."""
-    first = it["sources"][0]
-    who = first["source"] + (" (%s)" % first["scope"] if first.get("scope") else "")
-    return " · ".join(["Reported by " + who] + ["%s: %s" % (r["who"], r["text"]) for r in it["responses"]])
+    """One plain line: who reported it (every named source), then each official response."""
+    who = " and ".join(s["source"] + (" (%s)" % s["scope"] if s.get("scope") else "") for s in it["sources"][:3])
+    return " \u00b7 ".join(["Reported by " + who] + ["%s: %s" % (r["who"], r["text"]) for r in it["responses"]])
 
 
 def to_event(it, now):

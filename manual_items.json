@@ -42,5 +42,57 @@
    "Yahoo"
   ],
   "note": "Source URL points at CNN's site root: the lane could not fetch the CNN article. Replace with the article link when known."
+ },
+ {
+  "id": "nsa-net-down-20261117",
+  "title": "CNN and CBS report NSA's classified internal network is down; officials see no evidence of a cyberattack so far; NSA has not commented",
+  "place": "Fort Meade, Maryland, United States",
+  "lat": 39.108,
+  "lon": -76.771,
+  "time": "2026-11-17T16:15:00Z",
+  "expires": "2026-11-19T16:15:00Z",
+  "severity": "moderate",
+  "region": "Americas",
+  "summary": "CNN first reported, citing six people familiar, that the NSA's classified internal network, known as NSA Net, is down. CBS News, citing US officials it spoke to, reports the network went offline Tuesday and that the agency staggered arrival times at Fort Meade. Two officials told CBS there is no evidence so far of a cyberattack, and two sources said routine system patching was the cause. How long the network has been down is not clear. The NSA has not commented in the reports. The desk has not confirmed it.",
+  "sources": [
+   {
+    "source": "CNN",
+    "intermediary": null,
+    "url": "https://www.cnn.com/2026/11/17/us/video/national-security-communications-network-down-digvid",
+    "published": "2026-11-17T16:15:00Z",
+    "scope": "six people familiar",
+    "verification": "attributed",
+    "kind": "outlet"
+   },
+   {
+    "source": "CBS News",
+    "intermediary": null,
+    "url": "https://www.cbsnews.com/news/nsa-network-down-classified-fort-meade/",
+    "published": "2026-11-17T17:35:40Z",
+    "scope": "US officials who spoke to CBS News",
+    "verification": "attributed",
+    "kind": "outlet"
+   }
+  ],
+  "responses": [
+   {
+    "who": "NSA",
+    "text": "has not commented in the reports",
+    "verification": "attributed"
+   },
+   {
+    "who": "US officials (anonymous, per CBS)",
+    "text": "no evidence so far of a cyberattack",
+    "verification": "attributed"
+   }
+  ],
+  "carried_by": [
+   "Forbes",
+   "Washington Times",
+   "CTV",
+   "Gulf News",
+   "Arab News"
+  ],
+  "note": "CNN's article was not readable here (video page); CBS article read first-hand. Forbes returned 403."
  }
 ]
