@@ -196,3 +196,58 @@ class SecurityLane(unittest.TestCase):
         for t in ("Explosion reported near stadium", "Cyberattack hits hospital network", "Evacuation ordered after threat", "Ground stop at airport after alarm"):
             self.assertEqual(tipwatch.tag_topic(t), "security", t)
         self.assertEqual(tipwatch.tag_topic("United Airlines outage grounds flights"), "aviation")
+
+
+class GdeltSecurity(unittest.TestCase):
+    def gkg(self, rows):
+        import io
+        import zipfile
+        lines = []
+        for date, domain, url, title in rows:
+            f = [""] * 27
+            f[1], f[3], f[4], f[26] = date, domain, url, "<PAGE_TITLE>%s</PAGE_TITLE>" % title
+            lines.append("\t".join(f))
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, "w") as z:
+            z.writestr("x.gkg.csv", "\n".join(lines))
+        return buf.getvalue()
+
+    def test_only_security_titles_are_kept(self):
+        z = self.gkg([("20261117003000", "www.dailymail.com", "https://dailymail.example/1", "Iran weighing dirty bomb attack on US officials, report says"),
+                      ("20261117003000", "bakery.example", "https://bakery.example/1", "Local bakery wins award")])
+        items = tipwatch.read_gkg_security(z)
+        self.assertEqual([i["feed"] for i in items], ["dailymail.com"])
+        self.assertEqual(items[0]["time"], "2026-11-17T00:30:00Z")
+        self.assertEqual(set(items[0]), {"feed", "title", "link", "time"})
+
+    def test_a_gkg_file_is_read_once(self):
+        z = self.gkg([("20261117003000", "a.example", "https://a.example/1", "Explosion reported near stadium")])
+        calls = []
+        def fetch(url):
+            calls.append(url)
+            return b"x http://data.gdeltproject.org/gdeltv2/20261117003000.gkg.csv.zip" if url.endswith("lastupdate.txt") else z
+        st = {"items": [], "robots": {}}
+        a = tipwatch.gdelt_security_items(st, fetch, NOW)
+        b = tipwatch.gdelt_security_items(st, fetch, NOW)
+        self.assertEqual((len(a), len(b)), (1, 0))
+
+    def test_candidates_count_distinct_headlines_so_syndicated_copies_are_one(self):
+        st = {"items": [], "robots": {}}
+        now = datetime(2026, 11, 17, 1, 0, tzinfo=timezone.utc)
+        same = "Iran threats prompt US officials to shelter on bases"
+        items = [{"feed": "st%d.example" % i, "title": same, "link": "https://st%d.example/x" % i, "time": "2026-11-17T00:10:00Z"} for i in range(4)]
+        items.append({"feed": "other.example", "title": "US officials shelter on bases after Iran threats, report says", "link": "https://other.example/x", "time": "2026-11-17T00:20:00Z"})
+        tipwatch.add_items(st, items, now)
+        c = tipwatch.security_candidates(tipwatch.build_leads(st, now))
+        self.assertEqual(c[0]["n_outlets"], 5)
+        self.assertEqual(c[0]["distinct_headlines"], 2)
+
+    def test_a_round_can_include_gdelt_and_it_stays_internal(self):
+        z = self.gkg([("20261117003000", "a.example", "https://a.example/1", "Explosion reported near stadium"),
+                      ("20261117003000", "b.example", "https://b.example/1", "Explosion near stadium reported by police")])
+        fetch = lambda url: (b"x https://data.gdeltproject.org/gdeltv2/20261117003000.gkg.csv.zip" if url.endswith("lastupdate.txt") else z)
+        st = {"items": [], "robots": {}}
+        leads, status = tipwatch.run_round(st, [], datetime(2026, 11, 17, 1, 0, tzinfo=timezone.utc), gdelt_bytes=fetch)
+        self.assertTrue(status[-1]["ok"])
+        self.assertEqual(status[-1]["id"], "gdelt-security")
+        self.assertEqual(len(tipwatch.security_candidates(leads)), 1)

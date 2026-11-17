@@ -13,6 +13,7 @@ Usage: python tools/tipwatch.py --once            one round
        python tools/tipwatch.py --loop 3600 --every 180   rounds every 180 s for 3600 s  (a persistent job: tell the CoS first)
 """
 import argparse
+import io
 import json
 import os
 import re
@@ -22,6 +23,7 @@ import time
 import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
+import zipfile
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 
@@ -49,7 +51,7 @@ STOP = set("""about after again also amid back been before being between could d
 new news over says said than that their them then there these they this those through today under until very what when where which while
 will with would your live update updates video watch breaking report reports reported""".split())
 
-SECURITY_RX = re.compile(r"\b(dirty bomb|chemical attack|radiological|explosion|explosions|blast|bomb threat|bombing|evacuat\w+|shooting|gunman|cyberattack|cyber attack|ransomware|hostage|hostages|terror\w*|attack on|plot against|threat(?:s)? (?:to|against)|ground stop|lockdown|shelter in place|state of emergency|missile|airstrike|drone attack)\b", re.I)
+SECURITY_RX = re.compile(r"\b(dirty bomb|chemical attack|radiological|explosion|explosions|blast|bomb threat|bombing|evacuat\w+|shooting|gunman|cyberattack|cyber attack|ransomware|hostage|hostages|terror\w*|attack on|plot against|threat(?:s)? (?:to|against)|ground stop|lockdown|shelter in place|state of emergency|missile|airstrike|drone attack|attacks?|threats?|shelter\w*|plot(?:s|ting|ted)?)\b", re.I)
 RESPONSE_RX = re.compile(r"\b(white house|pentagon|state department|fbi|dhs|homeland security|cia|nsa|secret service|spokesperson|spokesman|officials? say|denies|denied|no credible|statement)\b", re.I)
 
 TOPICS = [
@@ -166,6 +168,52 @@ def http_fetch(url, headers=None):
         return 0, ""
 
 
+
+# ---------- GDELT as a tip source (security stories only) ----------
+# CNN's public RSS has been stale since 2023, so a CNN scoop reaches us only when other outlets carry it. GDELT lists page titles
+# from thousands of outlets every 15 minutes. We keep titles that match the security words and nothing else. Internal only.
+
+def read_gkg_security(zip_bytes):
+    """Return [{feed (domain), title, link, time}] for titles that match SECURITY_RX. Headline, link and time only."""
+    z = zipfile.ZipFile(io.BytesIO(zip_bytes))
+    out = []
+    for line in z.read(z.namelist()[0]).decode("utf-8", "replace").splitlines():
+        f = line.split("\t")
+        if len(f) < 27 or f[25] or not f[4].startswith("http"):
+            continue
+        m = re.search(r"<PAGE_TITLE>(.*?)</PAGE_TITLE>", f[26], re.S)
+        if not m:
+            continue
+        title = " ".join(m.group(1).split())
+        if SECURITY_RX.search(title):
+            out.append({"feed": f[3].lower().replace("www.", ""), "title": title[:200], "link": f[4],
+                        "time": f[1][:4] + "-" + f[1][4:6] + "-" + f[1][6:8] + "T" + f[1][8:10] + ":" + f[1][10:12] + ":" + f[1][12:14] + "Z"})
+    return out
+
+
+def gdelt_security_items(store, fetch_bytes, now):
+    """Read the newest GKG file once. fetch_bytes(url) -> bytes or None."""
+    txt = fetch_bytes("https://data.gdeltproject.org/gdeltv2/lastupdate.txt")
+    if not txt:
+        return []
+    m = re.search(r"/gdeltv2/(\d{14})\.gkg\.csv\.zip", txt.decode("utf-8", "replace"))
+    if not m or store.get("gdelt_last") == m.group(1):
+        return []
+    z = fetch_bytes("https://data.gdeltproject.org/gdeltv2/%s.gkg.csv.zip" % m.group(1))
+    if not z:
+        return []
+    store["gdelt_last"] = m.group(1)
+    return read_gkg_security(z)
+
+
+def http_bytes(url):
+    try:
+        with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=60) as r:
+            return r.read()
+    except Exception:  # noqa: BLE001
+        return None
+
+
 # ---------- store ----------
 
 def load(path):
@@ -274,7 +322,8 @@ def security_candidates(leads):
         if l["topic"] != "security":
             continue
         hints = [i["title"] for i in l["items"] if RESPONSE_RX.search(i["title"])][:3]
-        out.append({"lead": l["id"], "n_outlets": l["n_outlets"], "outlets": l["outlets"], "first_seen": l["first_seen"], "items": l["items"][:6],
+        titles = {re.sub(r"\W+", " ", i["title"].lower()).strip() for i in l["items"]}
+        out.append({"lead": l["id"], "distinct_headlines": len(titles), "n_outlets": l["n_outlets"], "outlets": l["outlets"], "first_seen": l["first_seen"], "items": l["items"][:6],
                     "response_hints": hints, "official_response_found": bool(hints),
                     "needs": ["official response line (from the agency or office, read directly)", "primary-source link", "calm wording, DC not Washington State, no alarm words"],
                     "publish": "Only through manual_items.json after a person adds the needs. Never automatic."})
@@ -283,7 +332,7 @@ def security_candidates(leads):
 
 # ---------- one round ----------
 
-def run_round(store, feeds, now, fetch=http_fetch, local_model=None):
+def run_round(store, feeds, now, fetch=http_fetch, local_model=None, gdelt_bytes=None):
     status = []
     for f in feeds:
         rec = {"id": f["id"], "ok": False, "new": 0}
@@ -303,6 +352,15 @@ def run_round(store, feeds, now, fetch=http_fetch, local_model=None):
         except Exception as e:  # noqa: BLE001
             rec["error"] = type(e).__name__
         status.append(rec)
+    if gdelt_bytes:
+        rec = {"id": "gdelt-security", "ok": False, "new": 0}
+        try:
+            before = len(store["items"])
+            add_items(store, gdelt_security_items(store, gdelt_bytes, now), now)
+            rec["ok"], rec["new"] = True, len(store["items"]) - before
+        except Exception as e:  # noqa: BLE001
+            rec["error"] = type(e).__name__
+        status.append(rec)
     add_items(store, [], now)
     return build_leads(store, now, local_model), status
 
@@ -313,6 +371,7 @@ def main(argv=None):
     ap.add_argument("--once", action="store_true")
     ap.add_argument("--loop", type=int, default=0)
     ap.add_argument("--every", type=int, default=180)
+    ap.add_argument("--no-gdelt", action="store_true", help="skip the GDELT security titles")
     ap.add_argument("--apfel", action="store_true", help="tag headlines the rules cannot place with the on-device model")
     a = ap.parse_args(argv)
     refuse_published_path(a.dir)
@@ -322,7 +381,7 @@ def main(argv=None):
     while True:
         now = now_utc()
         store = load(store_path)
-        leads, status = run_round(store, FEEDS, now, local_model=apfel_tag if a.apfel else None)
+        leads, status = run_round(store, FEEDS, now, local_model=apfel_tag if a.apfel else None, gdelt_bytes=None if a.no_gdelt else http_bytes)
         for path, obj in ((store_path, store), (leads_path, {"generated": iso(now), "note": "INTERNAL. Never publish.", "leads": leads, "feeds": status}),
                           (av_path, {"generated": iso(now), "note": "INTERNAL. For Lane 5 (Air Travel Desk). Never publish.", "leads": [l for l in leads if l["topic"] == "aviation" or (l["topic"] == "security" and _AVIATION_RX.search(l["items"][0]["title"]))]}),
                           (sec_path, {"generated": iso(now), "note": "INTERNAL. Candidates for a curated Reported item. Never publish.", "candidates": security_candidates(leads)})):
