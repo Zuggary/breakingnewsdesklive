@@ -155,3 +155,44 @@ class PublishIsGated(unittest.TestCase):
         src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools", "news_loop.py"), encoding="utf-8").read()
         self.assertIn("factory-scratch", src)
         self.assertNotIn("'news_output'", src)
+
+
+class ConfirmationSearch(unittest.TestCase):
+    """A story with one own-sourced origin gets ONE confirmation search, then one more judgement."""
+
+    def test_a_confirming_outlet_found_by_the_second_search_lets_the_story_publish(self):
+        import tempfile
+        now = datetime(2026, 11, 17, 18, 30, tzinfo=timezone.utc)
+        first = json.dumps({"candidates": [{"beat": "Tech, outages and cyber", "what_happened": "CNN reports the NSA classified network is down.", "first_seen_utc": "2026-11-17T16:15:00Z", "scope": "six people familiar",
+                                            "outlets": [{"name": "CNN", "url": "https://www.cnn.com/2026/11/17/us/nsa-net", "role": "original", "own_sources": True, "sourcing": "six people familiar"}],
+                                            "official_response": [], "notes": ""}]})
+        confirm = json.dumps({"outlets": [{"name": "CBS News", "url": "https://www.cbsnews.com/news/nsa-network-down-classified-fort-meade/", "role": "confirming", "own_sources": True, "sourcing": "two US officials spoke to CBS News"}],
+                              "official_response": [{"who": "NSA", "text": "has not commented in the reports", "url": "https://www.cbsnews.com/news/nsa-network-down-classified-fort-meade/"}]})
+        verdict = json.dumps({"decision": "publish", "reasons": [], "headline": "CNN and CBS report the NSA's classified network is down; the NSA has not commented in the reports",
+                              "summary": "CNN reported, citing six people familiar, that the NSA's classified network is down. CBS News, citing US officials, reports the same. The desk has not confirmed it.",
+                              "responses": [{"who": "NSA", "text": "has not commented in the reports"}]})
+        calls = []
+
+        def sweep(prompt):
+            calls.append(prompt[:40])
+            return confirm if "OTHER major outlets" in prompt else (first if "Tech, outages" in prompt else json.dumps({"candidates": []}))
+        with tempfile.TemporaryDirectory() as d:
+            counts = run_once(now, sweep, lambda p: verdict, os.path.join(d, "ledger.json"), d, [])
+            items = json.load(open(os.path.join(d, "auto_items.json")))
+        self.assertEqual(counts["published"], 1)
+        self.assertEqual(len(items), 1)
+        self.assertEqual(len(items[0]["sources"]), 2)
+        self.assertEqual(sum(1 for c in calls if c.startswith("Web-search task. Now:")), 1)       # exactly one confirmation search
+
+    def test_without_a_confirming_outlet_the_story_stays_held(self):
+        import tempfile
+        now = datetime(2026, 11, 17, 18, 30, tzinfo=timezone.utc)
+        first = json.dumps({"candidates": [{"beat": "Tech, outages and cyber", "what_happened": "CNN reports the NSA classified network is down.", "first_seen_utc": "2026-11-17T16:15:00Z", "scope": "six people familiar",
+                                            "outlets": [{"name": "CNN", "url": "https://www.cnn.com/2026/11/17/us/nsa-net", "role": "original", "own_sources": True, "sourcing": "six people familiar"}],
+                                            "official_response": [], "notes": ""}]})
+        verdict = json.dumps({"decision": "hold", "reasons": ["only one origin"], "headline": "x", "summary": "x. The desk has not confirmed it.", "responses": []})
+        sweep = lambda prompt: json.dumps({"outlets": [], "official_response": []}) if "OTHER major outlets" in prompt else (first if "Tech, outages" in prompt else json.dumps({"candidates": []}))
+        with tempfile.TemporaryDirectory() as d:
+            counts = run_once(now, sweep, lambda p: verdict, os.path.join(d, "ledger.json"), d, [])
+        self.assertEqual(counts["published"], 0)
+        self.assertEqual(counts["held"], 1)

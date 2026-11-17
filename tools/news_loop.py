@@ -6,7 +6,7 @@ import time
 
 from tools import news_pending as ledger
 from tools.lib import parse_time
-from tools.news_sweep import run_sweep, dedupe, default_runner
+from tools.news_sweep import run_sweep, dedupe, default_runner, confirm_prompt, merge_confirmation
 from tools.news_judge import candidate_id, judge_prompt, parse_verdict, gates, default_judge_runner
 
 
@@ -32,6 +32,17 @@ def run_once(now, sweep_runner, judge_runner, ledger_path, out_dir, live_items, 
             verdict = parse_verdict(judge_runner(judge_prompt(c)))
             ledger.record(ledger_path, cid, 'judged', now)
             ok, reasons, item = gates(c, verdict, list(live_items) + active, now)
+            if not ok and any('fewer than two independent' in r for r in reasons):
+                # One confirmation search for a story that has only one own-sourced origin. Then judge the merged story once.
+                c2 = merge_confirmation(c, sweep_runner(confirm_prompt(c, now.strftime('%Y-%m-%dT%H:%M:%SZ'))))
+                if c2 is not c and len(c2['outlets']) > len(c['outlets']):
+                    new_id = candidate_id(c2)
+                    ledger.record(ledger_path, cid, 'answered', now, 'merged into ' + new_id)
+                    c, cid = c2, new_id
+                    ledger.record(ledger_path, cid, 'found', now, 'after confirmation search')
+                    verdict = parse_verdict(judge_runner(judge_prompt(c)))
+                    ledger.record(ledger_path, cid, 'judged', now)
+                    ok, reasons, item = gates(c, verdict, list(live_items) + active, now)
         except Exception as exc:
             verdict, ok, reasons, item = None, False, ['judge error: ' + str(exc)], None
             ledger.record(ledger_path, cid, 'judged', now, reasons[0])
