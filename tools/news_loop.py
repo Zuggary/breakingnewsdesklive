@@ -183,11 +183,14 @@ def publish(out_dir, clone_url=None, removals_only=False):
             subprocess.run(['git', '-C', str(clone), 'init', '-q', '-b', 'news-data'], check=True)
             subprocess.run(['git', '-C', str(clone), 'remote', 'add', 'origin', url], check=True)
     # The remote branch is the baseline: drop any unpushed local commit or edit left by a failed earlier push.
-    fetched = subprocess.run(['git', '-C', str(clone), 'fetch', '-q', 'origin', 'news-data'], capture_output=True)
+    fetched = subprocess.run(['git', '-C', str(clone), 'fetch', '-q', 'origin', 'news-data'], capture_output=True, timeout=90)
     if fetched.returncode == 0:
         subprocess.run(['git', '-C', str(clone), 'reset', '-q', '--hard', 'FETCH_HEAD'], check=True)
-    elif removals_only or (control_dir() / 'HOLD').exists():
-        return 'held: cannot read the remote'
+    else:
+        ls = subprocess.run(['git', '-C', str(clone), 'ls-remote', '--heads', 'origin', 'news-data'], capture_output=True, text=True, timeout=60)
+        if ls.returncode != 0 or ls.stdout.strip():
+            return 'held: cannot read the remote'  # unreachable, or the branch exists but the fetch failed
+        # rc 0 and no heads: the branch does not exist yet, so this is the first push
     if (control_dir() / 'HOLD').exists():  # HOLD may arrive during the fetch
         removals_only = True
     if removals_only:  # HOLD: push only what is already live, minus pulls; no new item goes out
@@ -220,7 +223,7 @@ def publish(out_dir, clone_url=None, removals_only=False):
     if subprocess.run(git + ['diff', '--cached', '--quiet']).returncode == 0:
         return 'no change'
     subprocess.run(git + ['commit', '-q', '-m', 'auto items'], check=True)
-    subprocess.run(git + ['push', '-q', 'origin', 'HEAD:news-data'], check=True)
+    subprocess.run(git + ['push', '-q', 'origin', 'HEAD:news-data'], check=True, timeout=120)
     return 'pushed'
 
 
