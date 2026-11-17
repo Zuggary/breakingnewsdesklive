@@ -221,15 +221,17 @@ def cycle(now, ledger_path, out, do_publish, sweep_runner=default_runner, judge_
         apply_pulls(out, cdir / 'PULL', ledger_path, now)  # again, in case a pull arrived while the sweep ran
     except Exception as exc:  # noqa: BLE001  fail closed: no new items this cycle
         alert = '%s ALERT: control files or sweep failed, no new items: %s' % (now.strftime('%Y-%m-%dT%H:%M:%SZ'), exc)
-    if alert:
-        result = 'alert: nothing pushed'
-    else:
-        try:
-            result = publish(out, removals_only=(cdir / 'HOLD').exists()) if do_publish else 'dry'
-        except Exception as exc:  # noqa: BLE001
-            result, alert = 'alert: publish failed', '%s ALERT: publish failed: %s' % (now.strftime('%Y-%m-%dT%H:%M:%SZ'), exc)
-    if (out / 'news-data-clone' / 'auto_items.json').exists() and result in ('pushed', 'no change'):
-        log_published(out, ledger.read(out / 'news-data-clone' / 'auto_items.json'), out / 'published.seen', True)
+    # After an alert or under HOLD only removals go out; new items never do.
+    removals_only = bool(alert) or (cdir / 'HOLD').exists()
+    try:
+        result = publish(out, removals_only=removals_only) if do_publish else 'dry'
+    except Exception as exc:  # noqa: BLE001
+        result, alert = 'alert: publish failed', '%s ALERT: publish failed: %s' % (now.strftime('%Y-%m-%dT%H:%M:%SZ'), exc)
+    try:
+        if (out / 'news-data-clone' / 'auto_items.json').exists() and result in ('pushed', 'no change'):
+            log_published(out, ledger.read(out / 'news-data-clone' / 'auto_items.json'), out / 'published.seen', True)
+    except Exception as exc:  # noqa: BLE001  a log failure never stops takedowns
+        alert = alert or '%s ALERT: published log failed: %s' % (now.strftime('%Y-%m-%dT%H:%M:%SZ'), exc)
     return alert
 
 
