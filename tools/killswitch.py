@@ -39,8 +39,8 @@ def apply(events, approved):
     """Split events into (published, held). Held items carry the reason."""
     out, held = [], []
     for e in events:
-        if e.get("curated"):
-            out.append(e)      # a person wrote it from named sources and checked its wording; the global KILL still applies
+        if e.get("curated") and not e.get("auto"):
+            out.append(e)      # a person wrote it from named sources (auto items are NOT exempt: no person read them) and checked its wording; the global KILL still applies
             continue
         w = trigger_of(e)
         if w and e["id"] not in approved:

@@ -1,0 +1,16 @@
+[
+  {
+    "id": "auto-fictional-nsa-network",
+    "title": "Fictional outlets report an NSA network interruption in a training scenario",
+    "place": "Fort Example, Maryland, United States",
+    "time": "2026-11-17T01:00:00Z",
+    "expires": "2026-11-18T01:00:00Z",
+    "severity": "moderate",
+    "summary": "In this made-up training scenario, Example Ledger and Example Journal report an NSA network interruption, each citing its own sources. The desk has not confirmed it.",
+    "sources": [
+      {"source": "Example Ledger", "url": "https://ledger.example/nsa-training", "kind": "outlet", "verification": "attributed", "scope": "own sourcing"},
+      {"source": "Example Journal", "url": "https://journal.example/nsa-training", "kind": "outlet", "verification": "attributed", "scope": "own sourcing"}
+    ],
+    "responses": [{"who": "Fictional NSA spokesperson", "text": "has not commented in this training scenario", "verification": "attributed"}]
+  }
+]

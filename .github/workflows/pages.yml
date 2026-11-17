@@ -44,6 +44,10 @@ jobs:
         run: |
           mkdir -p data
           git fetch --depth 1 origin probe-data && git show FETCH_HEAD:probes.json > data/probes.json || rm -f data/probes.json
+      - name: Fetch the auto items
+        run: |
+          mkdir -p data
+          git fetch --depth 1 origin news-data && git show FETCH_HEAD:auto_items.json > data/auto_items.json || rm -f data/auto_items.json
       - name: Build event data
         run: python tools/build_data.py --out data
       - name: Report items held by the kill switch
