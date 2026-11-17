@@ -36,6 +36,11 @@ class Gates(unittest.TestCase):
         self.assertFalse(p["ready"])
         self.assertTrue(any("top outlets" in r for r in p["reasons"]))
 
+    def test_no_top_outlet_at_all_is_not_ready_and_does_not_crash(self):
+        p = auto_news.propose(cand([it("a.example", "Attack report"), it("b.example", "Attack report on officials")]), NOW)
+        self.assertFalse(p["ready"])
+        self.assertTrue(any("top outlets" in r for r in p["reasons"]))
+
     def test_no_official_response_line_is_not_ready(self):
         p = auto_news.propose(cand([it("cnn", "Explosion reported near stadium"), it("bbc", "Explosion near stadium, police on scene")]), NOW)
         self.assertFalse(p["ready"])

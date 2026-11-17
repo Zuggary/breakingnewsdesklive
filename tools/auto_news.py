@@ -38,7 +38,7 @@ def response_lines(titles):
 
 
 def template_summary(outlets, topic_words):
-    names = ", ".join(TOP_OUTLETS[o] for o in outlets)
+    names = ", ".join(TOP_OUTLETS.get(o, "Outlets") for o in outlets)
     return "%s report on this story. The reports are listed with their sources. The desk has not confirmed it." % names
 
 
