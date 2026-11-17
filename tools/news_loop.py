@@ -263,6 +263,20 @@ def cycle(now, ledger_path, out, do_publish, sweep_runner=default_runner, judge_
     return alert
 
 
+def acquire_lock(path=None):
+    """Exclusive non-blocking lock for the life of the process. Returns the open file, or None when another run holds it."""
+    import fcntl
+    path = Path(path) if path else control_dir() / 'loop.lock'
+    path.parent.mkdir(parents=True, exist_ok=True)
+    handle = open(path, 'w')
+    try:
+        fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        handle.close()
+        return None
+    return handle
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--every', type=float, default=900)
@@ -274,8 +288,16 @@ def main():
     args = parser.parse_args()
     if args.every <= 0:
         parser.error('--every must be positive')
+    lock = acquire_lock()
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
+    if lock is None:
+        try:
+            with (out / 'ALERTS.md').open('a') as f:
+                f.write('ALERT: a second news_loop run exited because the lock is held\n')
+        except OSError:
+            pass
+        raise SystemExit('another news_loop run holds the lock')
     path = args.ledger or str(out / 'ledger.json')
     last_hour = None
     while True:

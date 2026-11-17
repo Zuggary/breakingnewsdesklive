@@ -376,3 +376,16 @@ class ControlTests(unittest.TestCase):
             self.assertEqual(len(ids), 10)
             self.assertNotIn('auto-10', ids)
             self.assertIn('auto-01', ids)
+
+    def test_second_run_cannot_take_the_lock(self):
+        import tempfile
+        from pathlib import Path
+        from tools import news_loop as nl
+        with tempfile.TemporaryDirectory() as d:
+            first = nl.acquire_lock(Path(d) / 'loop.lock')
+            self.assertIsNotNone(first)
+            self.assertIsNone(nl.acquire_lock(Path(d) / 'loop.lock'))
+            first.close()
+            again = nl.acquire_lock(Path(d) / 'loop.lock')
+            self.assertIsNotNone(again)
+            again.close()
