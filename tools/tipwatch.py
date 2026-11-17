@@ -345,6 +345,17 @@ def security_candidates(leads):
     return out
 
 
+def alerts_for(candidates, seen):
+    """Lines for ALERTS.md: a security candidate carried by 5 or more outlets with 2 or more distinct headlines, not yet noted.
+    Nobody publishes from this. It tells a person to look now."""
+    out = []
+    for c in candidates:
+        if c["n_outlets"] >= 5 and c["distinct_headlines"] >= 2 and c["lead"] not in seen:
+            seen.add(c["lead"])
+            out.append("- %s | %d outlets | %d headlines | response found: %s | %s" % (c["first_seen"], c["n_outlets"], c["distinct_headlines"], c["official_response_found"], c["items"][0]["title"][:110]))
+    return out
+
+
 # ---------- one round ----------
 
 def run_round(store, feeds, now, fetch=http_fetch, local_model=None, gdelt_bytes=None):
@@ -405,6 +416,14 @@ def main(argv=None):
             with open(path + ".tmp", "w", encoding="utf-8") as f:
                 json.dump(obj, f, indent=1)
             os.replace(path + ".tmp", path)
+        seen = set(store.setdefault("alerted", []))
+        lines = alerts_for(security_candidates(leads), seen)
+        if lines:
+            with open(os.path.join(a.dir, "ALERTS.md"), "a", encoding="utf-8") as f:
+                f.write("\n".join(lines) + "\n")
+            store["alerted"] = sorted(seen)
+            with open(store_path, "w", encoding="utf-8") as f:
+                json.dump(store, f, indent=1)
         print("%s feeds_ok=%d items=%d leads=%d aviation=%d" % (iso(now), sum(s["ok"] for s in status), len(store["items"]), len(leads), sum(1 for l in leads if l["topic"] == "aviation")), flush=True)
         if a.once or time.time() >= end:
             return 0

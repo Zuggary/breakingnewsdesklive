@@ -251,3 +251,18 @@ class GdeltSecurity(unittest.TestCase):
         self.assertTrue(status[-1]["ok"])
         self.assertEqual(status[-1]["id"], "gdelt-security")
         self.assertEqual(len(tipwatch.security_candidates(leads)), 1)
+
+
+class Alerts(unittest.TestCase):
+    def cand(self, n, heads, lead="lead-1"):
+        return {"lead": lead, "n_outlets": n, "distinct_headlines": heads, "first_seen": "2026-11-17T16:15:00Z", "official_response_found": False,
+                "items": [{"title": "NSA classified network goes down, reports say"}]}
+
+    def test_a_widely_carried_security_story_raises_an_internal_alert_once(self):
+        seen = set()
+        self.assertEqual(len(tipwatch.alerts_for([self.cand(8, 5)], seen)), 1)
+        self.assertEqual(tipwatch.alerts_for([self.cand(8, 5)], seen), [])
+
+    def test_small_or_copied_stories_do_not(self):
+        self.assertEqual(tipwatch.alerts_for([self.cand(3, 3)], set()), [])
+        self.assertEqual(tipwatch.alerts_for([self.cand(30, 1)], set()), [])

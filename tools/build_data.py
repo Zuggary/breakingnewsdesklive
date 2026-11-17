@@ -658,6 +658,17 @@ def _toks(title):
 NEWS_ARTICLES = []
 
 
+_NATIONAL_RX = re.compile(r"\b(attack|attacks|threat|threats|explosion|blast|bomb|bombing|evacuat\w+|shooting|gunman|cyberattack|cyber attack|ransomware|hostage|hostages|terror\w*|ground stop|lockdown|state of emergency|missile|airstrike|invasion|coup|outage|network (?:is )?down|goes down|nuclear|chemical|radiological|intelligence|NSA|FBI|CIA|Pentagon|White House|Congress|Senate|Supreme Court|evacuation)\b", re.I)
+
+
+def _headline_severity(n, title=""):
+    """Outlet headline groups on security or national topics rank by how many outlets carry them: 8 or more is moderate,
+    20 or more is severe. Other topics stay minor. Size only, no judgement of the topic."""
+    if not _NATIONAL_RX.search(title or ""):
+        return "minor"
+    return "severe" if n >= 20 else "moderate" if n >= 8 else "minor"
+
+
 def parse_gdelt(d, src):
     global NEWS_ARTICLES
     NEWS_ARTICLES = d.get("news_articles", []) if isinstance(d, dict) else []
@@ -695,7 +706,7 @@ def parse_gdelt(d, src):
         title = " ".join(html.unescape(picked[0]["title"]).split()).strip("\"\u201c\u201d")[:140]
         names = ", ".join(a["domain"] for a in picked)
         e = mk("gdelt-" + re.sub(r"\W+", "", sorted(c["tk"])[0] + sorted(c["tk"])[-1] + first["seendate"])[:40], "headline",
-               "Headline: \u201c%s\u201d" % title, "Reported by %d outlets" % len(by_domain), None, None, when, "minor", len(by_domain), src,
+               "Headline: \u201c%s\u201d" % title, "Reported by %d outlets" % len(by_domain), None, None, when, _headline_severity(len(by_domain), title), len(by_domain), src,
                picked[0]["url"], region="World",
                detail={"outlets": len(by_domain), "outlet_names": names, "headline": title, "first_seen": iso_utc(when)[:16].replace("T", " ") + " UTC"})
         e["links"] = [{"label": a["domain"], "title": " ".join(html.unescape(a["title"]).split())[:140], "url": a["url"]} for a in picked]

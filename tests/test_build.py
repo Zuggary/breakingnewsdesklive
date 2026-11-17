@@ -312,3 +312,15 @@ class T(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class HeadlineSeverity(unittest.TestCase):
+    def test_outlet_headline_groups_rank_by_outlet_count(self):
+        s = "Highly classified NSA comms network goes down, reports say"
+        self.assertEqual(build_data._headline_severity(2, s), "minor")
+        self.assertEqual(build_data._headline_severity(8, s), "moderate")
+        self.assertEqual(build_data._headline_severity(19, s), "moderate")
+        self.assertEqual(build_data._headline_severity(20, s), "severe")
+
+    def test_other_topics_stay_minor_whatever_the_count(self):
+        self.assertEqual(build_data._headline_severity(40, "From Batman to Bond - how Robert Pattinson landed the role"), "minor")
