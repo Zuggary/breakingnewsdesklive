@@ -38,6 +38,7 @@ jobs:
             data/log.jsonl
             data/gdelt-last.json
             data/context-cache.json
+            data/news
           key: bnd-history-${{ github.run_id }}
           restore-keys: bnd-history-
       - name: Fetch the probe snapshot
@@ -49,7 +50,7 @@ jobs:
           mkdir -p data
           git fetch --depth 1 origin news-data && git show FETCH_HEAD:auto_items.json > data/auto_items.json || rm -f data/auto_items.json
       - name: Build event data
-        run: python tools/build_data.py --out data
+        run: python tools/build_data.py --out data --news-pages
       - name: Report items held by the kill switch
         run: |
           python - <<'PY'
@@ -70,12 +71,25 @@ jobs:
           cp -r fonts _site/
           [ -d assets/stock ] && cp -r assets/stock _site/assets/ || true
           [ -f data/log.jsonl ] && cp data/log.jsonl _site/data/ || true
+      - name: Copy generated news pages
+        run: |
+          [ ! -d data/news ] || cp -r data/news _site/
+          rm -f _site/news/events.json
+          for f in news-pages.xml news-sitemap.xml; do
+            if [ -f "data/$f" ]; then
+              cp "data/$f" _site/
+              echo "Sitemap: https://breakingnewsdesklive.com/$f" >> _site/robots.txt
+            fi
+          done
       - name: Check that every public root file is published
         run: |
           missing=0
           for f in *.html *.js *.css *.txt *.xml *.svg CNAME; do
             [ -f "$f" ] || continue
             [ -f "_site/$f" ] || { echo "::error::$f is in the repo root but not in _site"; missing=1; }
+          done
+          for f in news-pages.xml news-sitemap.xml; do
+            [ ! -f "data/$f" ] || [ -f "_site/$f" ] || { echo "::error::$f is missing from _site"; missing=1; }
           done
           exit $missing
       - uses: actions/configure-pages@v5

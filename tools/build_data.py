@@ -958,6 +958,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="data")
     ap.add_argument("--fixtures")
+    ap.add_argument("--news-pages", action="store_true")
     a = ap.parse_args()
     global OUT_DIR
     OUT_DIR = a.out
@@ -972,6 +973,34 @@ def main():
     if not events and os.path.exists(prev):
         print("No events from any source; keeping the previous file", file=sys.stderr)
         return 0
+    if a.news_pages:
+        from tools import news_pages
+        archived = probes.load_json(os.path.join(a.out, "news", "events.json"), [])
+        previous = probes.load_json(prev, {}).get("events", [])
+        expired = {str(e["id"]): e for e in archived + previous}
+        # Include already-expired valid inputs even on the first page build.
+        manual_path = os.path.join(a.fixtures or ROOT_DIR,
+                                   "manual-items.json" if a.fixtures else "manual_items.json")
+        auto_path = os.path.join(a.fixtures or a.out,
+                                 "auto-items.json" if a.fixtures else "auto_items.json")
+        manual = probes.load_json(manual_path, [])
+        auto = auto_items.load(auto_path)
+        manual_ids = {it["id"] for it in manual}
+        for it, is_auto in [(it, False) for it in manual] + [(it, True) for it in auto if it.get("id") not in manual_ids]:
+            if is_auto:
+                problems = auto_items.gate(it, now)
+                if problems != ["expired"]:
+                    continue
+            elif manual_items.validate(it):
+                continue
+            if manual_items.parse(it["expires"]) >= now:
+                continue
+            ev = manual_items.to_event(it, now)
+            ev["summary"] = ev.pop("summary_override")
+            ev["confidence"] = claims.confidence_for_event(ev)
+            expired.setdefault(ev["id"], ev)
+        active_ids = {str(e["id"]) for e in events}
+        expired = [e for key, e in expired.items() if key not in active_ids]
     track_seen(events, a.out, now)
     if not a.fixtures:
         from tools import context as ctxmod
@@ -985,6 +1014,8 @@ def main():
         json.dump({"generated": iso_utc(now), "count": len(HELD), "items": HELD}, f, indent=1)
     with open(os.path.join(a.out, "sources.json"), "w", encoding="utf-8") as f:
         json.dump({"generated": iso_utc(now), "sources": status}, f, indent=1)
+    if a.news_pages:
+        news_pages.build_news(events, expired, a.out, now)
     print("events=%d sources_ok=%d/%d" % (len(events), sum(s["ok"] for s in status), len(status)))
     return 0
 
