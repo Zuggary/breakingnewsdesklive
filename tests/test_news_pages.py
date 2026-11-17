@@ -69,9 +69,7 @@ class NewsPages(unittest.TestCase):
         item["detail"]["expires"] = "2026-11-17T13:00:00Z"
         self.assertIn("No longer in the live feed", news.render_page(item, NOW))
         self.assertNotIn('content="noindex"', news.render_page(item, NOW))
-        item["confidence"] = "Corrected"
-        self.assertNotIn('content="noindex"', news.render_page(item, NOW))
-        item["withdrawn"] = True
+        item["confidence"] = "Corrected"  # Corrected is noindex
         self.assertIn('content="noindex"', news.render_page(item, NOW))
 
     def test_sitemaps_and_retained_pages(self):
@@ -95,6 +93,19 @@ class NewsPages(unittest.TestCase):
             saved = json.loads((Path(out) / 'news/events.json').read_text())
             news.build_news([], saved, out, NOW + timedelta(days=4))
             self.assertTrue(path.exists())
+
+    def test_corrected_alone_or_flag_alone_is_noindex_and_off_news_sitemap(self):
+        for changes in ({"confidence": "Corrected"}, {"withdrawn": True}):
+            with tempfile.TemporaryDirectory() as d:
+                news.build_news([event(**changes)], [], d, NOW)
+                page = next(Path(d, "news").rglob("index.html")).read_text()
+                self.assertIn('name="robots" content="noindex"', page)
+                self.assertNotIn("desk-1", Path(d, "news-sitemap.xml").read_text())
+
+    def test_malformed_source_url_does_not_crash(self):
+        e = event()
+        e["detail"] = dict(e["detail"], sources=[{"source": "Bad", "url": "https://[invalid"}])
+        self.assertIn("Bad", news.render_page(e, NOW))
 
     def test_changed_since(self):
         item = event()

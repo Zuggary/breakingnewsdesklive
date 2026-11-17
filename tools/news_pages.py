@@ -63,7 +63,11 @@ def _sources(event):
         name = source.get("source") or source.get("name") or source.get("label", "Source")
         matching = next((l for l in links if l.get("label") == name), {})
         url = source.get("url") or matching.get("url") or (event.get("source_url") if i == 0 else "")
-        if urlsplit(url or "").scheme.lower() not in ("http", "https"):
+        try:
+            ok = urlsplit(url or "").scheme.lower() in ("http", "https")
+        except ValueError:
+            ok = False
+        if not ok:
             url = ""
         result.append((name, url))
     return result
@@ -71,7 +75,7 @@ def _sources(event):
 
 def _withdrawn(event):
     d = event.get("detail", {})
-    return event.get("confidence") == "Corrected" and bool(event.get("withdrawn") or d.get("withdrawn") or event.get("flags", {}).get("withdrawn"))
+    return event.get("confidence") == "Corrected" or bool(event.get("withdrawn") or d.get("withdrawn") or event.get("flags", {}).get("withdrawn"))
 
 
 def render_page(event, now):
