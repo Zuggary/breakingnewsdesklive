@@ -69,8 +69,8 @@ class NewsPages(unittest.TestCase):
         item["detail"]["expires"] = "2026-11-17T13:00:00Z"
         self.assertIn("No longer in the live feed", news.render_page(item, NOW))
         self.assertNotIn('content="noindex"', news.render_page(item, NOW))
-        item["confidence"] = "Corrected"  # Corrected is noindex
-        self.assertIn('content="noindex"', news.render_page(item, NOW))
+        item["confidence"] = "Corrected"  # Corrected stays public and indexable
+        self.assertNotIn('content="noindex"', news.render_page(item, NOW))
 
     def test_sitemaps_and_retained_pages(self):
         stamp = lambda hours: (NOW - timedelta(hours=hours)).strftime('%Y-%m-%dT%H:%M:%SZ')
@@ -94,27 +94,32 @@ class NewsPages(unittest.TestCase):
             news.build_news([], saved, out, NOW + timedelta(days=4))
             self.assertTrue(path.exists())
 
-    def test_corrected_alone_or_flag_alone_is_noindex_and_off_news_sitemap(self):
-        for changes in ({"confidence": "Corrected"}, {"withdrawn": True}):
-            with tempfile.TemporaryDirectory() as d:
-                news.build_news([event(**changes)], [], d, NOW)
-                page = next(Path(d, "news").rglob("index.html")).read_text()
-                self.assertIn('name="robots" content="noindex"', page)
-                self.assertNotIn("desk-1", Path(d, "news-sitemap.xml").read_text())
+    def test_corrected_stays_public_and_withdrawn_flag_becomes_a_notice(self):
+        with tempfile.TemporaryDirectory() as d:
+            news.build_news([event(confidence="Corrected")], [], d, NOW)
+            page = next(Path(d, "news").rglob("index.html")).read_text()
+            self.assertNotIn('content="noindex"', page)
+            self.assertIn("desk-1", Path(d, "news-sitemap.xml").read_text())
+        with tempfile.TemporaryDirectory() as d:
+            news.build_news([event(withdrawn=True)], [], d, NOW)
+            page = next(Path(d, "news").rglob("index.html")).read_text()
+            self.assertIn('content="noindex"', page)
+            self.assertNotIn("service review is underway", page)
+            self.assertNotIn("desk-1", Path(d, "news-sitemap.xml").read_text())
 
     def test_malformed_source_url_does_not_crash(self):
         e = event()
         e["detail"] = dict(e["detail"], sources=[{"source": "Bad", "url": "https://[invalid"}])
         self.assertIn("Bad", news.render_page(e, NOW))
 
-    def test_title_change_removes_the_old_page_and_corrected_is_off_pages_sitemap(self):
+    def test_title_change_removes_the_old_page(self):
         with tempfile.TemporaryDirectory() as d:
             news.build_news([event()], [], d, NOW)
             news.build_news([event(title="A different title", confidence="Corrected")], [], d, NOW)
             pages = list(Path(d, "news", "desk-1").glob("*/index.html"))
             self.assertEqual(len(pages), 1)
             self.assertIn("a-different-title", str(pages[0]))
-            self.assertNotIn("desk-1", Path(d, "news-pages.xml").read_text())
+            self.assertNotIn("agency-reports", Path(d, "news-pages.xml").read_text())
 
     def test_dotted_id_and_null_history_are_safe(self):
         with tempfile.TemporaryDirectory() as d:
@@ -122,16 +127,22 @@ class NewsPages(unittest.TestCase):
             self.assertEqual(len(urls), 1)
             self.assertTrue((Path(d) / urls[0].replace(news.BASE + "/", "") / "index.html").exists())
 
-    def test_pulled_ids_get_no_page_and_old_pages_are_deleted(self):
+    def test_pulled_item_becomes_a_notice_with_no_body_and_no_sitemap_entry(self):
         with tempfile.TemporaryDirectory() as d:
             news.build_news([event(), event(id="keep", title="Other item")], [], d, NOW)
-            self.assertTrue(Path(d, "news", "desk-1").exists())
-            archived = json.loads(Path(d, "news", "events.json").read_text())  # the archive still holds desk-1
-            news.build_news([], archived, d, NOW, drop_ids={"desk-1"})
-            self.assertFalse(Path(d, "news", "desk-1").exists())
-            self.assertTrue(Path(d, "news", "keep").exists())
-            self.assertNotIn("desk-1", Path(d, "news-pages.xml").read_text())
-            self.assertNotIn("desk-1", Path(d, "news", "events.json").read_text())
+            archived = json.loads(Path(d, "news", "events.json").read_text())
+            news.build_news([], archived, d, NOW, withdrawn={"desk-1": {"date": "2026-11-17", "reason": "date was wrong"}})
+            page = next(Path(d, "news", "desk-1").rglob("index.html")).read_text()
+            self.assertIn("withdrawn on 2026-11-17: date was wrong", page)
+            self.assertIn('content="noindex"', page)
+            self.assertNotIn("service review is underway", page)  # no article body
+            self.assertNotIn("Example Wire", page)
+            for name in ("news-pages.xml", "news-sitemap.xml"):
+                self.assertNotIn("desk-1", Path(d, name).read_text())
+            self.assertIn("keep", Path(d, "news-pages.xml").read_text())
+            # a later build from the archive keeps the notice
+            news.build_news([], json.loads(Path(d, "news", "events.json").read_text()), d, NOW, withdrawn={"desk-1": {"date": "2026-11-17", "reason": "date was wrong"}})
+            self.assertTrue(next(Path(d, "news", "desk-1").rglob("index.html")).exists())
 
     def test_dotted_and_dashed_ids_do_not_collide(self):
         self.assertNotEqual(news._path(event(id="desk.1")), news._path(event(id="desk-1")))

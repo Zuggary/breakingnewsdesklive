@@ -84,7 +84,23 @@ def _sources(event):
 
 def _withdrawn(event):
     d = event.get("detail", {})
-    return event.get("confidence") == "Corrected" or bool(event.get("withdrawn") or d.get("withdrawn") or event.get("flags", {}).get("withdrawn"))
+    return bool(event.get("notice") or event.get("withdrawn") or d.get("withdrawn") or event.get("flags", {}).get("withdrawn"))
+
+
+def render_notice(event):
+    """A withdrawn or pulled item: a short notice with no article body, not indexed."""
+    esc = lambda v: html.escape(str(v), quote=True)
+    n = event.get("notice") or {}
+    date = esc(n.get("date") or _modified(event)[:10])
+    reason = esc(n.get("reason") or "found wrong")
+    return '''<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Item withdrawn | Breaking News Desk</title><meta name="robots" content="noindex">
+<link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/style.css"></head>
+<body><header class="top"><a class="brand" href="/">Breaking News Desk</a></header>
+<main class="page"><article><h1>Item withdrawn</h1><p>This item was withdrawn on %s: %s.</p>
+<p><a href="/corrections">Corrections</a></p></article></main></body></html>
+''' % (date, reason)
 
 
 def render_page(event, now):
@@ -128,18 +144,22 @@ def render_page(event, now):
        source_html, responses, esc(changed_since(event)))
 
 
-def build_news(events, expired_events, out_dir, now, drop_ids=()):
-    """Write the pages. Ids in drop_ids (pulled items) get no page and any old page directory is deleted."""
+def build_news(events, expired_events, out_dir, now, withdrawn=None):
+    """Write the pages. `withdrawn` maps an id to {"date", "reason"}: that item gets a short notice page, no body, not in any sitemap."""
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
-    for gone in drop_ids:
-        for cand in (_id_dir(gone),):
-            shutil.rmtree(out / 'news' / cand, ignore_errors=True)
+    withdrawn = {str(k): (v if isinstance(v, dict) else {}) for k, v in (withdrawn or {}).items()}
     all_events = {}
     for items, expired in ((expired_events, True), (events, False)):
         for event in items:
-            if str(event["id"]) not in set(map(str, drop_ids)) and event.get("detail", {}).get("reported_line") and event.get("confidence"):
-                all_events[str(event["id"])] = dict(event, expired=expired)
+            key = str(event["id"])
+            if key in withdrawn:  # keep only what the notice page needs
+                all_events[key] = {"id": key, "title": event.get("title", "Item"), "time": event["time"], "notice": withdrawn[key]}
+            elif event.get("notice") or (event.get("detail", {}).get("reported_line") and event.get("confidence")):
+                all_events[key] = dict(event, expired=expired)
+            if event.get("withdrawn") and key not in withdrawn:
+                all_events[key] = {"id": key, "title": event.get("title", "Item"), "time": event["time"],
+                                   "notice": {"date": str(event.get("updated") or event["time"])[:10], "reason": "withdrawn"}}
     ET.register_namespace("", SITEMAP)
     ET.register_namespace("news", NEWS)
     pages, news = ET.Element("{%s}urlset" % SITEMAP), ET.Element("{%s}urlset" % SITEMAP)
@@ -154,14 +174,16 @@ def build_news(events, expired_events, out_dir, now, drop_ids=()):
             if stale != path.parent and stale.is_dir():
                 shutil.rmtree(stale)
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(render_page(event, now), encoding="utf-8")
+        path.write_text(render_notice(event) if event.get("notice") else render_page(event, now), encoding="utf-8")
         url = BASE + "/" + _path(event)
         urls.append(url)
-        if not (event.get("confidence") == "Corrected" or _withdrawn(event)):
+        if event.get("notice"):
+            continue
+        if True:
             entry = node(pages, "url")
             node(entry, "loc", url)
             node(entry, "lastmod", _modified(event))
-        if _time(now) - timedelta(hours=48) <= _time(event["time"]) <= _time(now) and not _withdrawn(event):
+        if _time(now) - timedelta(hours=48) <= _time(event["time"]) <= _time(now):
             entry = node(news, "url")
             node(entry, "loc", url)
             item = node(entry, "news", ns=NEWS)

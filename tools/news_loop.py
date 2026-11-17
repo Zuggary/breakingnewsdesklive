@@ -234,10 +234,15 @@ def publish(out_dir, clone_url=None, removals_only=False):
         known = set()
     pulled_path = clone / 'pulled.json'
     try:
-        before = set(json.loads(pulled_path.read_text())) if pulled_path.exists() else set()
+        before = json.loads(pulled_path.read_text()) if pulled_path.exists() else {}
+        before = before if isinstance(before, dict) else {str(x): {} for x in before}
     except ValueError:
-        before = set()
-    pulled_path.write_text(json.dumps(sorted(before | known | late)))
+        before = {}
+    notes = read_pull(control_dir() / 'PULL')
+    today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+    for cid in sorted(known | late):
+        before.setdefault(cid, {'date': today, 'reason': notes.get(cid) or 'found wrong'})
+    pulled_path.write_text(json.dumps(before, sort_keys=True))
     git = ['git', '-C', str(clone), '-c', 'user.name=Zuggary', '-c', 'user.email=Zuggary@users.noreply.github.com']
     subprocess.run(git + ['add', 'auto_items.json', 'pulled.json'], check=True)
     if subprocess.run(git + ['diff', '--cached', '--quiet']).returncode == 0:

@@ -48,8 +48,18 @@ jobs:
       - name: Fetch the auto items
         run: |
           mkdir -p data
-          git fetch --depth 1 origin news-data && git show FETCH_HEAD:auto_items.json > data/auto_items.json || rm -f data/auto_items.json
-          git show FETCH_HEAD:pulled.json > data/pulled.json 2>/dev/null || rm -f data/pulled.json
+          rm -f data/auto_items.json data/pulled.json
+          rc=0; git ls-remote --exit-code --heads origin news-data >/dev/null || rc=$?
+          if [ "$rc" = 0 ]; then
+            # Fail closed: any error here fails the build, so the previous deploy stays up and no pull list is ever read as empty.
+            git fetch --depth 1 origin news-data
+            git show FETCH_HEAD:auto_items.json > data/auto_items.json
+            if git cat-file -e FETCH_HEAD:pulled.json 2>/dev/null; then git show FETCH_HEAD:pulled.json > data/pulled.json; fi
+          elif [ "$rc" = 2 ]; then
+            echo "No news-data branch yet."
+          else
+            echo "::error::cannot reach the news-data branch"; exit "$rc"
+          fi
       - name: Build event data
         run: python tools/build_data.py --out data --news-pages
       - name: Report items held by the kill switch

@@ -101,7 +101,7 @@ class AutoItems(unittest.TestCase):
     def test_workflow_fetch_before_build(self):
         workflow = (FIXTURES.parent.parent / ".github/workflows/pages.yml").read_text()
         self.assertLess(workflow.index("name: Fetch the auto items"), workflow.index("name: Build event data"))
-        self.assertIn("git fetch --depth 1 origin news-data && git show FETCH_HEAD:auto_items.json > data/auto_items.json || rm -f data/auto_items.json", workflow)
+        self.assertIn("git ls-remote --exit-code --heads origin news-data", workflow)
 
     def test_only_stdlib_and_shared_helpers_imported(self):
         tree = ast.parse(Path(auto_items.__file__).read_text())
