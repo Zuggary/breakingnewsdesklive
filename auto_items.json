@@ -1,0 +1,48 @@
+[
+  {
+    "id": "auto-c26c0ddcf76d",
+    "title": "Senate Democrats seek pause in air traffic control router replacements, AP reports",
+    "place": "United States",
+    "time": "2026-11-17T17:05:20Z",
+    "expires": "2026-11-19T17:05:20Z",
+    "severity": "moderate",
+    "summary": "According to AP, Senate Democrats asked Transportation Secretary Sean Duffy to pause air traffic control router replacements until the cause of the previous week's nationwide ground stop is established. A Transportation Department spokesperson told States Newsroom that the department had been transparent about the incident and would continue providing updates as they became available. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "The Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/nationwide-ground-stop-trump-air-travel-faa-a638c9651f1fabe8f95d20353779ee5b",
+        "published": "2026-11-17T17:05:20Z",
+        "scope": "A letter from Senate Democrats to Transportation Secretary Sean Duffy; AP also obtained a separate administration funding-request letter.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://www.investing.com/news/stock-market-news/us-senators-urge-faa-to-pause-new-router-deployment-pending-testing-5032735",
+        "published": "2026-11-17T17:05:20Z",
+        "scope": "Quotes the senators\u2019 letter and cites Transportation Secretary Sean Duffy\u2019s remarks.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "States Newsroom",
+        "intermediary": null,
+        "url": "https://www.newsfromthestates.com/article/us-senate-dems-call-pause-router-installation-caused-air-travel-ground-stop",
+        "published": "2026-11-17T17:05:20Z",
+        "scope": "Cites and links to the senators\u2019 published letter and reports an email from a Transportation Department spokesperson to States Newsroom.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "U.S. Department of Transportation spokesperson",
+        "text": "According to States Newsroom, the spokesperson said the department had been transparent about the incident and would continue providing updates as they became available.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
+  }
+]
