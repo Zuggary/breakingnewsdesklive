@@ -205,7 +205,7 @@ def publish(out_dir, clone_url=None, removals_only=False):
         # Merge: remote items plus local items, local wins by id. Expired items drop out. Pulled and blocked ids drop out below.
         now = datetime.now(timezone.utc)
         remote = ledger.read(clone / 'auto_items.json') if (clone / 'auto_items.json').exists() else []
-        merged = {i['id']: i for i in remote}
+        merged = {i['id']: i for i in remote if isinstance(i, dict) and 'id' in i}
         merged.update({i['id']: i for i in ledger.read(out / 'auto_items.json')})
         live = []
         for i in merged.values():
@@ -214,7 +214,7 @@ def publish(out_dir, clone_url=None, removals_only=False):
                     live.append(i)
             except (KeyError, ValueError, TypeError):
                 continue
-        live.sort(key=lambda i: i['time'])
+        live.sort(key=lambda i: str(i.get('time', '')))
         ledger.write(clone / 'auto_items.json', live[-10:])
     elif not (clone / 'auto_items.json').exists():
         return 'held: no live file to take down from'
