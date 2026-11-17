@@ -1,0 +1,61 @@
+Offline fictional sweep reply:
+{
+  "candidates": [
+    {
+      "beat": "Tech, outages and cyber",
+      "what_happened": "CNN and CBS report a fictional NSA training network interruption.",
+      "first_seen_utc": "2026-11-17T12:00:00Z",
+      "scope": "Fictional offline replay only",
+      "notes": "Made-up scenario; URLs are fixture strings, never fetched.",
+      "outlets": [
+        {
+          "name": "CNN",
+          "url": "https://www.cnn.com/news/fictional-training-replay/",
+          "role": "original",
+          "own_sources": true,
+          "sourcing": "six people familiar",
+          "title": "Fictional training exercise network pauses while staff review systems"
+        },
+        {
+          "name": "CBS",
+          "url": "https://www.cbsnews.com/news/fictional-training-replay/",
+          "role": "confirming",
+          "own_sources": true,
+          "sourcing": "two US officials spoke to CBS News",
+          "title": "Fictional training exercise network pauses while staff review systems"
+        },
+        {
+          "name": "Forbes",
+          "url": "https://www.forbes.com/news/fictional-training-replay/",
+          "role": "carrying",
+          "own_sources": false,
+          "sourcing": "cites CNN",
+          "title": "Fictional training exercise network pauses while staff review systems"
+        },
+        {
+          "name": "Washington Times",
+          "url": "https://www.washingtontimes.com/news/fictional-training-replay/",
+          "role": "carrying",
+          "own_sources": false,
+          "sourcing": "cites CNN",
+          "title": "Fictional training exercise network pauses while staff review systems"
+        },
+        {
+          "name": "CTV",
+          "url": "https://www.ctvnews.ca/news/fictional-training-replay/",
+          "role": "carrying",
+          "own_sources": false,
+          "sourcing": "cites CNN",
+          "title": "Fictional training exercise network pauses while staff review systems"
+        }
+      ],
+      "official_response": [
+        {
+          "who": "NSA",
+          "text": "has not commented in the reports",
+          "url": "https://www.cbsnews.com/news/nsa-network-down-classified-fort-meade/"
+        }
+      ]
+    }
+  ]
+}
