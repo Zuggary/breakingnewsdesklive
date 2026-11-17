@@ -44,5 +44,42 @@
       }
     ],
     "carried_by": []
+  },
+  {
+    "id": "auto-35147e1b2be8",
+    "title": "Apple status page listed account and service disruptions, MacRumors reports",
+    "place": "United States",
+    "time": "2026-11-17T17:47:00Z",
+    "expires": "2026-11-19T17:47:00Z",
+    "severity": "moderate",
+    "summary": "MacRumors reported that users had trouble signing in to Apple accounts and iCloud, and that Apple's status page listed issues affecting several services. The Daily Beast separately reported user disruptions, citing user reports and outage-monitoring information. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "MacRumors",
+        "intermediary": null,
+        "url": "https://www.macrumors.com/2026/11/17/apple-accounts-experiencing-issues/",
+        "published": "2026-11-17T17:47:00Z",
+        "scope": "Multiple social media reports and Apple's System Status page.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "The Daily Beast",
+        "intermediary": null,
+        "url": "https://www.thedailybeast.com/apple-hit-by-major-outage-as-tech-chaos-spreads",
+        "published": "2026-11-17T17:47:00Z",
+        "scope": "Reports of user disruptions and outage-monitoring information.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Apple",
+        "text": "According to MacRumors, Apple's system status page listed issues affecting iCloud Account and Sign In, followed by outages affecting the App Store, Apple Music and AppleCare on Device.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
   }
 ]
