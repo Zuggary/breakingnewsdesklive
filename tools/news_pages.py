@@ -1,4 +1,5 @@
 """Static, attributed news pages and sitemaps. Standard library only."""
+import hashlib
 import html
 import json
 import re
@@ -25,8 +26,15 @@ def slugify(title):
     return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")[:60].rstrip("-") or "news"
 
 
+def _id_dir(raw):
+    """Directory name for an id. A short hash is added when cleaning changed the id, so desk.1 and desk-1 never collide."""
+    raw = str(raw)
+    clean = re.sub(r"[^A-Za-z0-9_-]+", "-", raw).strip("-") or "item"
+    return clean if clean == raw else "%s-%s" % (clean, hashlib.sha1(raw.encode()).hexdigest()[:6])
+
+
 def _path(event):
-    return "news/%s/%s/" % (re.sub(r"[^A-Za-z0-9_-]+", "-", str(event["id"])).strip("-") or "item", slugify(event["title"]))
+    return "news/%s/%s/" % (_id_dir(event["id"]), slugify(event["title"]))
 
 
 def _modified(event):
@@ -120,13 +128,17 @@ def render_page(event, now):
        source_html, responses, esc(changed_since(event)))
 
 
-def build_news(events, expired_events, out_dir, now):
+def build_news(events, expired_events, out_dir, now, drop_ids=()):
+    """Write the pages. Ids in drop_ids (pulled items) get no page and any old page directory is deleted."""
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
+    for gone in drop_ids:
+        for cand in (_id_dir(gone),):
+            shutil.rmtree(out / 'news' / cand, ignore_errors=True)
     all_events = {}
     for items, expired in ((expired_events, True), (events, False)):
         for event in items:
-            if event.get("detail", {}).get("reported_line") and event.get("confidence"):
+            if str(event["id"]) not in set(map(str, drop_ids)) and event.get("detail", {}).get("reported_line") and event.get("confidence"):
                 all_events[str(event["id"])] = dict(event, expired=expired)
     ET.register_namespace("", SITEMAP)
     ET.register_namespace("news", NEWS)

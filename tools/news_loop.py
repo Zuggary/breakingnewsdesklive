@@ -1,5 +1,6 @@
 """Local-only sweep and judge loop. Publication here means a local JSON artifact."""
 import argparse
+import json
 from datetime import datetime, timezone
 from pathlib import Path
 import time
@@ -227,8 +228,18 @@ def publish(out_dir, clone_url=None, removals_only=False):
         ledger.write(clone / 'auto_items.json', [i for i in read_rows(clone / 'auto_items.json') if i['id'] not in late])
         if (out / 'auto_items.json').exists():
             ledger.write(out / 'auto_items.json', [i for i in read_rows(out / 'auto_items.json') if i['id'] not in late])
+    try:  # durable list of pulled ids, so the page build never restores a pulled item from its archive
+        known = set(read_lines(out / 'blocklist.txt'))
+    except (OSError, ValueError):
+        known = set()
+    pulled_path = clone / 'pulled.json'
+    try:
+        before = set(json.loads(pulled_path.read_text())) if pulled_path.exists() else set()
+    except ValueError:
+        before = set()
+    pulled_path.write_text(json.dumps(sorted(before | known | late)))
     git = ['git', '-C', str(clone), '-c', 'user.name=Zuggary', '-c', 'user.email=Zuggary@users.noreply.github.com']
-    subprocess.run(git + ['add', 'auto_items.json'], check=True)
+    subprocess.run(git + ['add', 'auto_items.json', 'pulled.json'], check=True)
     if subprocess.run(git + ['diff', '--cached', '--quiet']).returncode == 0:
         return 'no change'
     subprocess.run(git + ['commit', '-q', '-m', 'auto items'], check=True)

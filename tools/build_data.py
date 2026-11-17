@@ -1002,7 +1002,9 @@ def main():
             ev["confidence"] = claims.confidence_for_event(ev)
             expired[ev["id"]] = ev  # current data beats the archive, so a later correction wins
         active_ids = {str(e["id"]) for e in events}
-        expired = [e for key, e in expired.items() if key not in active_ids]
+        pulled = {str(x) for x in probes.load_json(os.path.join(a.out, "pulled.json"), []) if x}
+        expired = [e for key, e in expired.items() if key not in active_ids and key not in pulled]
+        events_for_pages = [e for e in events if str(e["id"]) not in pulled]
     track_seen(events, a.out, now)
     if not a.fixtures:
         from tools import context as ctxmod
@@ -1017,7 +1019,7 @@ def main():
     with open(os.path.join(a.out, "sources.json"), "w", encoding="utf-8") as f:
         json.dump({"generated": iso_utc(now), "sources": status}, f, indent=1)
     if a.news_pages:
-        news_pages.build_news(events, expired, a.out, now)
+        news_pages.build_news(events_for_pages, expired, a.out, now, drop_ids=pulled)
     print("events=%d sources_ok=%d/%d" % (len(events), sum(s["ok"] for s in status), len(status)))
     return 0
 

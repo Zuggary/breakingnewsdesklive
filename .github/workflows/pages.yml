@@ -49,6 +49,7 @@ jobs:
         run: |
           mkdir -p data
           git fetch --depth 1 origin news-data && git show FETCH_HEAD:auto_items.json > data/auto_items.json || rm -f data/auto_items.json
+          git show FETCH_HEAD:pulled.json > data/pulled.json 2>/dev/null || rm -f data/pulled.json
       - name: Build event data
         run: python tools/build_data.py --out data --news-pages
       - name: Report items held by the kill switch

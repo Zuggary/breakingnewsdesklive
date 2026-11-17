@@ -122,6 +122,20 @@ class NewsPages(unittest.TestCase):
             self.assertEqual(len(urls), 1)
             self.assertTrue((Path(d) / urls[0].replace(news.BASE + "/", "") / "index.html").exists())
 
+    def test_pulled_ids_get_no_page_and_old_pages_are_deleted(self):
+        with tempfile.TemporaryDirectory() as d:
+            news.build_news([event(), event(id="keep", title="Other item")], [], d, NOW)
+            self.assertTrue(Path(d, "news", "desk-1").exists())
+            archived = json.loads(Path(d, "news", "events.json").read_text())  # the archive still holds desk-1
+            news.build_news([], archived, d, NOW, drop_ids={"desk-1"})
+            self.assertFalse(Path(d, "news", "desk-1").exists())
+            self.assertTrue(Path(d, "news", "keep").exists())
+            self.assertNotIn("desk-1", Path(d, "news-pages.xml").read_text())
+            self.assertNotIn("desk-1", Path(d, "news", "events.json").read_text())
+
+    def test_dotted_and_dashed_ids_do_not_collide(self):
+        self.assertNotEqual(news._path(event(id="desk.1")), news._path(event(id="desk-1")))
+
     def test_changed_since(self):
         item = event()
         self.assertEqual(news.changed_since(item), 'No changes since first published at 12:00 UTC.')
