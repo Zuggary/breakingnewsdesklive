@@ -348,5 +348,60 @@
     "carried_by": [
       "NPR"
     ]
+  },
+  {
+    "id": "auto-a4ace14600c3",
+    "title": "AP reports Iran war disruptions to regional sport as Qatar and Abu Dhabi F1 races remain scheduled",
+    "place": "United States",
+    "time": "2026-11-18T05:07:21Z",
+    "expires": "2026-11-20T05:07:21Z",
+    "severity": "moderate",
+    "summary": "The Associated Press reported that the Iran war has disrupted major sporting events across the Middle East. In an interview with The National, FIA president Mohammed Ben Sulayem said the federation was prepared for the Qatar and Abu Dhabi Formula 1 races to proceed. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/f1-middle-east-sport-spending-ec1eadf2eba9e9c38678da9beffc44ab",
+        "published": "2026-11-18T05:07:21Z",
+        "scope": "AP reporting and interviews with regional and sports researchers, including an analyst at the International Institute for Strategic Studies.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "The National",
+        "intermediary": null,
+        "url": "https://www.thenationalnews.com/sport/f1/2026/11/09/exclusive-mohammed-ben-sulayem-abu-dhabi-qatar-gp/",
+        "published": "2026-11-18T05:07:21Z",
+        "scope": "Exclusive interview with FIA president Mohammed Ben Sulayem.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Anadolu Agency",
+        "intermediary": null,
+        "url": "https://www.aa.com.tr/en/sports/qatar-abu-dhabi-f1-races-to-go-ahead-despite-regional-tensions-fia-chief/4120091",
+        "published": "2026-11-18T05:07:21Z",
+        "scope": "Reports FIA president Mohammed Ben Sulayem's public statement and the disruption to earlier regional races.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "The New Arab",
+        "intermediary": null,
+        "url": "https://www.newarab.com/analysis/how-iran-war-has-disrupted-world-sport",
+        "published": "2026-11-18T05:07:21Z",
+        "scope": "Interviews Middle East researcher Kristian Ulrichsen and sports professor Simon Chadwick about disruption to regional events; says the Qatar and Abu Dhabi races remain scheduled but their staging is uncertain.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Mohammed Ben Sulayem, FIA president",
+        "text": "Told The National that the FIA was ready and fully prepared for the Qatar and Abu Dhabi races to proceed.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
   }
 ]
