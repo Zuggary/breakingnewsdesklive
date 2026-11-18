@@ -972,7 +972,7 @@ def main():
     events, status = build(a.fixtures, now, a.out)
     os.makedirs(a.out, exist_ok=True)
     prev = os.path.join(a.out, "events.json")
-    if not events and os.path.exists(prev) and not probes.load_json(os.path.join(a.out, "routine.json"), []):
+    if not events and os.path.exists(prev):  # counts published events only; suppressed routine rows never defeat this
         print("No events from any source; keeping the previous file", file=sys.stderr)
         return 0
     if a.news_pages:

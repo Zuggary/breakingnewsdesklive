@@ -38,7 +38,7 @@ const generated = '2026-11-18T19:53:36Z';
 const buildTime = Date.parse(generated);
 const status = { time: '2026-11-18T19:48:36Z', first_seen: new Date(2026, 10, 18, 1, 5).toISOString() };
 assert.strictEqual(B.eventAge(status, generated, buildTime), 'since 1:05 am');
-assert.strictEqual(B.eventAge({ ...status, first_seen: new Date(2026, 10, 17, 13, 5).toISOString() }, generated, buildTime), 'since 1:05 pm');
+assert.strictEqual(B.eventAge({ ...status, first_seen: new Date(2026, 10, 17, 13, 5).toISOString() }, generated, buildTime), 'since yesterday 1:05 pm');
 assert.strictEqual(B.eventAge({ ...status, first_seen: '2026-11-18T19:38:36Z' }, generated, buildTime), '5m ago');
 assert.strictEqual(B.eventAge({ time: status.time }, generated, buildTime), '5m ago');
 assert.strictEqual(B.eventAge({ ...status, time: '2026-11-18T19:37:36Z' }, generated, buildTime), '16m ago');
@@ -54,7 +54,7 @@ assert.deepStrictEqual(B.filterEvents(ages, {}, buildTime), [extreme, fresh, upd
 assert.deepStrictEqual(B.filterEvents(ages, { hours: 0 }, buildTime), [extreme, fresh, updated, stale, old, cutoff]);
 assert.deepStrictEqual(B.filterEvents(ages, { hours: 24 }, buildTime), [fresh, updated]);
 
-const titles = [{ id: 'lead', title: 'Story' }, { id: 'other', title: 'Story' }, { id: 'third', title: 'Different' }];
+const titles = [{ id: 'lead', title: 'Story', confidence: 'Reported' }, { id: 'other', title: 'Story', confidence: 'Reported' }, { id: 'third', title: 'Different' }];
 assert.deepStrictEqual(B.withoutLead(titles, { id: 'lead', headline: 'Different' }), titles.slice(1));
 assert.deepStrictEqual(B.withoutLead(titles, { headline: 'Story' }), titles.slice(2));
 assert.deepStrictEqual(B.withoutLead(titles, null), titles);
@@ -76,5 +76,9 @@ console.log('routine and stale item helpers ok');
   const oldExtreme = { id: 'old-x', type: 'weather', title: 'Blizzard Warning', severity: 'extreme', time: new Date(fixed - 80 * 36e5).toISOString() };
   const oldModerate = { ...oldExtreme, id: 'old-m', severity: 'moderate' };
   for (const f of [{}, { hours: 72 }]) assert.deepStrictEqual(B.filterEvents([oldExtreme, oldModerate], f, fixed).map(e => e.id), ['old-x']); // the app default is hours 72
+  assert.strictEqual(B.eventAge({ ...status, first_seen: new Date(2026, 10, 15, 13, 5).toISOString() }, generated, buildTime), 'since Nov 15 1:05 pm');
+  const advisory = { id: 'adv', title: 'Lead headline', severity: 'extreme' };
+  const newsRow = { id: 'n1', title: 'Lead headline', confidence: 'Corroborated' };
+  assert.deepStrictEqual(B.withoutLead([advisory, newsRow], { headline: 'Lead headline' }).map(e => e.id), ['adv']); // no lead id: only the news row goes
   console.log('review fixes ok');
 }

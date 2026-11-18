@@ -37,8 +37,11 @@
   function eventAge(event, generated, now) {
     var build = Date.parse(generated), first = new Date(event.first_seen);
     if (event.first_seen && Math.abs(build - Date.parse(event.time)) <= 9e5 && build - first > 9e5) {
-      var hour = first.getHours();
-      return 'since ' + (hour % 12 || 12) + ':' + String(first.getMinutes()).padStart(2, '0') + (hour < 12 ? ' am' : ' pm');
+      var hour = first.getHours(), stamp = (hour % 12 || 12) + ':' + String(first.getMinutes()).padStart(2, '0') + (hour < 12 ? ' am' : ' pm');
+      var days = Math.round((new Date(build).setHours(0, 0, 0, 0) - new Date(first).setHours(0, 0, 0, 0)) / 864e5);
+      if (days <= 0) return 'since ' + stamp;
+      if (days === 1) return 'since yesterday ' + stamp;
+      return 'since ' + first.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' + stamp;
     }
     return ago(event.time, now);
   }
@@ -63,7 +66,7 @@
   }
   function withoutLead(events, lead) {
     if (!lead || (!lead.id && !lead.headline)) return events;
-    return events.filter(function (e) { return lead.id ? e.id !== lead.id : e.title !== lead.headline; });
+    return events.filter(function (e) { return lead.id ? e.id !== lead.id : !(e.title === lead.headline && e.confidence); }); // with no id, only a news row with that title is the lead
   }
   function groupEvents(events) {
     var groups = new Map();

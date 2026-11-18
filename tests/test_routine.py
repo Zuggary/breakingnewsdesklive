@@ -69,7 +69,7 @@ class RoutineTests(unittest.TestCase):
         self.assertEqual(sorted([stale, moderate, extreme, updated], key=lambda e: build_data.rank_key(e, NOW)),
                          [extreme, updated, moderate, stale])
 
-    def test_build_writes_routine_report_and_replaces_previous_closure(self):
+    def test_only_a_suppressed_closure_keeps_the_last_good_feed(self):
         faa = next(src for src in build_data.SOURCES if src["id"] == "atd-faa")
         payload = {"updated_utc": iso_utc(NOW), "events": [{"kind": "closure", "code": "SNA"}]}
         with TemporaryDirectory() as directory:
@@ -83,7 +83,7 @@ class RoutineTests(unittest.TestCase):
                   patch.object(build_data, "fetch_json", return_value=payload)):
                 clock.now.return_value = NOW
                 self.assertEqual(build_data.main(), 0)
-            self.assertEqual(json.loads(events_file.read_text())["events"], [])
+            self.assertEqual([e["id"] for e in json.loads(events_file.read_text())["events"]], ["faa-closure-SNA"])  # empty build never overwrites the last good feed
             self.assertEqual(json.loads((path / "closure-days.json").read_text()), {"SNA": ["2026-11-18"]})
             self.assertEqual(json.loads((path / "routine.json").read_text())[0]["id"], "faa-closure-SNA")
 
