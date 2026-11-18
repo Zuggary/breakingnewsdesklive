@@ -7,7 +7,7 @@ import shutil
 import unicodedata
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from urllib.parse import quote, urlsplit
+from urllib.parse import urlsplit
 import xml.etree.ElementTree as ET
 
 BASE = "https://breakingnewsdesklive.com"
@@ -73,7 +73,8 @@ def _sources(event):
         matching = next((l for l in links if l.get("label") == name), {})
         url = source.get("url") or matching.get("url") or (event.get("source_url") if i == 0 else "")
         try:
-            ok = urlsplit(url or "").scheme.lower() in ("http", "https")
+            parsed = urlsplit(url or "")
+            ok = parsed.scheme.lower() in ("http", "https") and bool(parsed.hostname)
         except ValueError:
             ok = False
         if not ok:

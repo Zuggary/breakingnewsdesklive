@@ -6,7 +6,7 @@
 <link rel="canonical" href="https://breakingnewsdesklive.com/about">
 <meta property="og:url" content="https://breakingnewsdesklive.com/about">
 <meta name="twitter:card" content="summary">
-<link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="tokens.css"><link rel="stylesheet" href="style.css"><meta name="theme-color" content="#0b0f14"></head><body><header class="top"><a class="brand" href="./"><span>Breaking News Desk<small>Global alert desk</small></span></a><nav><a href="./">Map</a><a href="/about">About</a><a href="/privacy">Privacy</a></nav></header>
+<link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="tokens.css"><link rel="stylesheet" href="style.css"><meta name="theme-color" content="#0b0f14"></head><body><header class="top"><a class="brand" href="./"><span>Breaking News Desk<small>Global alert desk</small></span></a><nav><a href="./">Map</a><a href="/about" aria-current="page">About</a><a href="/privacy">Privacy</a></nav></header>
 <p class="aibug"><b>AI-ASSISTED WIRE DESK</b> Independent and automated. No agency is affiliated. Check official sources before you act.</p><main class="page" style="display:block">
 <h1>About</h1>
 <p>Breaking News Desk shows facts as they come in from official and public sources. It covers natural hazards, air travel disruption, service outages, recalls, cyber and official notices, and space weather. A script collects the data about every 10 minutes. No person checks each routine item before it appears. A person reviews items held by the crisis switch.</p>
@@ -33,7 +33,7 @@
 
 <h2 id="sources">Sources</h2>
 <p>The full list with licences, update rates and last check is on the <a href="/data">Data and sources</a> page. Map outlines: <a href="https://www.naturalearthdata.com/" rel="noopener">Natural Earth</a>, public domain.</p>
-<table id="src"><thead><tr><th>Source</th><th>Licence or terms</th><th>Last checked (UTC)</th></tr></thead><tbody></tbody></table>
+<p id="source-status" role="status" hidden></p><table id="src"><thead><tr><th scope="col">Source</th><th scope="col">Licence or terms</th><th scope="col">Last checked (UTC)</th></tr></thead><tbody></tbody></table>
 
 <h2 id="masthead">Masthead and safety checks</h2>
 <p>Breaking News Desk is an independent, automated project with one human owner. Contact: contact@breakingnewsdesklive.com. To report a mistake, use the <a href="/corrections">corrections page</a>.</p>
@@ -54,15 +54,15 @@
 <p>USGS, NOAA (National Weather Service, National Hurricane Center, Storm Prediction Center, Space Weather Prediction Center, tsunami warning centers, Hazard Mapping System), NASA EONET, GDACS (UN and European Commission), the FAA through Air Travel Desk, Microsoft 365 status through Is it 364 yet, GitHub, Cloudflare, OpenAI and Atlassian status pages, FDA (openFDA), US Consumer Product Safety Commission, CISA, the Federal Register, the UK Foreign Office, the European Commission and the GDELT Project, Wikipedia and Wikimedia Commons (context text and photos), and NASA GIBS (satellite views).</p>
 </main>
 <script>
-fetch('data/sources.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){
+fetch('data/sources.json',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('Source data');return r.json()}).then(function(d){
  var tb=document.querySelector('#src tbody');
  d.sources.forEach(function(s){var tr=document.createElement('tr');
   var a=document.createElement('a');a.href=s.page;a.textContent=s.name;a.rel='noopener';
   var t=document.createElement('td');t.appendChild(a);
-  var l=document.createElement('td');l.textContent=s.licence+' ';var ta=document.createElement('a');ta.href=s.terms;ta.textContent='(terms)';ta.rel='noopener';l.appendChild(ta);
+  var l=document.createElement('td');l.textContent=s.licence+' ';var ta=document.createElement('a');ta.href=s.terms;ta.textContent='(terms)';ta.setAttribute('aria-label','Terms for '+s.name);ta.rel='noopener';l.appendChild(ta);
   var c=document.createElement('td');c.textContent=s.checked.replace('T',' ').replace('Z','')+(s.ok?'':' (last check failed)');
   tr.appendChild(t);tr.appendChild(l);tr.appendChild(c);tb.appendChild(tr);});
-}).catch(function(){});
+}).catch(function(){var status=document.getElementById('source-status');status.hidden=false;status.textContent='Could not load the source list.'});
 </script>
 <script src="/count.js" defer></script>
 </body></html>

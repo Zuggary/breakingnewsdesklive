@@ -50,6 +50,15 @@
     });
   }
   function safeUrl(u) { return /^https:\/\/[^\s]+$/.test(u || '') ? u : null; }
+  function sourceLink(url, text, rel) {
+    var href = safeUrl(url), node = document.createElement(href ? 'a' : 'span');
+    node.textContent = text;
+    if (href) {
+      node.href = href;
+      node.rel = rel || 'noopener';
+    }
+    return node;
+  }
   var ILLUS = { earthquake: ['earthquake-1', 'earthquake-2', 'earthquake-3'], storm: ['storm-1', 'storm-2', 'storm-3'], wildfire: ['wildfire-4', 'wildfire-5', 'wildfire-6'],
     smoke: ['wildfire-4', 'wildfire-5', 'wildfire-6'], flood: ['flood-1', 'flood-2', 'flood-3'], volcano: ['volcano-1', 'volcano-2', 'volcano-3'], outage: ['outage-2', 'outage-3', 'outage-5', 'outage-6'],
     cyber: ['outage-2', 'outage-3', 'outage-5', 'outage-6'], transport: ['flight-1', 'flight-2', 'flight-3'], recall: ['recall-1', 'recall-3'], space: ['space-2', 'space-3'] };
@@ -61,32 +70,32 @@
   function renderIllustration(src) {
     var d = document, f = d.createElement('figure'); f.className = 'ctx-fig illus';
     var wrap = d.createElement('div'); wrap.className = 'illus-wrap';
-    var im = d.createElement('img'); im.loading = 'lazy'; im.src = src; im.width = 320; im.alt = 'Illustration of the kind of event. It is not a photo of this event.'; wrap.appendChild(im);
+    var im = d.createElement('img'); im.loading = 'lazy'; im.decoding = 'async'; im.src = src; im.width = 320; im.height = 180; im.alt = 'Illustration of the kind of event. It is not a photo of this event.'; wrap.appendChild(im);
     var tag = d.createElement('span'); tag.className = 'illus-tag'; tag.textContent = 'Illustration'; wrap.appendChild(tag); f.appendChild(wrap);
     var fc = d.createElement('figcaption'); fc.className = 'src'; fc.textContent = 'Illustration made for this site. It does not show the actual scene.'; f.appendChild(fc);
     return f;
   }
-  function renderContext(c, e) {
+  function renderContext(c, e, heading) {
     var d = document, box = d.createElement('div'); box.className = 'ctx';
     function el(t, cls, x) { var n = d.createElement(t); if (cls) n.className = cls; if (x != null) n.textContent = x; return n; }
-    function link(href, text) { var a = el('a', '', text); a.href = safeUrl(href) || '#'; a.rel = 'noopener'; return a; }
-    box.appendChild(el('h3', '', 'Context'));
+    box.appendChild(el(heading || 'h3', '', 'Context'));
     if (c.summary) {
       var p = el('p', 'ctx-text', c.summary.text); box.appendChild(p);
-      var cr = el('p', 'src'); cr.appendChild(d.createTextNode('Text from Wikipedia: ')); cr.appendChild(link(c.summary.url, c.summary.title));
-      cr.appendChild(d.createTextNode(' (')); cr.appendChild(link(c.summary.history_url, 'authors'));
-      cr.appendChild(d.createTextNode('), licence ')); cr.appendChild(link('https://creativecommons.org/licenses/by-sa/4.0/', c.summary.licence)); cr.appendChild(d.createTextNode('. Not our words.'));
+      var cr = el('p', 'src'); cr.appendChild(d.createTextNode('Text from Wikipedia: ')); cr.appendChild(sourceLink(c.summary.url, c.summary.title));
+      cr.appendChild(d.createTextNode(' (')); cr.appendChild(sourceLink(c.summary.history_url, 'authors'));
+      cr.appendChild(d.createTextNode('), licence ')); cr.appendChild(sourceLink('https://creativecommons.org/licenses/by-sa/4.0/', c.summary.licence)); cr.appendChild(d.createTextNode('. Not our words.'));
       box.appendChild(cr);
     }
-    if (c.image) {
-      var f = el('figure', 'ctx-fig'); var im = d.createElement('img'); im.loading = 'lazy'; im.alt = 'Photo related to ' + (c.summary ? c.summary.title : 'this item'); im.src = safeUrl(c.image.src) || ''; im.width = 320; f.appendChild(im);
-      var fc = el('figcaption', 'src'); fc.appendChild(d.createTextNode('Photo: ' + c.image.author + ', ' + c.image.license + '. ')); fc.appendChild(link(c.image.credit_url, 'File page on Wikimedia Commons')); f.appendChild(fc); box.appendChild(f);
+    var photo = c.image && safeUrl(c.image.src);
+    if (photo) {
+      var f = el('figure', 'ctx-fig'); var im = d.createElement('img'); im.loading = 'lazy'; im.decoding = 'async'; im.alt = 'Photo related to ' + (c.summary ? c.summary.title : 'this item'); im.src = photo; im.width = 320; f.appendChild(im);
+      var fc = el('figcaption', 'src'); fc.appendChild(d.createTextNode('Photo: ' + c.image.author + ', ' + c.image.license + '. ')); fc.appendChild(sourceLink(c.image.credit_url, 'File page on Wikimedia Commons')); f.appendChild(fc); box.appendChild(f);
     }
-    if (c.satellite) {
-      var f2 = el('figure', 'ctx-fig'); var im2 = d.createElement('img'); im2.loading = 'lazy'; im2.alt = 'Satellite view of the wider area'; im2.src = safeUrl(c.satellite.src) || ''; im2.width = 320; f2.appendChild(im2);
-      var fc2 = el('figcaption', 'src'); fc2.appendChild(d.createTextNode(c.satellite.note + ' Credit: ')); fc2.appendChild(link(c.satellite.credit_url, c.satellite.credit)); f2.appendChild(fc2); box.appendChild(f2);
+    if (c.satellite && safeUrl(c.satellite.src)) {
+      var f2 = el('figure', 'ctx-fig'); var im2 = d.createElement('img'); im2.loading = 'lazy'; im2.decoding = 'async'; im2.alt = 'Satellite view of the wider area'; im2.src = c.satellite.src; im2.width = 320; f2.appendChild(im2);
+      var fc2 = el('figcaption', 'src'); fc2.appendChild(d.createTextNode(c.satellite.note + ' Credit: ')); fc2.appendChild(sourceLink(c.satellite.credit_url, c.satellite.credit)); f2.appendChild(fc2); box.appendChild(f2);
     }
-    if (!c.image && e) { var il = illustrationFor(e); if (il) box.appendChild(renderIllustration(il)); }
+    if (!photo && e) { var il = illustrationFor(e); if (il) box.appendChild(renderIllustration(il)); }
     return box;
   }
   var STOCK_TYPE = { earthquake: 'earthquake', wildfire: 'wildfire', smoke: 'wildfire', storm: 'storm', flood: 'flood', tsunami: 'flood', volcano: 'volcano', outage: 'outage', cyber: 'cyber', recall: 'recall', space: 'space', drought: 'heat' };
@@ -119,6 +128,6 @@
     im.decoding = 'async'; if (!eager) im.loading = 'lazy'; pic.appendChild(im);
     return pic;
   }
-  var api = { stockTag: stockTag, pickStock: pickStock, stockPicture: stockPicture, ILLUS: ILLUS, illustrationFor: illustrationFor, renderContext: renderContext, GROUPS: GROUPS, TYPES: TYPES, SEV: SEV, ago: ago, filterEvents: filterEvents, safeUrl: safeUrl };
+  var api = { sourceLink: sourceLink, stockTag: stockTag, pickStock: pickStock, stockPicture: stockPicture, ILLUS: ILLUS, illustrationFor: illustrationFor, renderContext: renderContext, GROUPS: GROUPS, TYPES: TYPES, SEV: SEV, ago: ago, filterEvents: filterEvents, safeUrl: safeUrl };
   if (typeof module !== 'undefined') module.exports = api; else root.BND = api;
 })(this);

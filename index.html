@@ -13,6 +13,8 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="style.css">
+<script src="lib.js" defer></script>
+<script src="app.js" defer></script>
 <meta property="og:title" content="Breaking News Desk: facts as they come in">
 <meta property="og:description" content="Hazards, air travel and service outages from official sources, ranked by size and severity.">
 <meta name="theme-color" content="#0b0f14">
@@ -34,13 +36,13 @@
  <span class="notice"><b>AI-ASSISTED WIRE DESK</b> Independent and automated. No agency is affiliated. Check official sources before you act. Not an emergency service.</span>
 </section>
 <main>
- <section id="list-wrap" aria-labelledby="now">
+ <section id="list-wrap" tabindex="-1" aria-labelledby="now">
   <div class="headrow"><h2 id="now">Top events</h2><a class="jump" href="#map-wrap">Map &darr;</a></div>
   <div class="chips-row" role="group" aria-label="Category" id="cats"></div>
   <div class="filters" role="group" aria-label="Filters" id="filters"></div>
-  <ol class="list" id="list"></ol>
+  <ol class="list" id="list" role="list"></ol>
  </section>
- <section id="map-wrap" aria-label="World map">
+ <section id="map-wrap" tabindex="-1" aria-label="World map">
   <div class="mapbox" id="mapbox"><canvas id="map" width="1200" height="600" role="img" aria-label="Map of current events. The list has the same events."></canvas></div>
   <div class="maptools"><button class="chip" id="proj" aria-pressed="false">Globe view</button><button class="chip" id="reset">Reset map</button></div>
   <div class="legend" id="legend"></div>
@@ -53,8 +55,6 @@
  <p>Official health notices (links only, no copied text): <a href="https://www.who.int/emergencies/disease-outbreak-news" rel="noopener">WHO Disease Outbreak News</a> · <a href="https://www.cdc.gov/outbreaks/" rel="noopener">CDC outbreaks</a>. Also: <a href="https://www.airtraveldesklive.com/" rel="noopener">US airport delays</a> · <a href="https://www.isit364yet.com/" rel="noopener">service outages</a>.</p>
  <p>Independent, automated project. Weather alerts, volcano levels and FAA status are US only; other items are global. <a href="/about#rank">How ranking works</a>. Data from USGS, NOAA, NASA, GDACS and the National Weather Service. Map outlines: Natural Earth. See <a href="/data">Data and sources</a>, <a href="/about">About</a> and <a href="/corrections">Corrections</a> for sources, licences and how to report an error.</p>
 </footer>
-<script src="lib.js"></script>
-<script src="app.js"></script>
 <script>if ("serviceWorker" in navigator) { window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); }); }</script>
 <script src="/count.js" defer></script>
 </body>

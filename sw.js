@@ -1,9 +1,9 @@
 /* Breaking News Desk service worker: offline support, same-origin files only. */
 (function () {
   "use strict";
-  var CACHE = "bnd-offline-v2";
-  var FILES = ["./", "./", "/about", "/privacy", "/data", "/corrections", "./tokens.css", "/tv", "/event",
-               "./style.css", "./fonts/public-sans-latin-wght-normal.woff2", "./fonts/barlow-condensed-700.woff2", "./app.js", "./lib.js", "./favicon.svg",
+  var CACHE = "bnd-offline-v3";
+  var FILES = ["./", "/about", "/privacy", "/data", "/corrections", "./tokens.css", "/tv", "/event",
+               "./style.css", "./fonts/public-sans-latin-wght-normal.woff2", "./fonts/barlow-condensed-700.woff2", "./fonts/barlow-condensed-600.woff2", "./app.js", "./lib.js", "./favicon.svg",
                "./data/events.json", "./data/sources.json", "./data/world.json"];
   function path(rel) { return new URL(rel, self.registration.scope).pathname; }
   var PATHS = {};
@@ -14,7 +14,7 @@
   });
   self.addEventListener("activate", function (e) {
     e.waitUntil(caches.keys().then(function (ks) {
-      return Promise.all(ks.map(function (k) { return k === CACHE ? null : caches.delete(k); }));
+      return Promise.all(ks.map(function (k) { return k.indexOf("bnd-offline-") === 0 && k !== CACHE ? caches.delete(k) : null; }));
     }).then(function () { return self.clients.claim(); }));
   });
   self.addEventListener("fetch", function (e) {
