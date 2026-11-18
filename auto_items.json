@@ -1,51 +1,5 @@
 [
   {
-    "id": "auto-2a7b1193be4f",
-    "title": "Apple says internal update caused outages affecting its online services",
-    "place": "United States",
-    "time": "2026-11-17T18:15:00Z",
-    "expires": "2026-11-19T18:15:00Z",
-    "severity": "moderate",
-    "summary": "The Associated Press reported that Apple attributed outages affecting services including the App Store, Apple Music and iCloud sign-ins to an internal update. Engadget reported observing service disruptions, while Apple told AP that many systems were back up and work continued to restore the remainder. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Engadget",
-        "intermediary": null,
-        "url": "https://www.engadget.com/2319504/icloud-and-other-apple-services-are-down-in-an-apparent-outage/",
-        "published": "2026-11-17T18:15:00Z",
-        "scope": "Observed disruption affecting Apple services; published at 18:15 UTC.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/apple-marriott-technology-outages-ff097d2a0bec767baf38a1bd8eff5829",
-        "published": "2026-11-17T18:15:00Z",
-        "scope": "Apple system status page and an emailed statement from Apple.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "NBC10 Philadelphia",
-        "intermediary": null,
-        "url": "https://www.nbcphiladelphia.com/news/tech/apple-reports-outages-for-multiple-services/4498868/",
-        "published": "2026-11-17T18:15:00Z",
-        "scope": "Apple service reports and a customer who visited a Philadelphia Apple store.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Apple",
-        "text": "Apple told the Associated Press that an internal update caused the outages, many systems were back up, and it was working to restore the remainder.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-d486483e29a3",
     "title": "Trump Jr. and Kalshi say they agreed to end his advisory role",
     "place": "United States",
@@ -484,6 +438,57 @@
       {
         "who": "Hamas",
         "text": "Called the raid and evacuation a violation of the ceasefire, according to Reuters.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
+  },
+  {
+    "id": "auto-c29c28d77d8d",
+    "title": "Broward declared a local emergency after flooding, Axios and WLRN report",
+    "place": "United States",
+    "time": "2026-11-18T15:33:07Z",
+    "expires": "2026-11-20T15:33:07Z",
+    "severity": "moderate",
+    "summary": "Axios and WLRN reported that Broward County declared a local state of emergency following heavy rain and flooding. County administrator Monica Cepero\u2019s declaration cited flooding and forecasts of further dangerous conditions, while Hollywood officials said crews were responding with high-water vehicles and urged residents to avoid flooded roads. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Axios",
+        "intermediary": null,
+        "url": "https://www.axios.com/local/hollywood/2026/11/18/broward-state-of-emergency-hollywood-flooding-heavy-rain-severe",
+        "published": "2026-11-18T15:33:07Z",
+        "scope": "Reports the county declaration and includes photographs by an Axios journalist of flooding in Hollywood.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "NBC 6 South Florida",
+        "intermediary": null,
+        "url": "https://www.nbcmiami.com/weather/stories-weather/broward-county-declares-local-state-of-emergency-due-to-flooding/3889771/",
+        "published": "2026-11-18T15:33:07Z",
+        "scope": "Reports the county declaration and quotes a news release advising drivers to avoid flooded roads.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "WLRN Public Media",
+        "intermediary": null,
+        "url": "https://www.wlrn.org/weather/2026-11-18/broward-rain-bomb-hollywood-flooding-closures",
+        "published": "2026-11-18T15:33:07Z",
+        "scope": "Reports the county and city declarations and cites National Weather Service rainfall estimates, a city advisory and a Florida Public Radio Emergency Network meteorologist.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Monica Cepero, Broward County administrator",
+        "text": "Declared a local state of emergency throughout Broward County, citing flooding and forecasts of further dangerous conditions.",
+        "verification": "attributed"
+      },
+      {
+        "who": "City of Hollywood",
+        "text": "Said emergency crews were responding with high-water vehicles and advised residents to avoid flooded roads.",
         "verification": "attributed"
       }
     ],
