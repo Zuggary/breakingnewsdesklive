@@ -49,6 +49,15 @@
       return true;
     });
   }
+  function groupEvents(events) {
+    var groups = new Map();
+    events.forEach(function (event) {
+      var key = JSON.stringify([event.type, event.title, event.severity, event.place]);
+      if (!groups.has(key)) groups.set(key, { ev: event, members: [] });
+      groups.get(key).members.push(event);
+    });
+    return Array.from(groups.values());
+  }
   function safeUrl(u) { return /^https:\/\/[^\s]+$/.test(u || '') ? u : null; }
   function sourceLink(url, text, rel) {
     var href = safeUrl(url), node = document.createElement(href ? 'a' : 'span');
@@ -128,6 +137,6 @@
     im.decoding = 'async'; if (!eager) im.loading = 'lazy'; pic.appendChild(im);
     return pic;
   }
-  var api = { sourceLink: sourceLink, stockTag: stockTag, pickStock: pickStock, stockPicture: stockPicture, ILLUS: ILLUS, illustrationFor: illustrationFor, renderContext: renderContext, GROUPS: GROUPS, TYPES: TYPES, SEV: SEV, ago: ago, filterEvents: filterEvents, safeUrl: safeUrl };
+  var api = { sourceLink: sourceLink, stockTag: stockTag, pickStock: pickStock, stockPicture: stockPicture, ILLUS: ILLUS, illustrationFor: illustrationFor, renderContext: renderContext, GROUPS: GROUPS, TYPES: TYPES, SEV: SEV, ago: ago, filterEvents: filterEvents, groupEvents: groupEvents, safeUrl: safeUrl };
   if (typeof module !== 'undefined') module.exports = api; else root.BND = api;
 })(this);

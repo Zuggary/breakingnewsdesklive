@@ -32,9 +32,31 @@ class T(unittest.TestCase):
         if len(others) >= 15:
             self.assertTrue(all(e["type"] != "headline" for e in self.events[:15]))
 
-    def test_severity_ranks_first(self):
-        order = [build_data.SEV_ORDER[e["severity"]] for e in self.events if not e.get("big")]
-        self.assertEqual(order, sorted(order), "a lower severity tier appears above a higher one")
+    def test_severity_ranks_first_within_each_group(self):
+        for routine in (False, True):
+            order = [build_data.SEV_ORDER[e["severity"]] for e in self.events
+                     if not e.get("big") and build_data.rank_key(e)[0] == routine]
+            self.assertEqual(order, sorted(order))
+
+    def test_news_ranks_above_routine_advisories(self):
+        news = {"type": "headline", "source_id": "curated", "severity": "minor",
+                "confidence": "Corroborated", "score": 10}
+        higher_news = dict(news, score=20)
+        weather = {"type": "weather", "source_id": "nws-alerts", "severity": "severe",
+                   "confidence": "Official single source", "score": 90}
+        extreme = dict(weather, severity="extreme")
+        sigmet = dict(weather, type="aviation", source_id="awc-sigmet", score=80)
+        recall = dict(weather, type="recall", source_id="openfda-food", score=70)
+        self.assertEqual(
+            sorted([recall, news, weather, sigmet, higher_news, extreme], key=build_data.rank_key),
+            [extreme, higher_news, news, weather, sigmet, recall],
+        )
+
+    def test_extreme_sigmet_and_recall_are_not_demoted(self):
+        base = {"type": "aviation", "source_id": "awc-sigmet", "severity": "extreme", "score": 50}
+        news = {"type": "headline", "source_id": "curated", "severity": "minor", "confidence": "Corroborated", "score": 10}
+        recall = dict(base, type="recall", source_id="openfda-food")
+        self.assertEqual(sorted([news, recall, base], key=build_data.rank_key)[2], news)
 
     def test_summaries_pass_guard(self):
         for e in self.events:

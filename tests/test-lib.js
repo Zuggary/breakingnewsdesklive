@@ -18,3 +18,18 @@ assert.strictEqual(B.filterEvents(sevEv,{sev:'severe'},now).length,2);
 assert.strictEqual(B.filterEvents(sevEv,{sev:'moderate'},now).length,3);
 assert.strictEqual(B.filterEvents(sevEv,{sev:''},now).length,4);
 console.log('severity filter ok');
+
+const first = { id: 'a', type: 'aviation', title: 'Ash advisory', severity: 'severe' };
+const otherType = { id: 'b', type: 'weather', title: 'Ash advisory', severity: 'severe' };
+const duplicate = { ...first, id: 'c' };
+const otherPlace = { ...first, id: 'e', place: 'Another county' };
+const otherSeverity = { ...first, id: 'f', severity: 'extreme' };
+const otherTitle = { ...first, id: 'd', title: 'Wind advisory' };
+assert.deepStrictEqual(B.groupEvents([first, otherType, duplicate, otherTitle]), [
+  { ev: first, members: [first, duplicate] },
+  { ev: otherType, members: [otherType] },
+  { ev: otherTitle, members: [otherTitle] },
+]);
+assert.strictEqual(B.groupEvents([first, otherPlace, otherSeverity]).length, 3); // different place or severity never collapses
+assert.deepStrictEqual(B.groupEvents([]), []);
+console.log('feed grouping ok');

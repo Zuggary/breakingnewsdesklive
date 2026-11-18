@@ -48,49 +48,20 @@
   }
 
   /* ---------- list ---------- */
-  var GROUPABLE = /(Warning|Watch|Advisory|Statement)$/;
-  function plural(t) { return /(ch|s|x)$/.test(t) ? t + 'es' : t + 's'; }
-  function viewRows(evs) {
-    var rows = [], byKey = {};
-    evs.forEach(function (e) {
-      if (e.type === 'weather' && e.severity !== 'extreme' && GROUPABLE.test(e.title)) {
-        var k = e.title + '|' + e.severity;
-        if (byKey[k]) { byKey[k].members.push(e); return; }
-        byKey[k] = { key: k, ev: e, members: [e] }; rows.push(byKey[k]);
-      } else rows.push({ key: e.id, ev: e, members: [e] });
-    });
-    return rows;
-  }
-  function groupRow(g, label, now) {
-    var e = g.ev, open = state.selGroup === g.key;
-    var li = el('li', 'card group s-' + e.severity + (open ? ' sel' : '')); li.style.setProperty('--c', B.SEV[e.severity] || '#93a1b5');
-    var h = el('button', 'head'); h.type = 'button'; h.setAttribute('aria-expanded', String(open));
-    var states = []; g.members.forEach(function (m) { var s = m.place.split(',')[0]; if (states.indexOf(s) < 0) states.push(s); });
-    var placeTxt = states.slice(0, 4).join(', ') + (states.length > 4 ? ' +' + (states.length - 4) : '');
-    var newest = g.members.reduce(function (m, x) { return Date.parse(x.time) > Date.parse(m.time) ? x : m; }, g.members[0]);
-    var title = g.members.length + ' ' + plural(e.title);
-    h.appendChild(el('span', 'rank', label));
-    h.appendChild(el('span', 'sev', SEVS[e.severity] || e.severity));
-    h.appendChild(el('span', 'typ', 'Weather'));
-    h.appendChild(el('span', 'title', title));
-    h.appendChild(el('span', 'place', placeTxt));
-    h.appendChild(el('span', 'src', 'NWS'));
-    var mt = el('span', 'meta'); mt.appendChild(el('b', '', SEVS[e.severity] || e.severity)); mt.appendChild(document.createTextNode(' \u00b7 Weather \u00b7 NWS \u00b7 ' + placeTxt)); h.appendChild(mt);
-    var wh = el('span', 'when', B.ago(newest.time, now)); wh.title = 'Newest of ' + g.members.length + ' alerts'; h.appendChild(wh);
-    h.dataset.group = g.key;
-    h.onclick = function () { state.selGroup = open ? null : g.key; render(); };
-    li.appendChild(h);
-    if (open) { var ul = el('ul', 'subs'); ul.setAttribute('role', 'list'); g.members.forEach(function (m) { ul.appendChild(evRow(m, '', now, true)); }); li.appendChild(ul); }
-    return li;
-  }
-  function evRow(e, label, now, sub) {
-      var li = el('li', 'card s-' + e.severity + (sub ? ' sub' : '') + (state.sel === e.id ? ' sel' : '')); li.style.setProperty('--c', B.SEV[e.severity] || '#93a1b5'); li.id = 'ev-' + e.id;
+  function evRow(e, label, now, count, members) {
+      var li = el('li', 'card s-' + e.severity + (state.sel === e.id ? ' sel' : '')); li.style.setProperty('--c', B.SEV[e.severity] || '#93a1b5'); li.id = 'ev-' + e.id;
       var h = el('button', 'head'); h.type = 'button'; h.setAttribute('aria-expanded', String(state.sel === e.id));
       h.appendChild(el('span', 'rank', label));
       e.source_short = e.source_short || SHORT[e.source_id] || e.source;
       var sv = el('span', 'sev', SEVS[e.severity] || e.severity); h.appendChild(sv);
       h.appendChild(el('span', 'typ', (B.TYPES[e.type] || B.TYPES.other).label));
-      h.appendChild(el('span', 'title', e.title));
+      var title = el('span', 'title', e.title);
+      if (count > 1) {
+        var badge = el('span', 'feed-count', 'x' + count);
+        badge.setAttribute('aria-label', count + ' events');
+        title.prepend(badge, ' ');
+      }
+      h.appendChild(title);
       h.appendChild(el('span', 'place', e.place));
       h.appendChild(el('span', 'src', e.source_short));
       var mt = el('span', 'meta'); var ms = el('b', '', SEVS[e.severity] || e.severity); mt.appendChild(ms);
@@ -110,6 +81,11 @@
           var lk = el('p', 'src', 'Also reported by (the outlet\u2019s own headline, as a link): ');
           var ul = el('ul', 'dg'); e.links.forEach(function (x) { var li2 = el('li'); li2.appendChild(B.sourceLink(x.url, x.label + ': ' + x.title, 'noopener nofollow')); ul.appendChild(li2); });
           m.appendChild(lk); m.appendChild(ul);
+        }
+        if (members && members.length > 1) {
+          var gl = el('ul', 'dg'); members.forEach(function (x) { var li3 = el('li'), pa = el('a', '', x.title + ' (' + B.ago(x.time, now) + ')'); pa.href = '/event?id=' + encodeURIComponent(x.id); li3.appendChild(pa); gl.appendChild(li3); });
+          m.appendChild(el('p', 'src', 'Identical rows grouped here: '));
+          m.appendChild(gl);
         }
         var u = B.safeUrl(e.source_url), s = el('p', 'src');
         s.appendChild(document.createTextNode('Source: ' + e.source + '. Event time: ' + e.time.replace('T', ' ').replace('Z', ' UTC') + '. '));
@@ -132,14 +108,14 @@
     ol.textContent = '';
     $('count').textContent = evs.length + (evs.length === state.events.length ? ' events' : ' of ' + state.events.length + ' events');
     if (!evs.length) ol.appendChild(el('li', 'empty', 'No events match these filters.'));
-    var rows = state.rows = viewRows(evs).slice(0, 60); state.rankOf = {};
+    var rows = state.rows = B.groupEvents(evs).slice(0, 60); state.rankOf = {};
     rows.forEach(function (g, i) {
       state.rankOf[g.ev.id] = i;
-      ol.appendChild(g.members.length > 1 ? groupRow(g, String(i + 1), now) : evRow(g.ev, String(i + 1), now, false));
+      ol.appendChild(evRow(g.ev, String(i + 1), now, g.members.length, g.members));
     });
-    if (activeRow.event || activeRow.group) {
+    if (activeRow.event) {
       Array.prototype.some.call(ol.querySelectorAll('.head'), function (button) {
-        if (activeRow.event ? button.dataset.event !== activeRow.event : button.dataset.group !== activeRow.group) return false;
+        if (button.dataset.event !== activeRow.event) return false;
         button.focus({ preventScroll: true });
         return true;
       });
@@ -183,9 +159,12 @@
       }
       ctx.fill(); ctx.stroke();
     });
-    var evs = state.rows.flatMap(function (row) { return row.members; });
+    var evs = state.rows.flatMap(function (row) {
+      return row.members.map(function (event) { return { event: event, rowId: row.ev.id }; });
+    });
     state.pts = [];
-    evs.slice().reverse().forEach(function (e) {
+    evs.reverse().forEach(function (entry) {
+      var e = entry.event;
       if (e.lat == null) return;
       var p = project(e.lon, e.lat, W, H); if (!p.v) return;
       var col = B.SEV[e.severity] || '#93a1b5', r = (3 + e.score / 14) * dpr, on = state.sel === e.id;
@@ -194,7 +173,7 @@
       ctx.lineWidth = (on ? 3 : 1) * dpr; ctx.strokeStyle = on ? '#ffb020' : '#0b0f14'; ctx.stroke();
       var rk = state.rankOf && state.rankOf[e.id] != null ? state.rankOf[e.id] : 99;
       if (rk < 10) { ctx.fillStyle = '#0b0f14'; ctx.font = 'bold ' + Math.round(r * 1.2) + 'px ui-monospace,monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(rk + 1), p.x, p.y + dpr * 0.5); }
-      state.pts.push({ id: e.id, x: p.x / dpr, y: p.y / (H / (cv.clientHeight || H)), r: Math.max(r / dpr * 1.9, 12) });
+      state.pts.push({ rowId: entry.rowId, x: p.x / dpr, y: p.y / (H / (cv.clientHeight || H)), r: Math.max(r / dpr * 1.9, 12) });
     });
   }
   function hit(ev) {
@@ -213,11 +192,9 @@
     if (drag && !drag.moved) {
       var h = hit(e);
       if (h) {
-        var group = state.rows.find(function (row) { return row.members.some(function (member) { return member.id === h.id; }); });
-        if (group && group.members.length > 1) state.selGroup = group.key;
-        state.sel = h.id;
+        state.sel = h.rowId;
         render();
-        var n = $('ev-' + h.id);
+        var n = $('ev-' + state.sel);
         if (n) n.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
       }
     }
@@ -257,14 +234,30 @@
       c.appendChild(el('b', '', String(by[t]))); c.appendChild(el('span', '', (B.TYPES[t] || B.TYPES.other).label)); g.appendChild(c);
     });
     box.appendChild(g);
+    var now = Date.now();
+    var recent = state.events.filter(function (e) {
+      return e.first_seen && e.first_seen !== e.time &&
+        now - Date.parse(e.first_seen) < 36e5 && now - Date.parse(e.time) < 6 * 36e5;
+    }).length;
+    $('last-hour').textContent = recent + (recent === 1 ? ' event' : ' events') + ' added to the feeds.';
   }
-  function digest() {
-    var recent = state.events.filter(function (e) { return e.first_seen && Date.now() - Date.parse(e.first_seen) < 36e5 && e.first_seen !== e.time && Date.now() - Date.parse(e.time) < 6 * 36e5; });
-    var w = $('digest-wrap'), box = $('digest'); box.textContent = '';
-    if (!recent.length) { w.hidden = true; return; }
-    w.hidden = false;
-    box.appendChild(el('p', 'sub', recent.length + ' event' + (recent.length === 1 ? '' : 's') + ' appeared in the feeds in the last hour. Top by rank:'));
-    var ul = el('ul', 'dg'); recent.slice(0, 5).forEach(function (e) { ul.appendChild(el('li', '', e.title + ' \u2014 ' + e.place + ' (' + B.ago(e.time) + ')')); }); box.appendChild(ul);
+  function renderLeadStory(data) {
+    var lead = data && data.lead;
+    if (!lead || !lead.headline) return;
+    $('lead-headline').textContent = lead.headline;
+    $('lead-summary').textContent = lead.summary || '';
+    var meta = $('lead-meta');
+    if (lead.label) meta.appendChild(el('span', 'lead-label', lead.label));
+    (lead.sources || []).forEach(function (source) {
+      if (source.name) meta.appendChild(B.sourceLink(source.url, source.name));
+    });
+    var asOf = data.as_of || data.generated;
+    if (Number.isFinite(Date.parse(asOf))) {
+      var time = el('time', '', 'As of ' + B.ago(asOf));
+      time.dateTime = asOf;
+      meta.appendChild(time);
+    }
+    $('lead-story').hidden = false;
   }
   function hero(d) {
     var evs = state.events, now = new Date();
@@ -330,6 +323,7 @@
     lg.appendChild(el('span', '', 'Numbers match the top 10 in the list.'));
   }
 
+  get('data/lead-story.json').then(renderLeadStory).catch(function () {});
   get('data/world.json').then(function (world) { state.world = world; draw(); }).catch(function () {});
   get('data/events.json').then(function (data) {
     state.events = data.events;
@@ -337,7 +331,7 @@
     $('updated').textContent = 'Updated ' + B.ago(data.generated);
     $('dot').className = 'dot' + (age > 45 ? ' stale' : '');
     if (age > 45) $('updated').textContent += ' This data is older than 45 minutes.';
-    buildFilters(); legend(); stats(); digest(); hero(data); render(); histInit();
+    buildFilters(); legend(); stats(); hero(data); render(); histInit();
   }).catch(function () {
     var message = 'Data could not be loaded. Try again in a minute.';
     $('count').textContent = message;

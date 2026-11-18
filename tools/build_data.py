@@ -903,7 +903,7 @@ def build(fixtures=None, now=None):
             n = seen.get(key, 0)
             seen[key] = n + 1
             e["score"] = round(max(0, e["score"] - (10 if e["type"] == "weather" else 3) * n), 1)
-    events.sort(key=rank_key)  # severity first, then score
+    events.sort(key=rank_key)
     return events, status
 
 
@@ -911,9 +911,11 @@ SEV_ORDER = {"extreme": 0, "severe": 1, "moderate": 2, "minor": 3}
 
 
 def rank_key(e):
-    """Severity tier first, then score. A minor event never ranks above a severe one."""
+    """Put routine advisories after other events, preserving the rank within each group."""
+    source = e.get("source_id")
+    routine = source in ("awc-sigmet", "openfda-food", "nws-alerts") and e["severity"] != "extreme"  # an extreme event is never demoted
     # Outlet headlines (GDELT) sort after every other event of the same tier, so they stay out of the top of the list.
-    return (0 if e.get("big") else 1, SEV_ORDER.get(e["severity"], 4), e["type"] == "headline", -e["score"])
+    return (routine, 0 if e.get("big") else 1, SEV_ORDER.get(e["severity"], 4), e["type"] == "headline", -e["score"])
 
 
 def track_seen(events, out_dir, now):
