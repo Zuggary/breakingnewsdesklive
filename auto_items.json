@@ -1,42 +1,5 @@
 [
   {
-    "id": "auto-35147e1b2be8",
-    "title": "Apple status page listed account and service disruptions, MacRumors reports",
-    "place": "United States",
-    "time": "2026-11-17T17:47:00Z",
-    "expires": "2026-11-19T17:47:00Z",
-    "severity": "moderate",
-    "summary": "MacRumors reported that users had trouble signing in to Apple accounts and iCloud, and that Apple's status page listed issues affecting several services. The Daily Beast separately reported user disruptions, citing user reports and outage-monitoring information. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "MacRumors",
-        "intermediary": null,
-        "url": "https://www.macrumors.com/2026/11/17/apple-accounts-experiencing-issues/",
-        "published": "2026-11-17T17:47:00Z",
-        "scope": "Multiple social media reports and Apple's System Status page.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "The Daily Beast",
-        "intermediary": null,
-        "url": "https://www.thedailybeast.com/apple-hit-by-major-outage-as-tech-chaos-spreads",
-        "published": "2026-11-17T17:47:00Z",
-        "scope": "Reports of user disruptions and outage-monitoring information.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Apple",
-        "text": "According to MacRumors, Apple's system status page listed issues affecting iCloud Account and Sign In, followed by outages affecting the App Store, Apple Music and AppleCare on Device.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-2a7b1193be4f",
     "title": "Apple says internal update caused outages affecting its online services",
     "place": "United States",
@@ -483,5 +446,47 @@
     "carried_by": [
       "Business Wire"
     ]
+  },
+  {
+    "id": "auto-a9d79b067717",
+    "title": "Witnesses tell Reuters Israeli tanks advanced beyond the Yellow Line in central Gaza",
+    "place": "United States",
+    "time": "2026-11-18T12:58:00Z",
+    "expires": "2026-11-20T12:58:00Z",
+    "severity": "moderate",
+    "summary": "Witnesses told Reuters that Israeli tanks advanced beyond the Yellow Line in central Gaza on Wednesday. The Israeli military said the operation targeted Hamas infrastructure, while Hamas called the raid and evacuation a ceasefire violation, Reuters reported. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "The Times of Israel",
+        "intermediary": null,
+        "url": "https://www.timesofisrael.com/liveblog_entry/idf-launches-rare-operation-beyond-yellow-line-in-central-gaza/",
+        "published": "2026-11-18T12:58:00Z",
+        "scope": "Israeli civilian-military agency COGAT's statement and Palestinian media reports",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://www.investing.com/news/world-news/israeli-military-begins-a-new-thrust-in-gaza-kills-three-people-5035960",
+        "published": "2026-11-18T12:58:00Z",
+        "scope": "Witnesses, Palestinian medics and an Israeli military spokesperson",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Israeli military spokesperson",
+        "text": "Said the operation targeted Hamas infrastructure west of the Yellow Line, according to Reuters.",
+        "verification": "attributed"
+      },
+      {
+        "who": "Hamas",
+        "text": "Called the raid and evacuation a violation of the ceasefire, according to Reuters.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
   }
 ]
