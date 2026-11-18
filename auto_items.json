@@ -1,53 +1,5 @@
 [
   {
-    "id": "auto-44987d708f85",
-    "title": "AP calls Alaska Senate race for Mary Peltola; CBS News independently projects her victory",
-    "place": "United States",
-    "time": "2026-11-18T03:20:00Z",
-    "expires": "2026-11-20T03:20:00Z",
-    "severity": "moderate",
-    "summary": "The Associated Press called Alaska\u2019s U.S. Senate race for Democrat Mary Peltola over Republican incumbent Dan Sullivan, and CBS News independently projected her victory. Peltola said in a statement reported by AP that voters had signaled dissatisfaction with the status quo in DC. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/alaska-senate-peltola-sullivan-congress-f1fd4d243bf764ec46ff94db4c792953",
-        "published": "2026-11-18T03:20:00Z",
-        "scope": "AP race call based on election results.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "CBS News",
-        "intermediary": null,
-        "url": "https://www.cbsnews.com/news/alaska-2026-senate-sullivan-peltola/",
-        "published": "2026-11-18T03:20:00Z",
-        "scope": "CBS News says it independently projects Peltola's victory. The available article was updated at 03:47 UTC.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "NBC News",
-        "intermediary": null,
-        "url": "https://www.nbcnews.com/politics/2026-election/mary-peltola-democrat-wins-alaska-senate-dan-sullivan-gop-rcna603307",
-        "published": "2026-11-18T03:20:00Z",
-        "scope": "NBC News made its own election projection; the article URL was identified through a separate election reference, but the article itself was inaccessible.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Mary Peltola",
-        "text": "In a statement reported by AP, Peltola said voters had signaled that the status quo in DC was not working for Alaska.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": [
-      "NPR"
-    ]
-  },
-  {
     "id": "auto-a4ace14600c3",
     "title": "AP reports Iran war disruptions to regional sport as Qatar and Abu Dhabi F1 races remain scheduled",
     "place": "United States",
@@ -432,6 +384,43 @@
       {
         "who": "City of Hollywood",
         "text": "Said emergency crews were responding with high-water vehicles and advised residents to avoid flooded roads.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
+  },
+  {
+    "id": "auto-bc01c097ad4f",
+    "title": "Reuters and Axios report Trump and Putin are expected to meet in China",
+    "place": "United States",
+    "time": "2026-11-18T16:15:00Z",
+    "expires": "2026-11-20T16:15:00Z",
+    "severity": "moderate",
+    "summary": "Reuters and Axios reported, citing officials, that President Donald Trump and President Vladimir Putin are expected to meet in China on Thursday. Russian news agencies quoted Kremlin aide Yuri Ushakov as saying the meeting would follow the APEC plenary session and include members of both delegations. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://new.streetinsider.com/Reuters/Putin%2Band%2BTrump%2Bexpected%2Bto%2Bhold%2Bbilateral%2Btalks%2Bat%2BAPEC%2Bsummit/27368775.html",
+        "published": "2026-11-18T16:15:00Z",
+        "scope": "U.S. and Russian officials",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Axios",
+        "intermediary": null,
+        "url": "https://www.axios.com/2026/11/18/trump-putin-china-meeting-ukraine",
+        "published": "2026-11-18T16:15:00Z",
+        "scope": "U.S. officials",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Yuri Ushakov, Kremlin foreign policy aide",
+        "text": "Russian news agencies quoted Ushakov as saying the meeting would follow the APEC plenary session and include members of both delegations.",
         "verification": "attributed"
       }
     ],
