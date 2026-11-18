@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   var B = window.BND, $ = function (id) { return document.getElementById(id); };
-  var state = { events: [], world: [], f: { type: 'all', region: 'all', hours: 0 }, sel: null, globe: false, rot: [-40, 20], pts: [], rows: [] };
+  var state = { events: [], world: [], f: { type: 'all', region: 'all', hours: 72 }, sel: null, globe: false, rot: [-40, 20], pts: [], rows: [] };
   var SHORT = { 'usgs-quakes': 'USGS', 'nws-alerts': 'NWS', nhc: 'NHC', eonet: 'NASA', gdacs: 'GDACS', 'usgs-volcano': 'USGS', 'swpc-kp': 'NOAA', 'spc-outlook': 'NOAA SPC', 'hms-smoke': 'NOAA', 'atd-faa': 'FAA', ms365: 'MS365', 'openfda-food': 'FDA', cpsc: 'CPSC', 'cisa-kev': 'CISA', 'fedreg-presidential': 'FED REG', fcdo: 'UK FCDO', 'eu-press': 'EU', 'gdelt-doc': 'GDELT', probes: 'DESK', 'news-lane': 'NEWS', curated: 'DESK', 'tsunami-ak': 'NOAA', 'tsunami-hi': 'NOAA', 'status-github': 'GITHUB', 'status-cloudflare': 'CLOUDFLARE', 'status-openai': 'OPENAI', 'status-atlassian': 'ATLASSIAN' };
   var cv = $('map'), ctx = cv.getContext('2d');
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -18,7 +18,8 @@
     regs.forEach(function (r) { var o = el('option', '', r === 'all' ? 'All regions' : r); o.value = r; rs.appendChild(o); });
     rs.onchange = function () { state.f.region = rs.value; render(); };
     var ts = el('select', 'chip'); ts.setAttribute('aria-label', 'Event age');
-    [['0', 'Any age'], ['24', 'Last 24 hours'], ['6', 'Last 6 hours'], ['1', 'Last hour']].forEach(function (o) { var op = el('option', '', o[1]); op.value = o[0]; ts.appendChild(op); });
+    [['0', 'Any age'], ['72', 'Last 72 hours'], ['24', 'Last 24 hours'], ['6', 'Last 6 hours'], ['1', 'Last hour']].forEach(function (o) { var op = el('option', '', o[1]); op.value = o[0]; ts.appendChild(op); });
+    ts.value = String(state.f.hours);
     ts.onchange = function () { state.f.hours = +ts.value; render(); };
     var ss = el('select', 'chip'); ss.setAttribute('aria-label', 'Severity');
     [['', 'Any severity'], ['extreme', 'Extreme only'], ['severe', 'Severe or worse'], ['moderate', 'Moderate or worse']].forEach(function (o) { var op = el('option', '', o[1]); op.value = o[0]; ss.appendChild(op); });
@@ -41,7 +42,7 @@
     }
     chip('all', 'All', state.events.length);
     Object.keys(B.GROUPS).forEach(function (g) {
-      var n = B.filterEvents(state.events, { type: 'g:' + g }).length;
+      var n = B.filterEvents(state.events, { type: 'g:' + g, hours: 0 }).length;
       if (n) chip('g:' + g, B.GROUPS[g][0].replace('Outages and cyber', 'Outages').replace('Recalls and safety', 'Recalls').replace('Official notices', 'Notices'), n);
     });
 
@@ -66,7 +67,7 @@
       h.appendChild(el('span', 'src', e.source_short));
       var mt = el('span', 'meta'); var ms = el('b', '', SEVS[e.severity] || e.severity); mt.appendChild(ms);
       mt.appendChild(document.createTextNode(' \u00b7 ' + (B.TYPES[e.type] || B.TYPES.other).label + ' \u00b7 ' + e.source_short + ' \u00b7 ' + e.place)); h.appendChild(mt);
-      h.appendChild(el('span', 'when', B.ago(e.time, now)));
+      h.appendChild(el('span', 'when', B.eventAge(e, state.generated, now)));
       h.dataset.event = e.id;
       h.onclick = function () { state.sel = state.sel === e.id ? null : e.id; render(); };
       li.appendChild(h);
@@ -83,7 +84,7 @@
           m.appendChild(lk); m.appendChild(ul);
         }
         if (members && members.length > 1) {
-          var gl = el('ul', 'dg'); members.forEach(function (x) { var li3 = el('li'), pa = el('a', '', x.title + ' (' + B.ago(x.time, now) + ')'); pa.href = '/event?id=' + encodeURIComponent(x.id); li3.appendChild(pa); gl.appendChild(li3); });
+          var gl = el('ul', 'dg'); members.forEach(function (x) { var li3 = el('li'), pa = el('a', '', x.title + ' (' + B.eventAge(x, state.generated, now) + ')'); pa.href = '/event?id=' + encodeURIComponent(x.id); li3.appendChild(pa); gl.appendChild(li3); });
           m.appendChild(el('p', 'src', 'Identical rows grouped here: '));
           m.appendChild(gl);
         }
@@ -102,7 +103,7 @@
   var SEVS = { extreme: 'EXTREME', severe: 'SEVERE', moderate: 'MODERATE', minor: 'MINOR' };
   function render() {
     var now = Date.now();
-    var evs = B.filterEvents(state.events, state.f, now);
+    var evs = B.withoutLead(B.filterEvents(state.events, state.f, now), state.lead);
     var ol = $('list'), active = document.activeElement;
     var activeRow = ol.contains(active) ? active.dataset : {};
     ol.textContent = '';
@@ -243,7 +244,9 @@
   }
   function renderLeadStory(data) {
     var lead = data && data.lead;
-    if (!lead || !lead.headline) return;
+    if (!lead) return;
+    state.lead = lead;
+    if (!lead.headline) return;
     $('lead-headline').textContent = lead.headline;
     $('lead-summary').textContent = lead.summary || '';
     var meta = $('lead-meta');
@@ -323,10 +326,11 @@
     lg.appendChild(el('span', '', 'Numbers match the top 10 in the list.'));
   }
 
-  get('data/lead-story.json').then(renderLeadStory).catch(function () {});
   get('data/world.json').then(function (world) { state.world = world; draw(); }).catch(function () {});
-  get('data/events.json').then(function (data) {
+  Promise.all([get('data/events.json'), get('data/lead-story.json').then(renderLeadStory).catch(function () {})]).then(function (feeds) {
+    var data = feeds[0];
     state.events = data.events;
+    state.generated = data.generated;
     var age = (Date.now() - Date.parse(data.generated)) / 60000;
     $('updated').textContent = 'Updated ' + B.ago(data.generated);
     $('dot').className = 'dot' + (age > 45 ? ' stale' : '');

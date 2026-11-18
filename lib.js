@@ -34,9 +34,20 @@
     if (h < 48) return h + 'h ago';
     return Math.round(h / 24) + 'd ago';
   }
+  function eventAge(event, generated, now) {
+    var build = Date.parse(generated), first = new Date(event.first_seen);
+    if (event.first_seen && Math.abs(build - Date.parse(event.time)) <= 9e5 && build - first > 9e5) {
+      var hour = first.getHours();
+      return 'since ' + (hour % 12 || 12) + ':' + String(first.getMinutes()).padStart(2, '0') + (hour < 12 ? ' am' : ' pm');
+    }
+    return ago(event.time, now);
+  }
   var SEVRANK = { extreme: 0, severe: 1, moderate: 2, minor: 3 };
   function filterEvents(events, f, now) {
     now = now || Date.now();
+    var hrs = f.hours == null ? (f.day ? 24 : 72) : f.hours;
+    function age(e) { return now - Date.parse(e.updated || e.time); }
+    function tier(e) { return e.severity === 'extreme' ? 0 : age(e) > 864e5 ? 2 : 1; }
     return events.filter(function (e) {
       if (f.type && f.type !== 'all') {
         if (f.type.indexOf('g:') === 0) { if (GROUPS[f.type.slice(2)][1].indexOf(e.type) < 0) return false; }
@@ -44,10 +55,15 @@
       }
       if (f.region && f.region !== 'all' && e.region !== f.region) return false;
       if (f.sev && SEVRANK[f.sev] != null && (SEVRANK[e.severity] == null ? 9 : SEVRANK[e.severity]) > SEVRANK[f.sev]) return false;
-      var hrs = f.hours || (f.day ? 24 : 0);
-      if (hrs && now - Date.parse(e.time) > hrs * 36e5) return false;
+      if (hrs && age(e) > hrs * 36e5 && !((f.hours == null || f.hours === 72) && e.severity === 'extreme')) return false; // the default list never ages out an extreme event
       return true;
+    }).sort(function (a, b) {
+      return tier(a) - tier(b);
     });
+  }
+  function withoutLead(events, lead) {
+    if (!lead || (!lead.id && !lead.headline)) return events;
+    return events.filter(function (e) { return lead.id ? e.id !== lead.id : e.title !== lead.headline; });
   }
   function groupEvents(events) {
     var groups = new Map();
@@ -137,6 +153,6 @@
     im.decoding = 'async'; if (!eager) im.loading = 'lazy'; pic.appendChild(im);
     return pic;
   }
-  var api = { sourceLink: sourceLink, stockTag: stockTag, pickStock: pickStock, stockPicture: stockPicture, ILLUS: ILLUS, illustrationFor: illustrationFor, renderContext: renderContext, GROUPS: GROUPS, TYPES: TYPES, SEV: SEV, ago: ago, filterEvents: filterEvents, groupEvents: groupEvents, safeUrl: safeUrl };
+  var api = { sourceLink: sourceLink, stockTag: stockTag, pickStock: pickStock, stockPicture: stockPicture, ILLUS: ILLUS, illustrationFor: illustrationFor, renderContext: renderContext, GROUPS: GROUPS, TYPES: TYPES, SEV: SEV, ago: ago, eventAge: eventAge, filterEvents: filterEvents, withoutLead: withoutLead, groupEvents: groupEvents, safeUrl: safeUrl };
   if (typeof module !== 'undefined') module.exports = api; else root.BND = api;
 })(this);

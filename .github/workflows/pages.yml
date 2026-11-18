@@ -35,6 +35,7 @@ jobs:
         with:
           path: |
             data/seen.json
+            data/closure-days.json
             data/log.jsonl
             data/gdelt-last.json
             data/context-cache.json

@@ -16,7 +16,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from tools import feed_terms, killswitch, probes, news_lane, claims, manual_items, auto_items, lead_story  # noqa: E402
+from tools import feed_terms, killswitch, probes, news_lane, claims, manual_items, auto_items, lead_story, recurring  # noqa: E402
 from tools.lib import (REGIONS, region_of, score_event, summarize, STATE_CENTROIDS, claims_ok, status_label, SAFE_SUMMARY,  # noqa: E402
                        iso_utc, parse_time, haversine_km)
 
@@ -24,8 +24,7 @@ FIXTURE_MODE = False
 FIXTURE_DIR = None
 OUT_DIR = None
 UA = "breakingnewsdesklive/1.0 (+https://breakingnewsdesklive.com; independent alert aggregator)"
-MAX_AGE_H = 72
-MAX_AGE_LONG_H = 168  # open fires, floods and volcanoes stay listed for 7 days
+MAX_AGE_H = 168  # Keep a week of source items available under Any age.
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HELD = []
@@ -760,7 +759,7 @@ def dedupe(events):
     return kept
 
 
-def build(fixtures=None, now=None):
+def build(fixtures=None, now=None, out_dir=None):
     global FIXTURE_MODE, FIXTURE_DIR
     FIXTURE_MODE = bool(fixtures)
     FIXTURE_DIR = fixtures
@@ -869,11 +868,9 @@ def build(fixtures=None, now=None):
                          region=ev["region"], summary_override=ev["summary_override"], curated=True, auto=True))
         arec["count"] += 1
     status.append(arec)
-    def fresh_enough(e):
-        age = MAX_AGE_LONG_H if e["type"] in ("wildfire", "volcano", "drought", "flood", "recall", "notice") else MAX_AGE_H
-        t = parse_time(e["time"])
-        return now - timedelta(hours=age) <= t <= now + timedelta(hours=1)
-    events = [e for e in events if fresh_enough(e)]
+    oldest, newest = now - timedelta(hours=MAX_AGE_H), now + timedelta(hours=1)
+    events = [e for e in events if oldest <= parse_time(e.get("updated") or e["time"]) <= newest]
+    events, _ = recurring.filter_closures(events, now, out_dir)
     events = dedupe(events)
     good = []
     for e in events:
@@ -903,19 +900,22 @@ def build(fixtures=None, now=None):
             n = seen.get(key, 0)
             seen[key] = n + 1
             e["score"] = round(max(0, e["score"] - (10 if e["type"] == "weather" else 3) * n), 1)
-    events.sort(key=rank_key)
+    events.sort(key=lambda e: rank_key(e, now))
     return events, status
 
 
 SEV_ORDER = {"extreme": 0, "severe": 1, "moderate": 2, "minor": 3}
 
 
-def rank_key(e):
-    """Put routine advisories after other events, preserving the rank within each group."""
+def rank_key(e, now=None):
+    """Rank extreme events first, then fresh events, then stale events."""
     source = e.get("source_id")
-    routine = source in ("awc-sigmet", "openfda-food", "nws-alerts") and e["severity"] != "extreme"  # an extreme event is never demoted
+    extreme = e["severity"] == "extreme"
+    updated = e.get("updated") or e.get("time")
+    stale = updated and (now or datetime.now(timezone.utc)) - parse_time(updated) > timedelta(hours=24)
+    routine = source in ("awc-sigmet", "openfda-food", "nws-alerts") and not extreme
     # Outlet headlines (GDELT) sort after every other event of the same tier, so they stay out of the top of the list.
-    return (0 if e["severity"] == "extreme" else 1, routine, 0 if e.get("big") else 1, SEV_ORDER.get(e["severity"], 4), e["type"] == "headline", -e["score"])
+    return (0 if extreme else 2 if stale else 1, routine, 0 if e.get("big") else 1, SEV_ORDER.get(e["severity"], 4), e["type"] == "headline", -e["score"])
 
 
 def track_seen(events, out_dir, now):
@@ -969,10 +969,10 @@ def main():
     if killswitch.global_stop(ROOT_DIR):
         print("KILL switch is on: publishing nothing new, keeping the last good files", file=sys.stderr)
         return 0
-    events, status = build(a.fixtures, now)
+    events, status = build(a.fixtures, now, a.out)
     os.makedirs(a.out, exist_ok=True)
     prev = os.path.join(a.out, "events.json")
-    if not events and os.path.exists(prev):
+    if not events and os.path.exists(prev) and not probes.load_json(os.path.join(a.out, "routine.json"), []):
         print("No events from any source; keeping the previous file", file=sys.stderr)
         return 0
     if a.news_pages:

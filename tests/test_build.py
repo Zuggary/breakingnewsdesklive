@@ -24,7 +24,7 @@ class T(unittest.TestCase):
             self.assertTrue(e["time"].endswith("Z"))
 
     def test_sorted(self):
-        keys = [build_data.rank_key(e) for e in self.events]
+        keys = [build_data.rank_key(e, NOW) for e in self.events]
         self.assertEqual(keys, sorted(keys))
 
     def test_headlines_stay_out_of_the_top_15(self):
@@ -33,9 +33,12 @@ class T(unittest.TestCase):
             self.assertTrue(all(e["type"] != "headline" for e in self.events[:15]))
 
     def test_severity_ranks_first_within_each_group(self):
-        for routine in (False, True):
-            order = [build_data.SEV_ORDER[e["severity"]] for e in self.events
-                     if not e.get("big") and build_data.rank_key(e)[1] == routine]
+        groups = {}
+        for e in self.events:
+            if not e.get("big"):
+                key = build_data.rank_key(e, NOW)
+                groups.setdefault(key[:2], []).append(key[3])
+        for order in groups.values():
             self.assertEqual(order, sorted(order))
 
     def test_news_ranks_above_routine_advisories(self):
