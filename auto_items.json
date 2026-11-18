@@ -201,5 +201,65 @@
       }
     ],
     "carried_by": []
+  },
+  {
+    "id": "auto-d486483e29a3",
+    "title": "Trump Jr. and Kalshi say they agreed to end his advisory role",
+    "place": "United States",
+    "time": "2026-11-17T22:57:00Z",
+    "expires": "2026-11-19T22:57:00Z",
+    "severity": "moderate",
+    "summary": "Donald Trump Jr. told Axios that he and Kalshi CEO Tarek Mansour agreed to end his advisory relationship with the company. Kalshi spokesperson Dani Lever told AP that the decision followed his firm\u2019s significant investment in rival Polymarket. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Axios",
+        "intermediary": null,
+        "url": "https://www.axios.com/2026/11/17/donald-trump-jr-kalshi-polymarket-split",
+        "published": "2026-11-17T22:57:00Z",
+        "scope": "Interview with Donald Trump Jr. and comments from 1789 Capital partner Omeed Malik.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/4a1daf13ba552169f9552a4e50cf194f",
+        "published": "2026-11-17T22:57:00Z",
+        "scope": "Kalshi spokesperson Dani Lever described the decision and its connection to 1789 Capital\u2019s increased investment in Polymarket.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://www.investing.com/news/stock-market-news/exclusivekalshi-ends-donald-trump-jrs-advisory-contract-due-to-polymarket-conflict-5022950",
+        "published": "2026-11-17T22:57:00Z",
+        "scope": "A Kalshi spokesperson confirmed the departure; Reuters also cited sources familiar with the matter.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "The Washington Post",
+        "intermediary": null,
+        "url": "https://www.washingtonpost.com/business/2026/11/12/kalshi-parts-ways-with-trump-jr-after-his-firm-deepens-its-polymarket-bet/",
+        "published": "2026-11-17T22:57:00Z",
+        "scope": "A Kalshi spokesperson and company representatives described the mutual decision and the investment that prompted discussions.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Donald Trump Jr.",
+        "text": "He told Axios that he and Kalshi CEO Tarek Mansour discussed the advisory relationship and agreed to end it.",
+        "verification": "attributed"
+      },
+      {
+        "who": "Kalshi spokesperson Dani Lever",
+        "text": "She told AP that Kalshi and Trump Jr. mutually agreed to end his advisory role after his firm\u2019s significant investment in a competitor, and thanked him for helping market Kalshi.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
   }
 ]
