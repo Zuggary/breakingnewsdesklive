@@ -1,42 +1,5 @@
 [
   {
-    "id": "auto-8daba76854bb",
-    "title": "AP reports rallies against Fico\u2019s government across Slovakia on Velvet Revolution anniversary",
-    "place": "United States",
-    "time": "2026-11-17T16:15:00Z",
-    "expires": "2026-11-19T16:15:00Z",
-    "severity": "moderate",
-    "summary": "People rallied against Prime Minister Robert Fico\u2019s government across Slovakia on the anniversary of the Velvet Revolution, according to the Associated Press. TASR reported that Fico urged fair political competition and said he hoped the opposition would not use public gatherings to spread hatred. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Aktuality.sk",
-        "intermediary": null,
-        "url": "https://www.aktuality.sk/clanok/6RI46NG/protesty-online-17-november-nezna-revolucia/",
-        "published": "2026-11-17T16:15:00Z",
-        "scope": "Live reporting and photographs from protest locations",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/13da4dadf4057826343481e2e9c5c47c",
-        "published": "2026-11-17T16:15:00Z",
-        "scope": "Reporting from Bratislava and remarks by protest participants",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Slovak Prime Minister Robert Fico",
-        "text": "According to TASR, Fico said he hoped the opposition would not use public gatherings to spread hatred and called for fair political competition.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-c26c0ddcf76d",
     "title": "Senate Democrats seek pause in air traffic control router replacements, AP reports",
     "place": "United States",
@@ -399,6 +362,52 @@
       {
         "who": "Mohammed Ben Sulayem, FIA president",
         "text": "Told The National that the FIA was ready and fully prepared for the Qatar and Abu Dhabi races to proceed.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
+  },
+  {
+    "id": "auto-9574e83540ca",
+    "title": "Reuters reports global stocks slipped as investors weighed Nvidia\u2019s forecast",
+    "place": "United States",
+    "time": "2026-11-18T09:26:00Z",
+    "expires": "2026-11-20T09:26:00Z",
+    "severity": "moderate",
+    "summary": "Reuters reported that global stocks slipped Wednesday as investors assessed Nvidia\u2019s sales forecast and awaited Anthropic\u2019s market debut. Nvidia reported third-quarter revenue of $115.8 billion and forecast fourth-quarter revenue of $130 billion, plus or minus 3%. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Reuters via MarketScreener",
+        "intermediary": null,
+        "url": "https://uk.marketscreener.com/news/global-stocks-slip-after-nvidia-earnings-anthropic-ipo-to-test-ai-boom--ce785eddd988f720",
+        "published": "2026-11-18T09:26:00Z",
+        "scope": "Market data and company forecasts; Reuters also cites market participants.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Agence France-Presse",
+        "intermediary": null,
+        "url": "https://www.afp.com/en/stocks-mixed-booming-nvidia-results-offset-spy-scandal",
+        "published": "2026-11-18T09:26:00Z",
+        "scope": "AFP reports market movements and Nvidia\u2019s results and quotes market analysts.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Bloomberg",
+        "intermediary": null,
+        "url": "https://www.swissinfo.ch/eng/nasdaq%2C-s%26p-500-futures-rise-after-nvidia-earnings%3A-markets-wrap/92397458",
+        "published": "2026-11-18T09:26:00Z",
+        "scope": "Bloomberg reports market data and describes Anthropic as having told prospective investors it expects to price shares at the high end of its range or above.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Nvidia",
+        "text": "Nvidia reported third-quarter revenue of $115.8 billion and forecast fourth-quarter revenue of $130 billion, plus or minus 3%. Interim CEO Colette Kress said the company\u2019s momentum was real and its product roadmap was on track.",
         "verification": "attributed"
       }
     ],
