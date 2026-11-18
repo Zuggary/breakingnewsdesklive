@@ -1,51 +1,5 @@
 [
   {
-    "id": "auto-9574e83540ca",
-    "title": "Reuters reports global stocks slipped as investors weighed Nvidia\u2019s forecast",
-    "place": "United States",
-    "time": "2026-11-18T09:26:00Z",
-    "expires": "2026-11-20T09:26:00Z",
-    "severity": "moderate",
-    "summary": "Reuters reported that global stocks slipped Wednesday as investors assessed Nvidia\u2019s sales forecast and awaited Anthropic\u2019s market debut. Nvidia reported third-quarter revenue of $115.8 billion and forecast fourth-quarter revenue of $130 billion, plus or minus 3%. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Reuters via MarketScreener",
-        "intermediary": null,
-        "url": "https://uk.marketscreener.com/news/global-stocks-slip-after-nvidia-earnings-anthropic-ipo-to-test-ai-boom--ce785eddd988f720",
-        "published": "2026-11-18T09:26:00Z",
-        "scope": "Market data and company forecasts; Reuters also cites market participants.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Agence France-Presse",
-        "intermediary": null,
-        "url": "https://www.afp.com/en/stocks-mixed-booming-nvidia-results-offset-spy-scandal",
-        "published": "2026-11-18T09:26:00Z",
-        "scope": "AFP reports market movements and Nvidia\u2019s results and quotes market analysts.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Bloomberg",
-        "intermediary": null,
-        "url": "https://www.swissinfo.ch/eng/nasdaq%2C-s%26p-500-futures-rise-after-nvidia-earnings%3A-markets-wrap/92397458",
-        "published": "2026-11-18T09:26:00Z",
-        "scope": "Bloomberg reports market data and describes Anthropic as having told prospective investors it expects to price shares at the high end of its range or above.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Nvidia",
-        "text": "Nvidia reported third-quarter revenue of $115.8 billion and forecast fourth-quarter revenue of $130 billion, plus or minus 3%. Interim CEO Colette Kress said the company\u2019s momentum was real and its product roadmap was on track.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-1bad7ab00c7f",
     "title": "AP: Garcia sends preservation letters ahead of planned House investigations into Trump administration",
     "place": "United States",
@@ -444,5 +398,44 @@
       }
     ],
     "carried_by": []
+  },
+  {
+    "id": "auto-38986959faac",
+    "title": "Bloomberg and Reuters report Anthropic IPO pricing of $83 a share",
+    "place": "United States",
+    "time": "2026-11-18T21:09:00Z",
+    "expires": "2026-11-20T21:09:00Z",
+    "severity": "moderate",
+    "summary": "Anthropic priced its initial public offering at $83 a share, above its target range of $70 to $78, Bloomberg and Reuters reported, citing people familiar with the matter. Anthropic declined to comment to Reuters. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Bloomberg",
+        "intermediary": null,
+        "url": "https://www.bloomberg.com/news/articles/2026-11-18/anthropic-is-said-to-price-ipo-at-83-per-share",
+        "published": "2026-11-18T21:09:00Z",
+        "scope": "People familiar with the matter.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://www.streetinsider.com/Reuters/Anthropic%2Bprices%2Bblockbuster%2BIPO%2Bat%2B%2483%2Ba%2Bshare%2C%2Bsource%2Bsays/27370548.html",
+        "published": "2026-11-18T21:09:00Z",
+        "scope": "One person familiar with the matter, who requested anonymity because the information was not public.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Anthropic",
+        "text": "Declined to comment to Reuters.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": [
+      "Associated Press"
+    ]
   }
 ]
