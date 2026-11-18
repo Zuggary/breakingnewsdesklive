@@ -35,7 +35,7 @@ class T(unittest.TestCase):
     def test_severity_ranks_first_within_each_group(self):
         for routine in (False, True):
             order = [build_data.SEV_ORDER[e["severity"]] for e in self.events
-                     if not e.get("big") and build_data.rank_key(e)[0] == routine]
+                     if not e.get("big") and build_data.rank_key(e)[1] == routine]
             self.assertEqual(order, sorted(order))
 
     def test_news_ranks_above_routine_advisories(self):
@@ -57,6 +57,12 @@ class T(unittest.TestCase):
         news = {"type": "headline", "source_id": "curated", "severity": "minor", "confidence": "Corroborated", "score": 10}
         recall = dict(base, type="recall", source_id="openfda-food")
         self.assertEqual(sorted([news, recall, base], key=build_data.rank_key)[2], news)
+
+    def test_extreme_outranks_the_big_flag(self):
+        big_minor = [{"type": "headline", "source_id": "probes", "severity": "minor", "big": True, "score": 90 - i} for i in range(60)]
+        extreme = {"type": "weather", "source_id": "nws-alerts", "severity": "extreme", "score": 1}
+        ranked = sorted(big_minor + [extreme], key=build_data.rank_key)
+        self.assertIs(ranked[0], extreme)  # first row, so the 60-row cutoff cannot drop it
 
     def test_summaries_pass_guard(self):
         for e in self.events:

@@ -915,7 +915,7 @@ def rank_key(e):
     source = e.get("source_id")
     routine = source in ("awc-sigmet", "openfda-food", "nws-alerts") and e["severity"] != "extreme"  # an extreme event is never demoted
     # Outlet headlines (GDELT) sort after every other event of the same tier, so they stay out of the top of the list.
-    return (routine, 0 if e.get("big") else 1, SEV_ORDER.get(e["severity"], 4), e["type"] == "headline", -e["score"])
+    return (0 if e["severity"] == "extreme" else 1, routine, 0 if e.get("big") else 1, SEV_ORDER.get(e["severity"], 4), e["type"] == "headline", -e["score"])
 
 
 def track_seen(events, out_dir, now):
