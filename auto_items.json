@@ -1,51 +1,5 @@
 [
   {
-    "id": "auto-c26c0ddcf76d",
-    "title": "Senate Democrats seek pause in air traffic control router replacements, AP reports",
-    "place": "United States",
-    "time": "2026-11-17T17:05:20Z",
-    "expires": "2026-11-19T17:05:20Z",
-    "severity": "moderate",
-    "summary": "According to AP, Senate Democrats asked Transportation Secretary Sean Duffy to pause air traffic control router replacements until the cause of the previous week's nationwide ground stop is established. A Transportation Department spokesperson told States Newsroom that the department had been transparent about the incident and would continue providing updates as they became available. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "The Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/nationwide-ground-stop-trump-air-travel-faa-a638c9651f1fabe8f95d20353779ee5b",
-        "published": "2026-11-17T17:05:20Z",
-        "scope": "A letter from Senate Democrats to Transportation Secretary Sean Duffy; AP also obtained a separate administration funding-request letter.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Reuters",
-        "intermediary": null,
-        "url": "https://www.investing.com/news/stock-market-news/us-senators-urge-faa-to-pause-new-router-deployment-pending-testing-5032735",
-        "published": "2026-11-17T17:05:20Z",
-        "scope": "Quotes the senators\u2019 letter and cites Transportation Secretary Sean Duffy\u2019s remarks.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "States Newsroom",
-        "intermediary": null,
-        "url": "https://www.newsfromthestates.com/article/us-senate-dems-call-pause-router-installation-caused-air-travel-ground-stop",
-        "published": "2026-11-17T17:05:20Z",
-        "scope": "Cites and links to the senators\u2019 published letter and reports an email from a Transportation Department spokesperson to States Newsroom.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "U.S. Department of Transportation spokesperson",
-        "text": "According to States Newsroom, the spokesperson said the department had been transparent about the incident and would continue providing updates as they became available.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-0960511a2bc0",
     "title": "Apple reports iCloud sign-in outage as users report problems with other services",
     "place": "United States",
@@ -469,6 +423,54 @@
     ],
     "carried_by": [
       "WSB-TV"
+    ]
+  },
+  {
+    "id": "auto-d668f13ad582",
+    "title": "Sanders tells AP he plans Medicare expansion push if Democrats control Senate",
+    "place": "United States",
+    "time": "2026-11-18T11:28:46Z",
+    "expires": "2026-11-20T11:28:46Z",
+    "severity": "moderate",
+    "summary": "According to AP, Sen. Bernie Sanders plans to pursue Medicare for All when Democrats control the Senate, beginning with lowering Medicare eligibility to 55 and expanding benefits. NBC separately reported remarks by Sanders and Hakeem Jeffries on lowering the eligibility age and expanding coverage. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "The Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/bernie-sanders-medicare-for-all-senate-18b2bd8c1e14c180a33efb2893b25a9c",
+        "published": "2026-11-18T11:28:46Z",
+        "scope": "Exclusive interview with Sanders.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "The Hill",
+        "intermediary": null,
+        "url": "https://thehill.com/homenews/senate/6201914-sanders-calls-medicare-all/",
+        "published": "2026-11-18T11:28:46Z",
+        "scope": "Reports Sanders' post-election call for Democrats to pass Medicare for All and quotes his proposed first steps.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "NBC News",
+        "intermediary": null,
+        "url": "https://www.nbclosangeles.com/news/politics/jeffries-endorses-lowering-medicare-age-universal-coverage/3971895/",
+        "published": "2026-11-18T11:28:46Z",
+        "scope": "Reports remarks by Hakeem Jeffries and Sanders on lowering the Medicare age and expanding benefits.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Sen. Bernie Sanders",
+        "text": "In a statement published by his Senate office, Sanders called for Medicare eligibility at 55, dental, vision and hearing benefits, and guaranteed health care for children as initial steps toward Medicare for All.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": [
+      "WSOC-TV"
     ]
   }
 ]
