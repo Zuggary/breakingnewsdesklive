@@ -1,44 +1,5 @@
 [
   {
-    "id": "auto-143c6259dbdd",
-    "title": "White House withdrew Heidi Overton\u2019s FDA nomination, AP reports",
-    "place": "United States",
-    "time": "2026-11-17T23:56:35Z",
-    "expires": "2026-11-19T23:56:35Z",
-    "severity": "moderate",
-    "summary": "The White House told AP it had withdrawn Heidi Overton\u2019s nomination to lead the Food and Drug Administration. A senior administration official told Axios that Overton lacked sufficient support on Capitol Hill for confirmation and that the administration wanted a new direction at the FDA. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Axios",
-        "intermediary": null,
-        "url": "https://www.axios.com/2026/11/17/heidi-overton-fda-nomination-dropped",
-        "published": "2026-11-17T23:56:35Z",
-        "scope": "A senior administration official.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/15d9c3978ed4f77657900cc2c327d375",
-        "published": "2026-11-17T23:56:35Z",
-        "scope": "The White House said it had pulled the nomination.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Senior administration official, speaking to Axios",
-        "text": "The official said Overton lacked sufficient support on Capitol Hill for confirmation and that the administration needed a new direction at the FDA.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": [
-      "Bloomberg Law"
-    ]
-  },
-  {
     "id": "auto-44987d708f85",
     "title": "AP calls Alaska Senate race for Mary Peltola; CBS News independently projects her victory",
     "place": "United States",
@@ -471,6 +432,43 @@
       {
         "who": "City of Hollywood",
         "text": "Said emergency crews were responding with high-water vehicles and advised residents to avoid flooded roads.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
+  },
+  {
+    "id": "auto-aa3561b5870d",
+    "title": "Cornyn tells AP he will withhold support for Gaiser's nomination to a Texas federal judgeship",
+    "place": "United States",
+    "time": "2026-11-18T17:33:23Z",
+    "expires": "2026-11-20T17:33:23Z",
+    "severity": "moderate",
+    "summary": "Sen. John Cornyn told The Associated Press he would withhold his blue slip for Elliot Gaiser's nomination to a federal judgeship in Texas. Reuters separately reported that a Senate aide said Cornyn had withheld support for Gaiser to appear before the Senate Judiciary Committee. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/donald-trump-judge-john-cornyn-29c80cad1197571cc3f5bb128023bf35",
+        "published": "2026-11-18T17:33:23Z",
+        "scope": "Interview with Sen. John Cornyn",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://sa.marketscreener.com/news/republican-senator-cornyn-blocks-trump-judicial-nominee-in-texas-ce785edddd8ef724",
+        "published": "2026-11-18T17:33:23Z",
+        "scope": "A Senate aide said Cornyn withheld support for Gaiser to appear before the Senate Judiciary Committee.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Sen. John Cornyn",
+        "text": "Cornyn told AP that Gaiser was not from Texas, had not undergone the customary vetting process and that better-qualified candidates were available.",
         "verification": "attributed"
       }
     ],
