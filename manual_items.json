@@ -94,5 +94,54 @@
    "Arab News"
   ],
   "note": "CNN's article was not readable here (video page); CBS article read first-hand. Forbes returned 403."
+ },
+ {
+  "id": "trump-putin-xi-apec-20261118",
+  "title": "CBS News, NBC News and Al Jazeera report Trump, Putin and Xi are meeting at APEC in Shenzhen; the White House confirmed the plan in advance",
+  "place": "Shenzhen, China",
+  "lat": 22.543,
+  "lon": 114.058,
+  "time": "2026-11-19T03:01:00Z",
+  "expires": "2026-11-21T03:01:00Z",
+  "severity": "moderate",
+  "region": "Asia",
+  "summary": "CBS News, NBC News and Al Jazeera report that US President Trump, Russian President Putin and Chinese President Xi are meeting on the sidelines of the APEC summit in Shenzhen, China. Al Jazeera reports Xi greeted Putin and Trump ahead of the summit. The White House said earlier, as reported by the Associated Press, that the three-way meeting was planned. The desk has not confirmed it.",
+  "sources": [
+   {
+    "source": "CBS News",
+    "intermediary": null,
+    "url": "https://www.cbsnews.com/video/latest-on-trumps-summit-with-xi-putin/",
+    "published": "2026-11-19T00:54:05Z",
+    "scope": "CBS News coverage of the summit",
+    "verification": "attributed",
+    "kind": "outlet"
+   },
+   {
+    "source": "NBC News",
+    "intermediary": null,
+    "url": "https://www.nbcnews.com/video/what-to-expect-from-trump-s-meeting-with-putin-and-xi-jinping-273779781736",
+    "published": "2026-11-19T01:39:13Z",
+    "scope": "NBC News coverage of the planned meeting",
+    "verification": "attributed",
+    "kind": "outlet"
+   },
+   {
+    "source": "Al Jazeera",
+    "intermediary": null,
+    "url": "https://www.aljazeera.com/video/newsfeed/2026/11/19/chinas-xi-greets-putin-and-trump-at-apec-before-historic-summit",
+    "published": "2026-11-19T03:01:27Z",
+    "scope": "Al Jazeera coverage at APEC",
+    "verification": "attributed",
+    "kind": "outlet"
+   }
+  ],
+  "responses": [
+   {
+    "who": "White House",
+    "text": "confirmed in advance that the three-way meeting was planned, as reported by the Associated Press",
+    "verification": "attributed"
+   }
+  ],
+  "carried_by": []
  }
 ]
