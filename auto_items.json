@@ -1,47 +1,5 @@
 [
   {
-    "id": "auto-e9dda99ac944",
-    "title": "Forbes reports Xint found five NGINX flaws; NGINX announces security updates",
-    "place": "United States",
-    "time": "2026-11-18T15:00:00Z",
-    "expires": "2026-11-20T15:00:00Z",
-    "severity": "moderate",
-    "summary": "Forbes reported that Xint found five NGINX vulnerabilities, including one that could permit remote code execution without authentication, and that F5 confirmed the findings. The NGINX project announced versions 1.30.7 and 1.31.9 with vulnerability fixes in its [release notice](https://nginx.org/2026.html). The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Forbes",
-        "intermediary": null,
-        "url": "https://tollbit.forbes.com/sites/thomasbrewster/2026/11/18/ai-finds-major-web-security-flaws/",
-        "published": "2026-11-18T15:00:00Z",
-        "scope": "Interview with Xint CEO Brian Pak and confirmation from NGINX maintainer F5.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Infosecurity Magazine",
-        "intermediary": null,
-        "url": "https://www.infosecurity-magazine.com/news/five-critical-vulnerabilities/",
-        "published": "2026-11-18T15:00:00Z",
-        "scope": "Reports the disclosures by Xint and other research teams, including Wiz, and cites their published findings and vulnerability databases.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "F5",
-        "text": "Forbes reported that F5 confirmed the five flaws and said it was patching them.",
-        "verification": "attributed"
-      },
-      {
-        "who": "NGINX project",
-        "text": "Announced versions 1.30.7 and 1.31.9 with fixes for multiple vulnerabilities.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-c29c28d77d8d",
     "title": "Broward declared a local emergency after flooding, Axios and WLRN report",
     "place": "United States",
@@ -402,5 +360,42 @@
     "carried_by": [
       "Reuters"
     ]
+  },
+  {
+    "id": "auto-be4ebb099579",
+    "title": "AP reports mixed Asian markets and higher U.S. futures ahead of Anthropic debut",
+    "place": "United States",
+    "time": "2026-11-19T05:00:38Z",
+    "expires": "2026-11-21T05:00:38Z",
+    "severity": "moderate",
+    "summary": "The Associated Press reported that Asian stock markets were mixed and U.S. stock futures rose as investors awaited Anthropic\u2019s market debut. Reuters reported that Anthropic said its IPO was priced at $83 per share, above its previously targeted range. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/stocks-markets-ai-us-anthropic-206c84045137824feabe052a29ff6140",
+        "published": "2026-11-19T05:00:38Z",
+        "scope": "AP reported market movements and cited individual index levels and company share prices.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://live.euronext.com/en/financial-news/stocks-rise-after-anthropic-ipo-pricing-sets-stage-blockbuster-debut",
+        "published": "2026-11-19T05:00:38Z",
+        "scope": "Reuters reports market movements and quotes Capital.com analyst Kyle Rodda; it attributes the IPO price to Anthropic.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Anthropic",
+        "text": "According to Reuters, Anthropic said its IPO was priced at $83 per share, above its previously targeted range.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
   }
 ]
