@@ -48,6 +48,8 @@ footer .tag{background:var(--amber);color:#1a1200;font-weight:800;padding:0 18px
 <footer><div class="tag">CHECK OFFICIAL SOURCES</div><div id="crawl"></div></footer>
 </div>
 <script src="lib.js"></script>
+<script src="sun.js"></script>
+<script src="sun-overlay.js"></script>
 <script>
 (function(){'use strict';
 var B=BND,$=function(i){return document.getElementById(i)},cv=$('map'),ctx=cv.getContext('2d'),S={ev:[],world:[],i:0,gen:''};
@@ -74,10 +76,28 @@ function worldLayer(W,H){var k=[W,H,V.lon.toFixed(3),V.lat.toFixed(3),V.z.toFixe
  c.fillStyle='#070b10';c.fillRect(0,0,W,H);c.fillStyle='#142033';c.strokeStyle='#243650';c.lineWidth=d;
  S.world.forEach(function(poly){var ring=poly[0],on=false,lx=null;c.beginPath();for(var i=0;i<ring.length;i++){var p=proj(ring[i][0],ring[i][1],W,H);if(lx!==null&&Math.abs(p.x-lx)>180*p.k)on=false;if(!on){c.moveTo(p.x,p.y);on=true}else c.lineTo(p.x,p.y);lx=p.x}c.fill();c.stroke()});
  return WL}
-function draw(t){
+var NL=document.createElement('canvas'),NK='',NM,NG;
+function nightLayer(W,H,d,now){
+ var minute=Math.floor(now/60000),key=[WK,d,minute].join();
+ if(key===NK)return NL;
+ if(minute!==NM){NG=SunOverlay.nightGeometry(now);NM=minute}
+ NK=key;NL.width=W;NL.height=H;
+ var c=NL.getContext('2d');
+ function trace(points){
+  c.beginPath();
+  points.forEach(function(point,i){var p=proj(point[0],point[1],W,H);if(i)c.lineTo(p.x,p.y);else c.moveTo(p.x,p.y)});
+ }
+ c.fillStyle='rgba(0,0,0,0.38)';
+ NG.polygons.forEach(function(points){trace(points);c.closePath();c.fill()});
+ c.strokeStyle='rgba(147,161,181,0.5)';c.lineWidth=d;
+ NG.lines.forEach(function(points){trace(points);c.stroke()});
+ return NL;
+}
+function draw(t,now){
  if(motion.matches)V={lon:VT.lon,lat:VT.lat,z:VT.z};else ease();
  var r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1,W=Math.round(r.width*d),H=Math.round(r.height*d);if(!W||!H)return;if(cv.width!==W||cv.height!==H){cv.width=W;cv.height=H}
  ctx.drawImage(worldLayer(W,H),0,0);
+ ctx.drawImage(nightLayer(W,H,d,now??Date.now()),0,0);
  var ph=(t||0)/1000;S.ev.slice(0,60).forEach(function(e,idx){if(e.lat==null)return;var p=proj(e.lon,e.lat,W,H),col=B.SEV[e.severity]||'#93a1b5',base=(3+e.score/16)*d,foc=idx===S.i&&idx<8;
   if(!motion.matches){var pulse=(ph*0.6+idx*0.17)%1;ctx.beginPath();ctx.arc(p.x,p.y,base+pulse*base*4,0,7);ctx.strokeStyle=col;ctx.globalAlpha=(1-pulse)*(foc?.9:.35);ctx.lineWidth=(foc?3:1.5)*d;ctx.stroke();ctx.globalAlpha=1;}
   ctx.beginPath();ctx.arc(p.x,p.y,foc?base*1.5:base,0,7);ctx.fillStyle=col;ctx.fill();if(foc){ctx.strokeStyle='#fff';ctx.lineWidth=2*d;ctx.stroke()}})}
@@ -104,7 +124,9 @@ window.BNDTV={
  return_to_wide:function(){CTL.banner='';S.i=0;VT={lon:0,lat:0,z:1};if(motion.matches)draw(0);board();lower();return true}
 };
 if(new URLSearchParams(location.search).get('tilt')==='1')document.body.classList.add('tilt');
-clocks();setInterval(clocks,1000);load();setInterval(load,300000);if(!motion.matches)frameId=requestAnimationFrame(frame);
+clocks();if(motion.matches)draw(0);
+setInterval(function(){clocks();var now=Date.now();if(motion.matches&&Math.floor(now/60000)!==NM)draw(0,now)},1000);
+load();setInterval(load,300000);if(!motion.matches)frameId=requestAnimationFrame(frame);
 setInterval(function(){if(!CTL.auto)return;var n=floorList().length;if(!n){S.i=0;aim();board();lower();return}S.i=(S.i+1)%n;aim();board();lower()},DWELL);
 window.addEventListener('resize',function(){if(motion.matches)draw(0)});
 motion.addEventListener('change',function(){if(motion.matches){cancelAnimationFrame(frameId);draw(0)}else frameId=requestAnimationFrame(frame)});

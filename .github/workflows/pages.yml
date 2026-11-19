@@ -78,7 +78,7 @@ jobs:
       - name: Prepare _site
         run: |
           rm -rf _site && mkdir -p _site/data
-          for f in ads.txt index.html tv.html event.html data.html corrections.html about.html privacy.html count.js app.js lib.js sw.js style.css tokens.css favicon.svg CNAME robots.txt sitemap.xml; do cp "$f" _site/; done
+          for f in ads.txt index.html tv.html sun.js sun-overlay.js event.html data.html corrections.html about.html privacy.html count.js app.js lib.js sw.js style.css tokens.css favicon.svg CNAME robots.txt sitemap.xml; do cp "$f" _site/; done
           cp data/events.json data/sources.json data/world.json data/lead-story.json _site/data/
           mkdir -p _site/assets && cp -r assets/illustrations _site/assets/
           cp -r fonts _site/
