@@ -1,53 +1,5 @@
 [
   {
-    "id": "auto-d668f13ad582",
-    "title": "Sanders tells AP he plans Medicare expansion push if Democrats control Senate",
-    "place": "United States",
-    "time": "2026-11-18T11:28:46Z",
-    "expires": "2026-11-20T11:28:46Z",
-    "severity": "moderate",
-    "summary": "According to AP, Sen. Bernie Sanders plans to pursue Medicare for All when Democrats control the Senate, beginning with lowering Medicare eligibility to 55 and expanding benefits. NBC separately reported remarks by Sanders and Hakeem Jeffries on lowering the eligibility age and expanding coverage. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "The Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/bernie-sanders-medicare-for-all-senate-18b2bd8c1e14c180a33efb2893b25a9c",
-        "published": "2026-11-18T11:28:46Z",
-        "scope": "Exclusive interview with Sanders.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "The Hill",
-        "intermediary": null,
-        "url": "https://thehill.com/homenews/senate/6201914-sanders-calls-medicare-all/",
-        "published": "2026-11-18T11:28:46Z",
-        "scope": "Reports Sanders' post-election call for Democrats to pass Medicare for All and quotes his proposed first steps.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "NBC News",
-        "intermediary": null,
-        "url": "https://www.nbclosangeles.com/news/politics/jeffries-endorses-lowering-medicare-age-universal-coverage/3971895/",
-        "published": "2026-11-18T11:28:46Z",
-        "scope": "Reports remarks by Hakeem Jeffries and Sanders on lowering the Medicare age and expanding benefits.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Sen. Bernie Sanders",
-        "text": "In a statement published by his Senate office, Sanders called for Medicare eligibility at 55, dental, vision and hearing benefits, and guaranteed health care for children as initial steps toward Medicare for All.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": [
-      "WSOC-TV"
-    ]
-  },
-  {
     "id": "auto-fd1163667cc9",
     "title": "TJX revenue exceeds estimates as company raises annual comparable-sales forecast, Reuters reports",
     "place": "United States",
@@ -412,6 +364,43 @@
       {
         "who": "John Thune, Senate majority leader",
         "text": "CBS News reported that Thune said Republicans were exploring Democratic support for defense funding while retaining reconciliation as an option.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
+  },
+  {
+    "id": "auto-247f0d22fae0",
+    "title": "Reuters reports Anthropic IPO raised $81.31 billion",
+    "place": "United States",
+    "time": "2026-11-18T23:19:00Z",
+    "expires": "2026-11-20T23:19:00Z",
+    "severity": "moderate",
+    "summary": "Reuters reported, citing a person familiar with the matter, that Anthropic\u2019s IPO raised $81.31 billion after the offering was expanded. AP reported that Anthropic announced an offering of 980 million shares, including approximately 956 million sold by the company and the remainder by selling stockholders. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://new.streetinsider.com/Reuters/Exclusive-Anthropic%2Bclinches%2Bbiggest-ever%2BIPO%2Bwith%2B%2481%2Bbillion%2Boffering/27371465.html",
+        "published": "2026-11-18T23:19:00Z",
+        "scope": "One person familiar with the matter.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/anthropic-ipo-pricing-70b660ddf900d90bbf484ecdf1fb441c",
+        "published": "2026-11-18T23:19:00Z",
+        "scope": "Cites Anthropic's announcement of the offering and share allocation.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Anthropic",
+        "text": "According to AP, Anthropic said the offering included 980 million shares, with approximately 956 million sold by the company and the remainder by selling stockholders.",
         "verification": "attributed"
       }
     ],
