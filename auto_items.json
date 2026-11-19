@@ -1,42 +1,5 @@
 [
   {
-    "id": "auto-fe3fe902c89b",
-    "title": "CBS News reports L3Harris took hours to locate outage behind nationwide ground stop",
-    "place": "United States",
-    "time": "2026-11-18T18:36:00Z",
-    "expires": "2026-11-20T18:36:00Z",
-    "severity": "moderate",
-    "summary": "CBS News reported, citing a person familiar with the investigation, that L3Harris took several hours to locate the outage's source, delaying the lifting of Friday's nationwide ground stop. AP reported that Transportation Secretary Sean Duffy said the contractor did not identify and isolate the router issue quickly enough. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "CBS News",
-        "intermediary": null,
-        "url": "https://www.cbsnews.com/news/ground-stop-l3harris-system-outage/",
-        "published": "2026-11-18T18:36:00Z",
-        "scope": "A person familiar with the investigation and another source, as well as sources describing the contractor\u2019s response.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/ground-stop-faa-l3harris-94757b1f6aa71c3435c8286e27926786",
-        "published": "2026-11-18T18:36:00Z",
-        "scope": "Transportation Secretary Sean Duffy said in a Wednesday interview that the contractor failed to identify and isolate the router issue quickly enough.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "L3Harris",
-        "text": "L3Harris told CBS News its network operations center monitors latency and outages around the clock and referred the outlet to an earlier statement saying it supported the FAA investigation.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-38986959faac",
     "title": "Bloomberg and Reuters report Anthropic IPO pricing of $83 a share",
     "place": "United States",
@@ -427,6 +390,59 @@
     ],
     "carried_by": [
       "The Washington Post"
+    ]
+  },
+  {
+    "id": "auto-a9a6349cba1a",
+    "title": "AP and CNN report flooding and water rescues in Florida\u2019s Brevard County",
+    "place": "United States",
+    "time": "2026-11-19T20:10:30Z",
+    "expires": "2026-11-21T20:10:30Z",
+    "severity": "moderate",
+    "summary": "Flooding prompted evacuations and water rescues in Florida\u2019s Brevard County on Thursday, according to AP and CNN. County spokesperson Don Walker told CNN that more than 50 water rescues had been conducted and rescues were continuing Thursday morning. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/extreme-weather-flooding-florida-california-storms-11c05b72dad87373b5632c0f4bb322f5",
+        "published": "2026-11-19T20:10:30Z",
+        "scope": "AP cites residents, the National Weather Service, local authorities and the Florida Division of Emergency Management.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "CNN",
+        "intermediary": null,
+        "url": "https://kesq.com/cnn-weather-environment/2026/11/19/severe-flooding-hits-parts-of-coastal-florida-from-over-a-foot-of-rain-and-a-lot-more-is-incoming/",
+        "published": "2026-11-19T20:10:30Z",
+        "scope": "Brevard County spokesperson Don Walker told CNN that more than 50 water rescues had been conducted; the report also cites the Weather Prediction Center.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "WFTV",
+        "intermediary": null,
+        "url": "https://www.wftv.com/news/local/flash-flood-warning-issued-parts-brevard-county/NBMPY4TREZE2HAUIRZSS3S7YBY/?outputType=amp",
+        "published": "2026-11-19T20:10:30Z",
+        "scope": "WFTV reports flash flood warnings and Doppler radar rainfall estimates for Brevard County.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "City of Palm Bay",
+        "text": "AP reported that the city ordered mandatory evacuations for some Palm Bay Estates residents, helped residents by boat and opened shelters.",
+        "verification": "attributed"
+      },
+      {
+        "who": "Brevard County spokesperson Don Walker",
+        "text": "Walker told CNN that more than 50 water rescues had been conducted and that rescues were continuing Thursday morning.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": [
+      "Audacy WTIC"
     ]
   }
 ]
