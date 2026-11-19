@@ -4,63 +4,331 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Breaking News Desk: facts as they come in</title>
-<meta name="description" content="Facts as they come in, from public sources: hazards, air travel, outages and more on one live map. Every item links to its source. No opinion, no agenda.">
+<meta name="description" content="Facts as they come in, from public sources: hazards, air travel, outages and more on one live wire desk. Every item links to its source. No opinion, no agenda.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Breaking News Desk">
 <link rel="canonical" href="https://breakingnewsdesklive.com/">
 <meta property="og:url" content="https://breakingnewsdesklive.com/">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/barlow-condensed-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/public-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="style.css">
 <script src="lib.js" defer></script>
+<script src="sun.js" defer></script>
+<script src="sun-overlay.js" defer></script>
 <script src="app.js" defer></script>
 <meta property="og:title" content="Breaking News Desk: facts as they come in">
 <meta property="og:description" content="Hazards, air travel and service outages from official sources, ranked by size and severity.">
-<meta name="theme-color" content="#0b0f14">
+<meta name="theme-color" content="#060a10">
 </head>
-<body>
-<a class="skip" href="#list-wrap">Skip to the list</a>
-<header class="top">
- <a class="brand" href="./"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="8" fill="#ffb020"/><circle cx="32" cy="32" r="18" fill="none" stroke="#ffb020" stroke-width="4" opacity=".6"/><circle cx="32" cy="32" r="28" fill="none" stroke="#ffb020" stroke-width="3" opacity=".3"/></svg><span>Breaking News Desk<small>Facts as they come in, from public sources</small></span></a>
- <nav><a href="/about">About</a><a href="/privacy">Privacy</a></nav>
-</header>
-<div class="status" id="status" aria-live="polite"><span><i class="dot stale" id="dot"></i><b id="count">Loading</b></span><span id="updated"></span></div>
-<section class="topline" id="topline" hidden aria-label="Top headline"></section>
-<section class="strip" aria-labelledby="h1">
- <h1 id="h1">Facts as they come in</h1>
- <span class="dateline" id="dateline"></span>
- <span class="verdict" id="verdict">&ndash; events</span>
- <span class="tiles" id="tiles" aria-label="Events by severity"></span>
- <span class="srcline" id="srcline">updated now &middot; <a href="/data">every source and age</a></span>
- <span class="notice"><b>AI-ASSISTED WIRE DESK</b> Independent and automated. No agency is affiliated. Check official sources before you act. Not an emergency service.</span>
-</section>
-<main>
- <section id="list-wrap" tabindex="-1" aria-labelledby="now">
-  <section class="lead-story" id="lead-story" hidden aria-labelledby="lead-heading">
-   <h2 id="lead-heading">Top story</h2>
-   <h3 id="lead-headline"></h3>
-   <p class="lead-summary" id="lead-summary"></p>
-   <p class="lead-meta" id="lead-meta"></p>
+<body class="home-desk">
+<a class="skip" href="#list-wrap">Skip to wire desk</a>
+<div id="desk-grain" class="desk-grain" aria-hidden="true"></div>
+
+<div class="top-deck">
+  <div id="aibug" role="note">
+    <span class="ai-left"><i class="ai-pip" aria-hidden="true"></i>AI-ASSISTED WIRE DESK · NO AGENCY AFFILIATION</span>
+    <span class="ai-right"><i class="dot" id="dot" aria-hidden="true"></i><span class="srcline" id="srcline">Loading public feeds · <a href="/data">Sources &amp; licences</a></span></span>
+  </div>
+
+  <div class="status" id="status" aria-live="polite">
+    <b id="count">Loading</b>
+  </div>
+
+  <header class="top wire-masthead" id="masthead">
+    <div class="brand-block">
+      <a class="brand" href="./">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>BREAKING NEWS DESK</span>
+      </a>
+      <div class="edition-meta">
+        <span class="dateline" id="dateline">LIVE GLOBAL WIRE · PUBLIC SOURCES</span>
+        <span class="verdict" id="verdict">Attributed wire</span>
+        <span class="mobile-clock" id="mobile-clock" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <nav aria-label="Site navigation">
+      <a href="/tv">TV Desk</a>
+      <a href="/data">Sources</a>
+      <a href="/about">About</a>
+      <a href="/corrections">Edits</a>
+      <a href="/privacy">Privacy</a>
+    </nav>
+
+    <div class="mast-telemetry">
+      <div class="tiles" id="tiles" aria-label="Events by severity"></div>
+      <div class="clocks" id="clocks" aria-label="World desk clocks"></div>
+    </div>
+  </header>
+
+  <section id="official-strip" aria-label="Official sources notice and wire ticker">
+    <span class="official-tag">CHECK OFFICIAL SOURCES</span>
+    <div class="ticker-viewport" id="ticker-viewport">
+      <div id="ticker-track" class="ticker-track">
+        <span class="tk-item">Not an emergency service. Independent and automated; no agency is affiliated.</span>
+      </div>
+    </div>
+    <div class="ticker-controls">
+      <span id="ticker-step" class="ticker-step" aria-live="off">1/1</span>
+      <button type="button" class="ticker-btn" id="ticker-toggle" aria-pressed="false" aria-label="Pause wire ticker">Pause</button>
+      <span id="next-update" class="next-update">NEXT UPDATE 05:00</span>
+    </div>
   </section>
-  <div class="headrow"><h2 id="now">Top events</h2><a class="jump" href="#map-wrap">Map &darr;</a></div>
-  <div class="chips-row" role="group" aria-label="Category" id="cats"></div>
-  <div class="filters" role="group" aria-label="Filters" id="filters"></div>
-  <ol class="list" id="list" role="list"></ol>
- </section>
- <section id="map-wrap" tabindex="-1" aria-label="World map">
-  <div class="mapbox" id="mapbox"><canvas id="map" width="1200" height="600" role="img" aria-label="Map of current events. The list has the same events."></canvas></div>
-  <div class="maptools"><button class="chip" id="proj" aria-pressed="false">Globe view</button><button class="chip" id="reset">Reset map</button></div>
-  <div class="legend" id="legend"></div>
-  <section class="stats" aria-labelledby="last-hour-heading"><h2 id="last-hour-heading">In the last hour</h2><p class="sub" id="last-hour"></p></section>
-  <section class="stats" aria-label="Counts"><h2>In the list now</h2><div id="stats"></div>
-  <div id="hist-wrap" hidden><p class="sub" id="hist-title">Events in the feeds over time</p><canvas id="hist" width="600" height="140" role="img" aria-label="Chart of event counts over time"></canvas><div class="maptools"><button class="chip" data-h="24" aria-pressed="true">24 hours</button><button class="chip" data-h="168" aria-pressed="false">7 days</button></div></div></section>
- </section>
+</div>
+
+<main id="front-page">
+  <section class="topline" id="topline" hidden aria-label="Top headline"></section>
+
+  <section id="ops-monitor" class="ops-monitor" aria-label="Operational monitor">
+    <div class="ops-bar chyron-bar">
+      <span class="chyron-tag">OPERATIONAL MONITOR</span>
+      <span class="ops-bar-note">Click to filter wire rail by primary telemetry</span>
+      <a class="ops-prov-inline" id="ops-sources-inline" href="/data">Feeds &amp; licences &rarr;</a>
+    </div>
+    <div class="ops-grid">
+      <button type="button" class="ops-cell is-active" id="ops-all" data-filter="all" aria-pressed="true">
+        <span class="ops-lbl">ALL MONITORED</span>
+        <strong class="ops-val" id="ops-all-val">--</strong>
+        <span class="ops-sub" id="ops-all-sub">Ranked public bulletins</span>
+      </button>
+      <button type="button" class="ops-cell" id="ops-hazards" data-filter="g:hazards" aria-pressed="false">
+        <span class="ops-lbl">SEVERE HAZARDS</span>
+        <strong class="ops-val" id="ops-haz-val">--</strong>
+        <span class="ops-sub" id="ops-haz-sub">Quakes, storms, fires, NWS</span>
+      </button>
+      <button type="button" class="ops-cell" id="ops-outages" data-filter="g:outages" aria-pressed="false">
+        <span class="ops-lbl">PROBES &amp; OUTAGES</span>
+        <strong class="ops-val" id="ops-out-val">--</strong>
+        <span class="ops-sub" id="ops-out-sub">30 signed-out probes + status</span>
+      </button>
+      <button type="button" class="ops-cell" id="ops-airspace" data-filter="g:transport" aria-pressed="false">
+        <span class="ops-lbl">FAA &amp; AIRSPACE</span>
+        <strong class="ops-val" id="ops-air-val">--</strong>
+        <span class="ops-sub" id="ops-air-sub">Airports &amp; aviation SIGMETs</span>
+      </button>
+      <a class="ops-cell ops-link" id="ops-sources" href="/data">
+        <span class="ops-lbl">FEED PROVENANCE</span>
+        <strong class="ops-val" id="ops-src-val">--</strong>
+        <span class="ops-sub" id="ops-src-sub">Feed terms &amp; licences &rarr;</span>
+      </a>
+    </div>
+  </section>
+
+  <div id="editorial-lead" class="editorial-lead">
+    <article class="lead-story lead-plate" id="lead-story" aria-labelledby="lead-headline">
+      <div class="lead-chyron">
+        <span class="chyron-tag" id="lead-kicker">LEAD DISPATCH</span>
+        <span class="sev-badge" id="lead-sev">WIRE</span>
+        <span class="verif-badge" id="lead-label">LOADING</span>
+        <span class="sec-badge" id="lead-type">TOP STORY</span>
+        <span class="stream-badge" id="lead-stream-tag" hidden>ON STREAM NOW</span>
+        <span class="chyron-src" id="lead-src-age">Public sources</span>
+      </div>
+
+      <div class="lead-body">
+        <p class="lead-dateline" id="lead-facts">ATTRIBUTED PUBLIC WIRE · VERIFIED DISPATCH</p>
+        <h1 class="lead-headline" id="lead-headline"><a id="lead-link" href="./">Loading latest attributed lead dispatch</a></h1>
+        <p class="lead-summary" id="lead-summary">Fetching verified public-source bulletins from the wire feed.</p>
+        <div class="lead-reported" id="lead-reported" hidden></div>
+        <div class="what-changed" id="lead-changed"><span class="wc-label">WHAT CHANGED</span><span id="lead-changed-text">Checking source revision history…</span></div>
+        <div class="lead-meta" id="lead-meta"></div>
+      </div>
+
+      <aside class="recap-box" id="recap-strip" aria-labelledby="recap-heading">
+        <div class="recap-head">
+          <h2 class="chyron-tag" id="recap-heading">WHAT WE KNOW SO FAR</h2>
+          <span id="recap-meta">Newcomer 2-point briefing · Attributed facts</span>
+        </div>
+        <ul class="recap-list" id="recap-list">
+          <li>Loading verified top-story scope and secondary monitored events.</li>
+        </ul>
+      </aside>
+    </article>
+  </div>
+
+  <section id="map-wrap" class="map-section" tabindex="-1" aria-labelledby="map-heading">
+    <div class="map-panel">
+      <div class="chyron-bar">
+        <h2 class="chyron-tag" id="map-heading">WORLD MONITOR</h2>
+        <span class="chyron-sub">Solar terminator</span>
+        <span class="sun-readout" id="sun-readout">SUN --.-° --.-°</span>
+      </div>
+      <div class="mapbox" id="mapbox">
+        <canvas id="map" width="1200" height="600" role="img" aria-label="World map of current events and live day-night solar terminator. Top events are numbered to match the wire rail."></canvas>
+        <div id="map-labels" class="map-labels" aria-hidden="true"></div>
+      </div>
+      <div class="map-bar">
+        <div class="maptools">
+          <button type="button" class="chip" id="proj" aria-pressed="false">Globe view</button>
+          <button type="button" class="chip" id="reset">Reset map</button>
+        </div>
+        <div class="legend" id="legend"></div>
+      </div>
+    </div>
+
+    <div id="focus-plaque" class="wire-plate" aria-live="polite">
+      <div class="plaque-meta">
+        <span class="sev-badge">FOCUS</span>
+        <span class="plaque-hint">Select any numbered event on the map or wire rail to inspect coordinates, provenance, and changes.</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="secondary-deck" class="secondary-deck" aria-labelledby="sec-heading">
+    <div class="chyron-bar">
+      <h2 class="chyron-tag" id="sec-heading">WIRE DISPATCHES</h2>
+      <span class="chyron-sub">Corroborated &amp; official reports across desks</span>
+    </div>
+    <div class="sec-grid" id="secondary-columns">
+      <article class="sec-card sec-placeholder">
+        <div class="sec-card-top"><span class="sec-badge">WIRE</span></div>
+        <h3>Loading wire dispatches…</h3>
+        <p class="sec-card-sum">Waiting for ranked public-source bulletins.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="stream-facade" class="stream-facade" aria-labelledby="stream-heading">
+    <div class="chyron-bar">
+      <h2 class="chyron-tag" id="stream-heading"><i class="stream-pip" aria-hidden="true"></i>24/7 STREAM</h2>
+      <span class="chyron-sub">Autonomous broadcast</span>
+      <a class="stream-tv-link" href="/tv">TV Desk &rarr;</a>
+    </div>
+    <div id="stream-stage" class="stream-stage">
+      <div class="stream-poster" id="stream-poster">
+        <svg class="stream-poster-svg" viewBox="0 0 640 360" aria-hidden="true">
+          <defs>
+            <pattern id="wire-grid" width="32" height="32" patternUnits="userSpaceOnUse">
+              <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#132131" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect width="640" height="360" fill="#060a10"/>
+          <rect width="640" height="360" fill="url(#wire-grid)"/>
+          <circle cx="320" cy="176" r="114" fill="#0a1523" stroke="#22364d" stroke-width="1.5"/>
+          <ellipse cx="320" cy="176" rx="114" ry="42" fill="none" stroke="#1b2e43" stroke-width="1"/>
+          <ellipse cx="320" cy="176" rx="56" ry="114" fill="none" stroke="#1b2e43" stroke-width="1"/>
+          <line x1="206" y1="176" x2="434" y2="176" stroke="#1b2e43" stroke-width="1"/>
+          <line x1="320" y1="62" x2="320" y2="290" stroke="#1b2e43" stroke-width="1"/>
+          <path d="M 358 66 C 322 132, 318 220, 368 286" fill="none" stroke="#f2b33d" stroke-width="2" stroke-opacity="0.82"/>
+          <circle cx="386" cy="146" r="5" fill="#f2b33d"/>
+          <circle cx="386" cy="146" r="13" fill="none" stroke="#f2b33d" stroke-width="1" stroke-opacity="0.55"/>
+          <circle cx="272" cy="194" r="5" fill="#4cc3ff"/>
+          <circle cx="272" cy="194" r="13" fill="none" stroke="#4cc3ff" stroke-width="1" stroke-opacity="0.5"/>
+        </svg>
+        <div class="stream-overlay">
+          <div class="stream-now-row">
+            <span class="stream-badge" id="stream-badge">ON STREAM NOW</span>
+            <span class="stream-now-line" id="stream-now-line">Autonomous 3D wire desk · Public sources</span>
+          </div>
+          <div class="stream-actions-row">
+            <button type="button" class="stream-play-btn" id="stream-play">
+              <span class="play-glyph" aria-hidden="true">&#9654;</span>
+              <span>Play Live Stream (Muted)</span>
+            </button>
+            <p class="stream-note">No Twitch embed loads until click. Starts muted.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="stream-rundown" id="stream-rundown" aria-label="Broadcast on-air queue"></div>
+  </section>
+
+  <section id="list-wrap" class="wire-rail-section" tabindex="-1" aria-labelledby="now">
+    <div class="chyron-bar">
+      <h2 class="chyron-tag" id="now">WIRE DESK RAIL</h2>
+      <span class="rail-count" id="list-count">Top 12 ranked</span>
+      <a class="jump" id="map-jump" href="#map-wrap">World map &darr;</a>
+    </div>
+    <div class="rail-toolbar">
+      <div class="chips-row" role="group" aria-label="Section by news type" id="cats"></div>
+      <details class="filter-drawer" id="filter-drawer" open>
+        <summary class="filter-toggle">Filter severity, region &amp; age</summary>
+        <div class="filters" role="group" aria-label="Wire filters" id="filters"></div>
+      </details>
+    </div>
+    <div class="rail-cols" aria-hidden="true">
+      <span>#</span>
+      <span>SEV</span>
+      <span>STATUS</span>
+      <span>EVENT &amp; LOCATION</span>
+      <span>SOURCE · AGE</span>
+    </div>
+    <ol class="list" id="list" role="list"></ol>
+    <div class="rail-more-bar" id="rail-more-bar" hidden>
+      <button type="button" class="chip rail-more-btn" id="load-more">Show 12 more items</button>
+    </div>
+  </section>
+
+  <aside id="telemetry-rail" class="telemetry-rail" aria-label="Operational boards">
+    <section class="stats-box" id="changes-box" aria-labelledby="changes-heading">
+      <div class="chyron-bar">
+        <h2 class="chyron-tag" id="changes-heading">WHAT CHANGED</h2>
+        <span class="chyron-sub">Source revisions</span>
+      </div>
+      <ul class="ledger-list" id="changes-list">
+        <li class="sub">Checking source revision history…</li>
+      </ul>
+    </section>
+
+    <section class="stats-box" id="probe-box" aria-labelledby="probe-heading">
+      <div class="chyron-bar">
+        <h2 class="chyron-tag" id="probe-heading">DESK PROBES · 30 SERVICES</h2>
+        <span class="chyron-sub">Signed-out checks</span>
+      </div>
+      <div id="probe-board" class="board-body">
+        <p class="sub">Loading probe and provider outage status…</p>
+      </div>
+    </section>
+
+    <section class="stats-box" id="region-box" aria-labelledby="region-heading">
+      <div class="chyron-bar">
+        <h2 class="chyron-tag" id="region-heading">BY REGION</h2>
+        <span class="chyron-sub">Filter rail</span>
+      </div>
+      <div id="region-board" class="region-grid">
+        <p class="sub">Counting regional coverage…</p>
+      </div>
+    </section>
+  </aside>
+
+  <section class="stats-box" id="feed-box" aria-labelledby="feed-heading">
+    <div class="chyron-bar">
+      <h2 class="chyron-tag" id="feed-heading">FEED PROVENANCE</h2>
+      <a class="chyron-link" href="/data">All 29 sources &amp; licences &rarr;</a>
+    </div>
+    <div id="feed-board" class="feed-grid">
+      <p class="sub">Checking feed status…</p>
+    </div>
+  </section>
+
+  <section class="stats-box" id="summary-box" aria-labelledby="counts-heading">
+    <div class="chyron-bar">
+      <h2 class="chyron-tag" id="counts-heading">WIRE CADENCE</h2>
+      <span class="chyron-sub" id="last-hour">Public-source breakdown</span>
+    </div>
+    <div class="summary-body">
+      <div id="stats"></div>
+      <div class="hist-subwrap" id="hist-wrap" hidden>
+        <h3 id="hist-title" class="subhead-disp">Events in the feeds over time</h3>
+        <canvas id="hist" width="600" height="120" role="img" aria-label="Chart of event counts over time"></canvas>
+        <div class="maptools">
+          <button type="button" class="chip" data-h="24" aria-pressed="true">24 hours</button>
+          <button type="button" class="chip" data-h="168" aria-pressed="false">7 days</button>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
-<footer>
- <p>Official health notices (links only, no copied text): <a href="https://www.who.int/emergencies/disease-outbreak-news" rel="noopener">WHO Disease Outbreak News</a> · <a href="https://www.cdc.gov/outbreaks/" rel="noopener">CDC outbreaks</a>. Also: <a href="https://www.airtraveldesklive.com/" rel="noopener">US airport delays</a> · <a href="https://www.isit364yet.com/" rel="noopener">service outages</a>.</p>
- <p>Independent, automated project. Weather alerts, volcano levels and FAA status are US only; other items are global. <a href="/about#rank">How ranking works</a>. Data from USGS, NOAA, NASA, GDACS and the National Weather Service. Map outlines: Natural Earth. See <a href="/data">Data and sources</a>, <a href="/about">About</a> and <a href="/corrections">Corrections</a> for sources, licences and how to report an error.</p>
+
+<footer class="site-footer">
+  <p><b>AI-ASSISTED WIRE DESK · NO AGENCY AFFILIATION.</b> Independent, automated project. No agency is affiliated. Check official sources before you act. Not an emergency service.</p>
+  <p>Official health notices (links only, no copied text): <a href="https://www.who.int/emergencies/disease-outbreak-news" rel="noopener">WHO Disease Outbreak News</a> · <a href="https://www.cdc.gov/outbreaks/" rel="noopener">CDC outbreaks</a>. Also: <a href="https://www.airtraveldesklive.com/" rel="noopener">US airport delays</a> · <a href="https://www.isit364yet.com/" rel="noopener">service outages</a>.</p>
+  <p>Weather alerts, volcano levels and FAA status are US only; other items are global. <a href="/about#rank">How ranking works</a>. Data from USGS, NOAA, NASA, GDACS and the National Weather Service. Map outlines: Natural Earth. See <a href="/data">Data and sources</a>, <a href="/about">About</a>, <a href="/corrections">Corrections</a> and <a href="/privacy">Privacy</a> for sources, licences and how to report an error.</p>
 </footer>
+
 <script>if ("serviceWorker" in navigator) { window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); }); }</script>
 <script src="/count.js" defer></script>
 </body>

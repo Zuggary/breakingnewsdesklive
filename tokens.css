@@ -5,13 +5,17 @@
   color-scheme: dark;
 
   /* Palette */
+  --stage-bg: #060a10;
+  --mast-bg: #091019;
+  --rail-bg: #0b141f;
   --navy: #0d1722;
-  --surface: #142233;
-  --surface-alt: #1b2f46;
-  --border: #2d4560;
-  --text: #eef3f7;
-  --text-muted: #b9c8d6;
-  --link: #9fd3ff;
+  --surface: #132131;
+  --surface-alt: #1a2d42;
+  --rule: #22364d;
+  --border: #2f4863;
+  --text: #eef3f8;
+  --text-muted: #b8c7d6;
+  --link: #ffd98a;
   --red: #ef4444;
   --red-text: #fecaca;
   --red-soft: rgba(239, 68, 68, 0.2);
@@ -21,12 +25,15 @@
   --amber: #f2b33d;
   --amber-text: #ffd98a;
   --amber-soft: rgba(242, 179, 61, 0.16);
+  --mod: #4cc3ff;
+  --mod-text: #9fd3ff;
+  --mod-soft: rgba(76, 195, 255, 0.16);
 
-  /* Accent block: the only part that changes per desk */
-  --accent: #4cc3ff;
-  --accent-hover: #7dd3ff;
-  --accent-soft: rgba(76, 195, 255, 0.16);
-  --on-accent: #0d1722;
+  /* Accent block: single Broadcast Signal Amber UI accent */
+  --accent: #f2b33d;
+  --accent-hover: #ffd98a;
+  --accent-soft: rgba(242, 179, 61, 0.14);
+  --on-accent: #070c12;
 
   /* Type scale */
   --fs-xs: 0.8125rem;
@@ -45,11 +52,11 @@
   --space-6: 32px;
 
   /* Shape and layout */
-  --radius: 10px;
+  --radius: 0px;
   --gutter: 16px;
 
   /* Focus ring */
-  --focus-ring: 3px solid var(--accent);
+  --focus-ring: 2px solid var(--accent);
 }
 
 @media (min-width: 700px) {

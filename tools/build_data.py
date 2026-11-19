@@ -702,13 +702,13 @@ def parse_gdelt(d, src):
         picked = picked[:3]
         first = min(by_domain.values(), key=lambda x: x["seendate"])
         when = datetime.strptime(first["seendate"], "%Y%m%dT%H%M%SZ").replace(tzinfo=timezone.utc)
-        title = " ".join(html.unescape(picked[0]["title"]).split()).strip("\"\u201c\u201d")[:140]
+        title = " ".join(html.unescape(html.unescape(picked[0]["title"])).split()).strip("\"\u201c\u201d")[:140]
         names = ", ".join(a["domain"] for a in picked)
         e = mk("gdelt-" + re.sub(r"\W+", "", sorted(c["tk"])[0] + sorted(c["tk"])[-1] + first["seendate"])[:40], "headline",
                "Headline: \u201c%s\u201d" % title, "Reported by %d outlets" % len(by_domain), None, None, when, _headline_severity(len(by_domain), title), len(by_domain), src,
                picked[0]["url"], region="World",
                detail={"outlets": len(by_domain), "outlet_names": names, "headline": title, "first_seen": iso_utc(when)[:16].replace("T", " ") + " UTC"})
-        e["links"] = [{"label": a["domain"], "title": " ".join(html.unescape(a["title"]).split())[:140], "url": a["url"]} for a in picked]
+        e["links"] = [{"label": a["domain"], "title": " ".join(html.unescape(html.unescape(a["title"])).split())[:140], "url": a["url"]} for a in picked]
         out.append(e)
     out.sort(key=lambda e: -e["size"])
     return out[:12]
