@@ -1,56 +1,5 @@
 [
   {
-    "id": "auto-c29c28d77d8d",
-    "title": "Broward declared a local emergency after flooding, Axios and WLRN report",
-    "place": "United States",
-    "time": "2026-11-18T15:33:07Z",
-    "expires": "2026-11-20T15:33:07Z",
-    "severity": "moderate",
-    "summary": "Axios and WLRN reported that Broward County declared a local state of emergency following heavy rain and flooding. County administrator Monica Cepero\u2019s declaration cited flooding and forecasts of further dangerous conditions, while Hollywood officials said crews were responding with high-water vehicles and urged residents to avoid flooded roads. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Axios",
-        "intermediary": null,
-        "url": "https://www.axios.com/local/hollywood/2026/11/18/broward-state-of-emergency-hollywood-flooding-heavy-rain-severe",
-        "published": "2026-11-18T15:33:07Z",
-        "scope": "Reports the county declaration and includes photographs by an Axios journalist of flooding in Hollywood.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "NBC 6 South Florida",
-        "intermediary": null,
-        "url": "https://www.nbcmiami.com/weather/stories-weather/broward-county-declares-local-state-of-emergency-due-to-flooding/3889771/",
-        "published": "2026-11-18T15:33:07Z",
-        "scope": "Reports the county declaration and quotes a news release advising drivers to avoid flooded roads.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "WLRN Public Media",
-        "intermediary": null,
-        "url": "https://www.wlrn.org/weather/2026-11-18/broward-rain-bomb-hollywood-flooding-closures",
-        "published": "2026-11-18T15:33:07Z",
-        "scope": "Reports the county and city declarations and cites National Weather Service rainfall estimates, a city advisory and a Florida Public Radio Emergency Network meteorologist.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Monica Cepero, Broward County administrator",
-        "text": "Declared a local state of emergency throughout Broward County, citing flooding and forecasts of further dangerous conditions.",
-        "verification": "attributed"
-      },
-      {
-        "who": "City of Hollywood",
-        "text": "Said emergency crews were responding with high-water vehicles and advised residents to avoid flooded roads.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-bc01c097ad4f",
     "title": "Reuters and Axios report Trump and Putin are expected to meet in China",
     "place": "United States",
@@ -397,5 +346,49 @@
       }
     ],
     "carried_by": []
+  },
+  {
+    "id": "auto-359f163d70f4",
+    "title": "AP and Reuters sources report damage to Riyadh tower housing Saudi wealth fund",
+    "place": "United States",
+    "time": "2026-11-19T06:46:00Z",
+    "expires": "2026-11-21T06:46:00Z",
+    "severity": "moderate",
+    "summary": "A Riyadh tower housing Saudi Arabia\u2019s Public Investment Fund sustained damage, according to a witness cited by AP and three people familiar with the matter cited by Reuters. The Saudi-led coalition said falling debris from a missile threat it attributed to the Houthis caused material damage, with the extent still being assessed. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/saudi-yemen-war-iran-november-19-2026-e72472c557057943cab32010666b29bf",
+        "published": "2026-11-19T06:46:00Z",
+        "scope": "A witness who requested anonymity because of security concerns described visible damage to the tower.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://new.streetinsider.com/Reuters/Riyadh%2Bskyscraper%2Bhousing%2BSaudi%2Bwealth%2Bfund%2Bdamaged%2Bin%2BHouthi%2Bstrike%2C%2Bsources%2Bsay/27371744.html",
+        "published": "2026-11-19T06:46:00Z",
+        "scope": "Three people familiar with the matter reported damage to the tower; a Reuters witness described closures and evacuations in the financial district.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Saudi-led coalition",
+        "text": "The coalition said it had dealt with a Houthi missile threat toward Riyadh and that its initial assessment indicated material damage from falling debris, with the extent still being assessed.",
+        "verification": "attributed"
+      },
+      {
+        "who": "Saudi Public Investment Fund",
+        "text": "Reuters reported that PIF said it would respond to the agency\u2019s request for comment.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": [
+      "The Times of Israel"
+    ]
   }
 ]
