@@ -1,63 +1,5 @@
 [
   {
-    "id": "auto-1bad7ab00c7f",
-    "title": "AP: Garcia sends preservation letters ahead of planned House investigations into Trump administration",
-    "place": "United States",
-    "time": "2026-11-18T10:01:37Z",
-    "expires": "2026-11-20T10:01:37Z",
-    "severity": "moderate",
-    "summary": "AP reported that Representative Robert Garcia sent document-preservation letters to members of President Donald Trump's family and senior officials ahead of planned House investigations into the administration. White House spokeswoman Lauren Bis told WIRED that the president was willing to work with anyone to deliver results, while criticizing the proposed Democratic investigations. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/democrats-oversight-letters-trump-6cfa31f11051c52e567523e27ee5803e",
-        "published": "2026-11-18T10:01:37Z",
-        "scope": "Letters released Wednesday and a statement from Garcia.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "The Atlantic",
-        "intermediary": null,
-        "url": "https://www.theatlantic.com/politics/2026/11/democrat-investigations-trump-allies/689484/",
-        "published": "2026-11-18T10:01:37Z",
-        "scope": "Describes and quotes multiple letters from Garcia, including their recipients and requests.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "WIRED",
-        "intermediary": null,
-        "url": "https://www.wired.com/story/house-democrats-are-officially-coming-for-trumps-orbit/",
-        "published": "2026-11-18T10:01:37Z",
-        "scope": "Describes and quotes Garcia's letters and obtained responses directly from a White House spokeswoman and a World Liberty spokesperson.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "White House spokeswoman Lauren Bis",
-        "text": "Told WIRED that the president was willing to work with anyone to deliver results, but said Democrats pursuing investigations she characterized as shams would be working against the American people.",
-        "verification": "attributed"
-      },
-      {
-        "who": "World Liberty spokesperson David Wachsman",
-        "text": "Told WIRED that congressional scrutiny of a company he described as compliant would be troubling without a basis.",
-        "verification": "attributed"
-      },
-      {
-        "who": "Trump family representative",
-        "text": "WIRED reported that the representative did not immediately respond to its request for comment.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": [
-      "WSB-TV"
-    ]
-  },
-  {
     "id": "auto-d668f13ad582",
     "title": "Sanders tells AP he plans Medicare expansion push if Democrats control Senate",
     "place": "United States",
@@ -437,5 +379,42 @@
     "carried_by": [
       "Associated Press"
     ]
+  },
+  {
+    "id": "auto-a8308d0b6e40",
+    "title": "Thune says Republican votes for $350 billion defense package remain uncertain, CBS reports",
+    "place": "United States",
+    "time": "2026-11-18T22:38:00Z",
+    "expires": "2026-11-20T22:38:00Z",
+    "severity": "moderate",
+    "summary": "Senate Majority Leader John Thune said it remained uncertain whether Republicans had enough votes to pass a $350 billion defense funding package through reconciliation, CBS News reported. Axios separately reported on the funding discussions, citing Thune's remarks and interviews with House Republicans. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "CBS News",
+        "intermediary": null,
+        "url": "https://www.cbsnews.com/news/thune-senate-gop-defense-bill-reconciliation/",
+        "published": "2026-11-18T22:38:00Z",
+        "scope": "Thune's remarks after Republican conference meetings and an interview with CBS News.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Axios",
+        "intermediary": null,
+        "url": "https://www.axios.com/newsletters/axios-hill-leaders-aa72e8a0-e38c-11f1-9da7-99143f420f77",
+        "published": "2026-11-18T22:38:00Z",
+        "scope": "Thune's remarks to reporters and interviews with House Republicans, including Budget Committee Chair Jodey Arrington.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "John Thune, Senate majority leader",
+        "text": "CBS News reported that Thune said Republicans were exploring Democratic support for defense funding while retaining reconciliation as an option.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
   }
 ]
