@@ -1,47 +1,5 @@
 [
   {
-    "id": "auto-a9d79b067717",
-    "title": "Witnesses tell Reuters Israeli tanks advanced beyond the Yellow Line in central Gaza",
-    "place": "United States",
-    "time": "2026-11-18T12:58:00Z",
-    "expires": "2026-11-20T12:58:00Z",
-    "severity": "moderate",
-    "summary": "Witnesses told Reuters that Israeli tanks advanced beyond the Yellow Line in central Gaza on Wednesday. The Israeli military said the operation targeted Hamas infrastructure, while Hamas called the raid and evacuation a ceasefire violation, Reuters reported. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "The Times of Israel",
-        "intermediary": null,
-        "url": "https://www.timesofisrael.com/liveblog_entry/idf-launches-rare-operation-beyond-yellow-line-in-central-gaza/",
-        "published": "2026-11-18T12:58:00Z",
-        "scope": "Israeli civilian-military agency COGAT's statement and Palestinian media reports",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Reuters",
-        "intermediary": null,
-        "url": "https://www.investing.com/news/world-news/israeli-military-begins-a-new-thrust-in-gaza-kills-three-people-5035960",
-        "published": "2026-11-18T12:58:00Z",
-        "scope": "Witnesses, Palestinian medics and an Israeli military spokesperson",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Israeli military spokesperson",
-        "text": "Said the operation targeted Hamas infrastructure west of the Yellow Line, according to Reuters.",
-        "verification": "attributed"
-      },
-      {
-        "who": "Hamas",
-        "text": "Called the raid and evacuation a violation of the ceasefire, according to Reuters.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-e9dda99ac944",
     "title": "Forbes reports Xint found five NGINX flaws; NGINX announces security updates",
     "place": "United States",
@@ -357,6 +315,54 @@
       }
     ],
     "carried_by": []
+  },
+  {
+    "id": "auto-32b728575522",
+    "title": "Reuters and CNBC report early gains in Japanese shares and U.S. futures after Anthropic IPO pricing",
+    "place": "United States",
+    "time": "2026-11-19T01:51:00Z",
+    "expires": "2026-11-21T01:51:00Z",
+    "severity": "moderate",
+    "summary": "Reuters and CNBC reported that Japanese shares and U.S. stock futures rose in early Thursday trading after Anthropic priced its IPO; AFP reported that most Asian markets fell. Anthropic announced an offering price of $83 per share and said it expected Nasdaq trading to begin November 19. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://www.investing.com/news/economy-news/stocks-rise-after-anthropic-ipo-pricing-sets-stage-for-blockbuster-debut-5037540",
+        "published": "2026-11-19T01:51:00Z",
+        "scope": "Market data and comments from a financial market analyst; Anthropic's pricing announcement",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "AFP",
+        "intermediary": null,
+        "url": "https://origin-zh9p7m-www.afp.com/en/asian-stocks-drop-anthropics-record-ipo-fails-reassure",
+        "published": "2026-11-19T01:51:00Z",
+        "scope": "AFP reports market movements and quotes analysts Dan Ives and Malik Ahmed Khan. It says U.S. futures rose on the IPO news and Tokyo edged up, while most Asian markets fell.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "CNBC",
+        "intermediary": null,
+        "url": "https://www.cnbc.com/2026/11/18/stock-market-today-live-updates.html",
+        "published": "2026-11-19T01:51:00Z",
+        "scope": "CNBC cites a person familiar with the IPO pricing and quotes Plancorp investment strategist Callie Cox; its report also gives market figures for U.S. futures and Japan's Nikkei.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Anthropic",
+        "text": "Anthropic announced that its IPO was priced at $83 per share for an offering of 980 million shares, with Nasdaq trading expected to begin November 19.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": [
+      "AOL"
+    ]
   },
   {
     "id": "auto-25d8b7d9b2e9",
