@@ -1,42 +1,5 @@
 [
   {
-    "id": "auto-bc01c097ad4f",
-    "title": "Reuters and Axios report Trump and Putin are expected to meet in China",
-    "place": "United States",
-    "time": "2026-11-18T16:15:00Z",
-    "expires": "2026-11-20T16:15:00Z",
-    "severity": "moderate",
-    "summary": "Reuters and Axios reported, citing officials, that President Donald Trump and President Vladimir Putin are expected to meet in China on Thursday. Russian news agencies quoted Kremlin aide Yuri Ushakov as saying the meeting would follow the APEC plenary session and include members of both delegations. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Reuters",
-        "intermediary": null,
-        "url": "https://new.streetinsider.com/Reuters/Putin%2Band%2BTrump%2Bexpected%2Bto%2Bhold%2Bbilateral%2Btalks%2Bat%2BAPEC%2Bsummit/27368775.html",
-        "published": "2026-11-18T16:15:00Z",
-        "scope": "U.S. and Russian officials",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Axios",
-        "intermediary": null,
-        "url": "https://www.axios.com/2026/11/18/trump-putin-china-meeting-ukraine",
-        "published": "2026-11-18T16:15:00Z",
-        "scope": "U.S. officials",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Yuri Ushakov, Kremlin foreign policy aide",
-        "text": "Russian news agencies quoted Ushakov as saying the meeting would follow the APEC plenary session and include members of both delegations.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-aa3561b5870d",
     "title": "Cornyn tells AP he will withhold support for Gaiser's nomination to a Texas federal judgeship",
     "place": "United States",
@@ -390,5 +353,60 @@
     "carried_by": [
       "The Times of Israel"
     ]
+  },
+  {
+    "id": "auto-ecf8cd9b2b37",
+    "title": "TechCrunch reports Anthropic shares began Nasdaq trading above their $83 offering price",
+    "place": "United States",
+    "time": "2026-11-19T16:59:00Z",
+    "expires": "2026-11-21T16:59:00Z",
+    "severity": "moderate",
+    "summary": "TechCrunch reported that Anthropic shares traded at $110 in their first minutes on Nasdaq, above the $83 offering price. Anthropic announced that it priced its IPO at $83 per share and expected trading to begin November 19 under the symbol ANT. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "TechCrunch",
+        "intermediary": null,
+        "url": "https://techcrunch.com/2026/11/19/anthropic-hits-nasdaq-exchanges-at-110-27-above-ipo-price/",
+        "published": "2026-11-19T16:59:00Z",
+        "scope": "Reports the shares' trading price in the first minutes of availability.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/anthropic-ipo-nasdaq-ai-b6a74b8949021207dc162fcc876c4649",
+        "published": "2026-11-19T16:59:00Z",
+        "scope": "Reports the opening trade directly, without attributing it to TechCrunch.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://www.streetinsider.com/General%2BNews/Anthropic%2Bhits%2B%242%2Btrillion%2Bin%2BNasdaq%2Bdebut%2C%2Btops%2BSpaceXs%2BJune%2Blisting/27372528.html",
+        "published": "2026-11-19T16:59:00Z",
+        "scope": "Reports the opening trade directly; its report also includes comments from market participants.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Forbes",
+        "intermediary": null,
+        "url": "https://tollbit.forbes.com/sites/fionariley/2026/11/19/anthropic-ipo-live-shares-pop-34-to-open-at-11150/",
+        "published": "2026-11-19T16:59:00Z",
+        "scope": "Reports the opening trade directly in its live coverage; separately attributes an earlier pre-open indication to Bloomberg.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Anthropic",
+        "text": "The company announced that it priced its IPO at $83 per share and expected its shares to begin trading on Nasdaq on November 19 under the symbol ANT.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
   }
 ]
