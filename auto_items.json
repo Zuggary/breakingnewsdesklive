@@ -1,60 +1,5 @@
 [
   {
-    "id": "auto-ecf8cd9b2b37",
-    "title": "TechCrunch reports Anthropic shares began Nasdaq trading above their $83 offering price",
-    "place": "United States",
-    "time": "2026-11-19T16:59:00Z",
-    "expires": "2026-11-21T16:59:00Z",
-    "severity": "moderate",
-    "summary": "TechCrunch reported that Anthropic shares traded at $110 in their first minutes on Nasdaq, above the $83 offering price. Anthropic announced that it priced its IPO at $83 per share and expected trading to begin November 19 under the symbol ANT. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "TechCrunch",
-        "intermediary": null,
-        "url": "https://techcrunch.com/2026/11/19/anthropic-hits-nasdaq-exchanges-at-110-27-above-ipo-price/",
-        "published": "2026-11-19T16:59:00Z",
-        "scope": "Reports the shares' trading price in the first minutes of availability.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/anthropic-ipo-nasdaq-ai-b6a74b8949021207dc162fcc876c4649",
-        "published": "2026-11-19T16:59:00Z",
-        "scope": "Reports the opening trade directly, without attributing it to TechCrunch.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Reuters",
-        "intermediary": null,
-        "url": "https://www.streetinsider.com/General%2BNews/Anthropic%2Bhits%2B%242%2Btrillion%2Bin%2BNasdaq%2Bdebut%2C%2Btops%2BSpaceXs%2BJune%2Blisting/27372528.html",
-        "published": "2026-11-19T16:59:00Z",
-        "scope": "Reports the opening trade directly; its report also includes comments from market participants.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Forbes",
-        "intermediary": null,
-        "url": "https://tollbit.forbes.com/sites/fionariley/2026/11/19/anthropic-ipo-live-shares-pop-34-to-open-at-11150/",
-        "published": "2026-11-19T16:59:00Z",
-        "scope": "Reports the opening trade directly in its live coverage; separately attributes an earlier pre-open indication to Bloomberg.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Anthropic",
-        "text": "The company announced that it priced its IPO at $83 per share and expected its shares to begin trading on Nasdaq on November 19 under the symbol ANT.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-619ae340f612",
     "title": "AP: Ueland pledges independence at Senate hearing on GAO nomination",
     "place": "United States",
@@ -483,5 +428,63 @@
       }
     ],
     "carried_by": []
+  },
+  {
+    "id": "auto-d81b28a90478",
+    "title": "Second judge blocks construction of Trump\u2019s proposed memorial arch, AP reports",
+    "place": "United States",
+    "time": "2026-11-20T18:24:17Z",
+    "expires": "2026-11-22T18:24:17Z",
+    "severity": "moderate",
+    "summary": "A second federal judge issued a preliminary injunction halting construction of President Donald Trump\u2019s proposed memorial arch near Arlington National Cemetery, according to AP. Bloomberg Law reports that Justice Department spokesperson Matthew Nies said the department plans to appeal the ruling. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/trump-arch-virginia-judge-brinkema-f7b9b0a0480481505038d007bf270cd9",
+        "published": "2026-11-20T18:24:17Z",
+        "scope": "Plaintiffs' lawyers who sued to challenge the project.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "NPR",
+        "intermediary": null,
+        "url": "https://www.knba.org/npr-news/2026-11-20/a-second-judge-blocks-trumps-arch-saying-its-unlikely-to-succeed-in-court",
+        "published": "2026-11-20T18:24:17Z",
+        "scope": "Democracy Forward, which represents the plaintiffs, confirmed the ruling in a statement shared with NPR.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "The Washington Post",
+        "intermediary": null,
+        "url": "https://www.washingtonpost.com/politics/2026/11/20/another-judge-blocks-trumps-arch-construction-second-blow-project/",
+        "published": "2026-11-20T18:24:17Z",
+        "scope": "Cites statements from parties to the lawsuit, including Democracy Forward, and a White House response.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Bloomberg Law",
+        "intermediary": null,
+        "url": "https://news.bloomberglaw.com/health-law-and-business/trumps-triumphal-arch-temporarily-blocked-by-another-judge",
+        "published": "2026-11-20T18:24:17Z",
+        "scope": "Reports the judge's decision and cites a Justice Department spokesperson on the department's appeal plans.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Justice Department spokesperson Matthew Nies",
+        "text": "The department plans to appeal the ruling, according to Bloomberg Law.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": [
+      "The Daily Beast",
+      "Axios"
+    ]
   }
 ]
