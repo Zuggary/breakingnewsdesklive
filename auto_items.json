@@ -1,42 +1,5 @@
 [
   {
-    "id": "auto-247f0d22fae0",
-    "title": "Reuters reports Anthropic IPO raised $81.31 billion",
-    "place": "United States",
-    "time": "2026-11-18T23:19:00Z",
-    "expires": "2026-11-20T23:19:00Z",
-    "severity": "moderate",
-    "summary": "Reuters reported, citing a person familiar with the matter, that Anthropic\u2019s IPO raised $81.31 billion after the offering was expanded. AP reported that Anthropic announced an offering of 980 million shares, including approximately 956 million sold by the company and the remainder by selling stockholders. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Reuters",
-        "intermediary": null,
-        "url": "https://new.streetinsider.com/Reuters/Exclusive-Anthropic%2Bclinches%2Bbiggest-ever%2BIPO%2Bwith%2B%2481%2Bbillion%2Boffering/27371465.html",
-        "published": "2026-11-18T23:19:00Z",
-        "scope": "One person familiar with the matter.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/anthropic-ipo-pricing-70b660ddf900d90bbf484ecdf1fb441c",
-        "published": "2026-11-18T23:19:00Z",
-        "scope": "Cites Anthropic's announcement of the offering and share allocation.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Anthropic",
-        "text": "According to AP, Anthropic said the offering included 980 million shares, with approximately 956 million sold by the company and the remainder by selling stockholders.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-32b728575522",
     "title": "Reuters and CNBC report early gains in Japanese shares and U.S. futures after Anthropic IPO pricing",
     "place": "United States",
@@ -449,5 +412,51 @@
     "carried_by": [
       "Reuters"
     ]
+  },
+  {
+    "id": "auto-cf25e3c98898",
+    "title": "Senate passes permitting bill 62\u201333, CBS News reports; House approval still required",
+    "place": "United States",
+    "time": "2026-11-20T03:18:00Z",
+    "expires": "2026-11-22T03:18:00Z",
+    "severity": "moderate",
+    "summary": "CBS News reported that the Senate voted 62\u201333 to pass a bipartisan bill intended to speed permitting for energy and infrastructure projects; Axios independently reported the vote and said House approval remained necessary. CBS reported that a spokesperson said earlier in November that House Minority Leader Hakeem Jeffries supported permitting reform but considered the Senate legislation deficient in several areas. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "CBS News",
+        "intermediary": null,
+        "url": "https://www.cbsnews.com/news/senate-bipartisan-permitting-reform-bill-energy-baaja-trump/",
+        "published": "2026-11-20T03:18:00Z",
+        "scope": "Reports the Senate vote and quotes senators and a spokesperson.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Axios",
+        "intermediary": null,
+        "url": "https://www.axios.com/2026/11/20/senate-passes-energy-permitting-bill",
+        "published": "2026-11-20T03:18:00Z",
+        "scope": "Independently reports the Senate vote and describes the bill's provisions.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "The Washington Post",
+        "intermediary": null,
+        "url": "https://www.washingtonpost.com/climate-environment/2026/11/19/senate-votes-weaken-environmental-laws-speed-up-energy-projects/",
+        "published": "2026-11-20T03:18:00Z",
+        "scope": "Reports the Senate vote and identifies senators who supported or opposed the measure.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "House Minority Leader Hakeem Jeffries, through a spokesperson",
+        "text": "CBS News reported that the spokesperson said earlier in November that Jeffries supported permitting reform but considered the Senate legislation deficient in several areas.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
   }
 ]
