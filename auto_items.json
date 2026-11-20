@@ -1,49 +1,5 @@
 [
   {
-    "id": "auto-359f163d70f4",
-    "title": "AP and Reuters sources report damage to Riyadh tower housing Saudi wealth fund",
-    "place": "United States",
-    "time": "2026-11-19T06:46:00Z",
-    "expires": "2026-11-21T06:46:00Z",
-    "severity": "moderate",
-    "summary": "A Riyadh tower housing Saudi Arabia\u2019s Public Investment Fund sustained damage, according to a witness cited by AP and three people familiar with the matter cited by Reuters. The Saudi-led coalition said falling debris from a missile threat it attributed to the Houthis caused material damage, with the extent still being assessed. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/saudi-yemen-war-iran-november-19-2026-e72472c557057943cab32010666b29bf",
-        "published": "2026-11-19T06:46:00Z",
-        "scope": "A witness who requested anonymity because of security concerns described visible damage to the tower.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Reuters",
-        "intermediary": null,
-        "url": "https://new.streetinsider.com/Reuters/Riyadh%2Bskyscraper%2Bhousing%2BSaudi%2Bwealth%2Bfund%2Bdamaged%2Bin%2BHouthi%2Bstrike%2C%2Bsources%2Bsay/27371744.html",
-        "published": "2026-11-19T06:46:00Z",
-        "scope": "Three people familiar with the matter reported damage to the tower; a Reuters witness described closures and evacuations in the financial district.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Saudi-led coalition",
-        "text": "The coalition said it had dealt with a Houthi missile threat toward Riyadh and that its initial assessment indicated material damage from falling debris, with the extent still being assessed.",
-        "verification": "attributed"
-      },
-      {
-        "who": "Saudi Public Investment Fund",
-        "text": "Reuters reported that PIF said it would respond to the agency\u2019s request for comment.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": [
-      "The Times of Israel"
-    ]
-  },
-  {
     "id": "auto-ecf8cd9b2b37",
     "title": "TechCrunch reports Anthropic shares began Nasdaq trading above their $83 offering price",
     "place": "United States",
@@ -490,5 +446,42 @@
     "carried_by": [
       "MarketScreener"
     ]
+  },
+  {
+    "id": "auto-3969074dd456",
+    "title": "Magnitude 4.4 earthquake shakes Los Angeles area near Commerce, news outlets report",
+    "place": "United States",
+    "time": "2026-11-20T12:10:00Z",
+    "expires": "2026-11-22T12:10:00Z",
+    "severity": "moderate",
+    "summary": "KABC and CBS News reported that a magnitude 4.4 earthquake struck near Commerce, California, citing the U.S. Geological Survey. KABC reported that the Los Angeles Fire Department entered earthquake alert mode and said personnel at its 106 neighborhood stations were surveying infrastructure and areas of concern. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "KABC",
+        "intermediary": null,
+        "url": "https://editions.geo.hosted.abcotvs.com/post/magnitude-42-earthquake-strikes-commerce-area-usgs-says/20058854/",
+        "published": "2026-11-20T12:10:00Z",
+        "scope": "Cites the U.S. Geological Survey, residents who felt the shaking, and a Los Angeles Fire Department statement.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "CBS News",
+        "intermediary": null,
+        "url": "https://www.cbsnews.com/news/earthquake-los-angeles-11-20-2026/",
+        "published": "2026-11-20T12:10:00Z",
+        "scope": "Cites the U.S. Geological Survey and its reports of people feeling the earthquake.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Los Angeles Fire Department",
+        "text": "According to KABC, the department said it entered earthquake alert mode and was surveying infrastructure and areas of concern through personnel at its 106 neighborhood fire stations.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
   }
 ]
