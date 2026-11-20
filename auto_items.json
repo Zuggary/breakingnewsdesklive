@@ -1,42 +1,5 @@
 [
   {
-    "id": "auto-be4ebb099579",
-    "title": "AP reports mixed Asian markets and higher U.S. futures ahead of Anthropic debut",
-    "place": "United States",
-    "time": "2026-11-19T05:00:38Z",
-    "expires": "2026-11-21T05:00:38Z",
-    "severity": "moderate",
-    "summary": "The Associated Press reported that Asian stock markets were mixed and U.S. stock futures rose as investors awaited Anthropic\u2019s market debut. Reuters reported that Anthropic said its IPO was priced at $83 per share, above its previously targeted range. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/stocks-markets-ai-us-anthropic-206c84045137824feabe052a29ff6140",
-        "published": "2026-11-19T05:00:38Z",
-        "scope": "AP reported market movements and cited individual index levels and company share prices.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Reuters",
-        "intermediary": null,
-        "url": "https://live.euronext.com/en/financial-news/stocks-rise-after-anthropic-ipo-pricing-sets-stage-blockbuster-debut",
-        "published": "2026-11-19T05:00:38Z",
-        "scope": "Reuters reports market movements and quotes Capital.com analyst Kyle Rodda; it attributes the IPO price to Anthropic.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Anthropic",
-        "text": "According to Reuters, Anthropic said its IPO was priced at $83 per share, above its previously targeted range.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-359f163d70f4",
     "title": "AP and Reuters sources report damage to Riyadh tower housing Saudi wealth fund",
     "place": "United States",
@@ -460,6 +423,72 @@
     ],
     "carried_by": [
       "The Washington Post"
+    ]
+  },
+  {
+    "id": "auto-2d58afbd9ed3",
+    "title": "Reuters: Lawmakers warn Iran war funding dispute could complicate government funding deal",
+    "place": "United States",
+    "time": "2026-11-20T11:01:00Z",
+    "expires": "2026-11-22T11:01:00Z",
+    "severity": "moderate",
+    "summary": "Reuters reported that lawmakers from both parties warned disagreements over Iran war funding and President Donald Trump's defense spending request could impede a government funding deal beyond December 11. Sen. Michael Bennet's office said he would oppose appropriations packages that fund the war and urged the Senate to restrict that spending. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://www.devdiscourse.com/article/international/4009973-congress-struggles-to-avert-us-shutdown-as-iran-war-divides-lawmakers",
+        "published": "2026-11-20T11:01:00Z",
+        "scope": "Named lawmakers from both parties, including Senator Mike Rounds, who spoke to Reuters.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "The Washington Post",
+        "intermediary": null,
+        "url": "https://www.washingtonpost.com/politics/2026/11/11/one-month-shutdown-congress-is-far-deal-fund-government/",
+        "published": "2026-11-20T11:01:00Z",
+        "scope": "Reports statements from Senate appropriator Patty Murray and House Appropriations Committee Chairman Tom Cole, including Cole's response when asked about restrictions on Iran war funding.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Axios",
+        "intermediary": null,
+        "url": "https://www.axios.com/2026/11/19/government-shutdown-funding-iran-democrat",
+        "published": "2026-11-20T11:01:00Z",
+        "scope": "Quotes multiple House Democrats and identifies an interview with Rep. Yassamin Ansari.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Roll Call",
+        "intermediary": null,
+        "url": "https://rollcall.com/2026/11/12/democrats-mulling-iran-war-funding-cutoff-strategy/",
+        "published": "2026-11-20T11:01:00Z",
+        "scope": "Quotes lawmakers and a joint senators' statement; cites sources familiar with administration discussions about a stopgap bill.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Bloomberg",
+        "intermediary": null,
+        "url": "https://businessmirror.com.ph/2026/11/10/shutdown-risks-emerge-as-democrats-consider-ways-to-end-iran-war/",
+        "published": "2026-11-20T11:01:00Z",
+        "scope": "Reports an emailed statement from Sen. Patty Murray and comments from Rep. Rosa DeLauro; also attributes separate interviews to other publications.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Sen. Michael Bennet's office",
+        "text": "Bennet's office said he would oppose appropriations packages that fund the Iran war and urged the Senate to restrict that spending; it noted that government funding expires December 11.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": [
+      "MarketScreener"
     ]
   }
 ]
