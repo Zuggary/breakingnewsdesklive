@@ -1,44 +1,5 @@
 [
   {
-    "id": "auto-38986959faac",
-    "title": "Bloomberg and Reuters report Anthropic IPO pricing of $83 a share",
-    "place": "United States",
-    "time": "2026-11-18T21:09:00Z",
-    "expires": "2026-11-20T21:09:00Z",
-    "severity": "moderate",
-    "summary": "Anthropic priced its initial public offering at $83 a share, above its target range of $70 to $78, Bloomberg and Reuters reported, citing people familiar with the matter. Anthropic declined to comment to Reuters. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Bloomberg",
-        "intermediary": null,
-        "url": "https://www.bloomberg.com/news/articles/2026-11-18/anthropic-is-said-to-price-ipo-at-83-per-share",
-        "published": "2026-11-18T21:09:00Z",
-        "scope": "People familiar with the matter.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Reuters",
-        "intermediary": null,
-        "url": "https://www.streetinsider.com/Reuters/Anthropic%2Bprices%2Bblockbuster%2BIPO%2Bat%2B%2483%2Ba%2Bshare%2C%2Bsource%2Bsays/27370548.html",
-        "published": "2026-11-18T21:09:00Z",
-        "scope": "One person familiar with the matter, who requested anonymity because the information was not public.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Anthropic",
-        "text": "Declined to comment to Reuters.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": [
-      "Associated Press"
-    ]
-  },
-  {
     "id": "auto-a8308d0b6e40",
     "title": "Thune says Republican votes for $350 billion defense package remain uncertain, CBS reports",
     "place": "United States",
@@ -444,5 +405,47 @@
     "carried_by": [
       "Audacy WTIC"
     ]
+  },
+  {
+    "id": "auto-0d3931f57d6c",
+    "title": "Intuit says it agreed to sell Mailchimp to Bending Spoons for about $3.68 billion",
+    "place": "United States",
+    "time": "2026-11-19T21:07:00Z",
+    "expires": "2026-11-21T21:07:00Z",
+    "severity": "moderate",
+    "summary": "Intuit said it agreed to sell Mailchimp to Bending Spoons for approximately $3.68 billion, with closing expected in early 2027 subject to regulatory approvals and other customary conditions. Bending Spoons confirmed the agreement and said Intuit would invest $368 million of the proceeds in newly issued Bending Spoons equity. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://www.investing.com/news/stock-market-news/intuit-to-sell-mailchimp-to-bending-spoons-for-368-billion-5039975",
+        "published": "2026-11-19T21:07:00Z",
+        "scope": "Intuit's announcement",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Dow Jones Newswires",
+        "intermediary": null,
+        "url": "https://www.marketscreener.com/news/bending-spoons-to-buy-mailchimp-raises-outlook-ce785ed2df8dfe26",
+        "published": "2026-11-19T21:07:00Z",
+        "scope": "Attributes the acquisition announcement to Bending Spoons; cites FactSet for analyst estimates.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Intuit",
+        "text": "Intuit said the sale would sharpen its focus on business customers and that it intended to use cash proceeds for share repurchases after closing.",
+        "verification": "attributed"
+      },
+      {
+        "who": "Bending Spoons",
+        "text": "Bending Spoons confirmed an agreement to acquire Mailchimp at an enterprise value of $3.68 billion and said Intuit would invest $368 million of the proceeds in newly issued Bending Spoons equity.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
   }
 ]
