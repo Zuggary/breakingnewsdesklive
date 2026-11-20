@@ -1,53 +1,5 @@
 [
   {
-    "id": "auto-32b728575522",
-    "title": "Reuters and CNBC report early gains in Japanese shares and U.S. futures after Anthropic IPO pricing",
-    "place": "United States",
-    "time": "2026-11-19T01:51:00Z",
-    "expires": "2026-11-21T01:51:00Z",
-    "severity": "moderate",
-    "summary": "Reuters and CNBC reported that Japanese shares and U.S. stock futures rose in early Thursday trading after Anthropic priced its IPO; AFP reported that most Asian markets fell. Anthropic announced an offering price of $83 per share and said it expected Nasdaq trading to begin November 19. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Reuters",
-        "intermediary": null,
-        "url": "https://www.investing.com/news/economy-news/stocks-rise-after-anthropic-ipo-pricing-sets-stage-for-blockbuster-debut-5037540",
-        "published": "2026-11-19T01:51:00Z",
-        "scope": "Market data and comments from a financial market analyst; Anthropic's pricing announcement",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "AFP",
-        "intermediary": null,
-        "url": "https://origin-zh9p7m-www.afp.com/en/asian-stocks-drop-anthropics-record-ipo-fails-reassure",
-        "published": "2026-11-19T01:51:00Z",
-        "scope": "AFP reports market movements and quotes analysts Dan Ives and Malik Ahmed Khan. It says U.S. futures rose on the IPO news and Tokyo edged up, while most Asian markets fell.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "CNBC",
-        "intermediary": null,
-        "url": "https://www.cnbc.com/2026/11/18/stock-market-today-live-updates.html",
-        "published": "2026-11-19T01:51:00Z",
-        "scope": "CNBC cites a person familiar with the IPO pricing and quotes Plancorp investment strategist Callie Cox; its report also gives market figures for U.S. futures and Japan's Nikkei.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Anthropic",
-        "text": "Anthropic announced that its IPO was priced at $83 per share for an offering of 980 million shares, with Nasdaq trading expected to begin November 19.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": [
-      "AOL"
-    ]
-  },
-  {
     "id": "auto-25d8b7d9b2e9",
     "title": "Axios and New York Times report Trump is weighing further strikes on Iran",
     "place": "United States",
@@ -454,6 +406,48 @@
       {
         "who": "House Minority Leader Hakeem Jeffries, through a spokesperson",
         "text": "CBS News reported that the spokesperson said earlier in November that Jeffries supported permitting reform but considered the Senate legislation deficient in several areas.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
+  },
+  {
+    "id": "auto-0db7ea228665",
+    "title": "Russia says it struck Ukrainian infrastructure; Kyiv officials report bridge damage",
+    "place": "United States",
+    "time": "2026-11-20T07:35:34Z",
+    "expires": "2026-11-22T07:35:34Z",
+    "severity": "moderate",
+    "summary": "Reuters reported that Russia\u2019s Defence Ministry said its forces struck Ukrainian energy and transport infrastructure, defence industry facilities and vessels. AP reported that Kyiv authorities described damage to bridges and transport infrastructure. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://malaysia.news.yahoo.com/russia-says-hits-sea-vessels-073534922.html",
+        "published": "2026-11-20T07:35:34Z",
+        "scope": "Russia\u2019s Defence Ministry statement",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/433e18f00cbd37a2a9da94e60fce0e07",
+        "published": "2026-11-20T07:35:34Z",
+        "scope": "AP attributes its report on the Kyiv strikes to local authorities, the Kyiv City Military Administration, Mayor Vitali Klitschko and energy provider DTEK.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Russia\u2019s Defence Ministry",
+        "text": "The ministry said its forces struck Ukrainian infrastructure and vessels it said were used for military purposes.",
+        "verification": "attributed"
+      },
+      {
+        "who": "Vitali Klitschko, Kyiv mayor",
+        "text": "Klitschko said strikes damaged the Podilskyi and Darnitskyi bridges and hit the Southern Bridge, causing traffic closures and restrictions.",
         "verification": "attributed"
       }
     ],
