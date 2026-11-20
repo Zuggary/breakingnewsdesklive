@@ -90,14 +90,14 @@
     </div>
     <div class="ops-grid">
       <button type="button" class="ops-cell is-active" id="ops-all" data-filter="all" aria-pressed="true">
-        <span class="ops-lbl">ALL MONITORED</span>
+        <span class="ops-lbl">ALL EVENTS</span>
         <strong class="ops-val" id="ops-all-val">--</strong>
         <span class="ops-sub" id="ops-all-sub">Ranked public bulletins</span>
       </button>
       <button type="button" class="ops-cell" id="ops-hazards" data-filter="g:hazards" aria-pressed="false">
-        <span class="ops-lbl">SEVERE HAZARDS</span>
+        <span class="ops-lbl">HAZARDS DESK</span>
         <strong class="ops-val" id="ops-haz-val">--</strong>
-        <span class="ops-sub" id="ops-haz-sub">Quakes, storms, fires, NWS</span>
+        <span class="ops-sub" id="ops-haz-sub">Quakes, NWS, storms, fires</span>
       </button>
       <button type="button" class="ops-cell" id="ops-outages" data-filter="g:outages" aria-pressed="false">
         <span class="ops-lbl">PROBES &amp; OUTAGES</span>
@@ -140,10 +140,10 @@
       <aside class="recap-box" id="recap-strip" aria-labelledby="recap-heading">
         <div class="recap-head">
           <h2 class="chyron-tag" id="recap-heading">WHAT WE KNOW SO FAR</h2>
-          <span id="recap-meta">Newcomer 2-point briefing · Attributed facts</span>
+          <span id="recap-meta">Also monitored across desks · Attributed facts</span>
         </div>
         <ul class="recap-list" id="recap-list">
-          <li>Loading verified top-story scope and secondary monitored events.</li>
+          <li>Loading additional verified public-source events.</li>
         </ul>
       </aside>
     </article>
@@ -233,7 +233,6 @@
         </div>
       </div>
     </div>
-    <div class="stream-rundown" id="stream-rundown" aria-label="Broadcast on-air queue"></div>
   </section>
 
   <section id="list-wrap" class="wire-rail-section" tabindex="-1" aria-labelledby="now">
@@ -243,11 +242,24 @@
       <a class="jump" id="map-jump" href="#map-wrap">World map &darr;</a>
     </div>
     <div class="rail-toolbar">
-      <div class="chips-row" role="group" aria-label="Section by news type" id="cats"></div>
+      <div class="cats-bar" id="cats-bar">
+        <div class="cats-scroll" id="cats-scroll">
+          <div class="chips-row" role="group" aria-label="Section by news type" id="cats"></div>
+        </div>
+        <button type="button" class="cats-chevron" id="cats-next" aria-label="More categories" hidden>&#x203A;</button>
+      </div>
       <details class="filter-drawer" id="filter-drawer" open>
         <summary class="filter-toggle">Filter severity, region &amp; age</summary>
         <div class="filters" role="group" aria-label="Wire filters" id="filters"></div>
       </details>
+    </div>
+    <div class="status-key" id="status-key" aria-label="Verification status key">
+      <span class="sk-head">STATUS KEY</span>
+      <span><b class="sk-corrob">CORROBORATED</b> &ge;2 sources</span>
+      <span><b class="sk-off">OFFICIAL</b> agency feed</span>
+      <span><b class="sk-dev">DEVELOPING</b> active</span>
+      <span><b class="sk-unv">UNVERIFIED</b> single claim/probe</span>
+      <span><b class="sk-res">RESOLVED</b> cleared</span>
     </div>
     <div class="rail-cols" aria-hidden="true">
       <span>#</span>
@@ -311,9 +323,9 @@
     </div>
     <div class="summary-body">
       <div id="stats"></div>
-      <div class="hist-subwrap" id="hist-wrap" hidden>
+      <div class="hist-subwrap" id="hist-wrap">
         <h3 id="hist-title" class="subhead-disp">Events in the feeds over time</h3>
-        <canvas id="hist" width="600" height="120" role="img" aria-label="Chart of event counts over time"></canvas>
+        <canvas id="hist" width="600" height="132" role="img" aria-label="Chart of event counts over time"></canvas>
         <div class="maptools">
           <button type="button" class="chip" data-h="24" aria-pressed="true">24 hours</button>
           <button type="button" class="chip" data-h="168" aria-pressed="false">7 days</button>

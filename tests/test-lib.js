@@ -273,3 +273,57 @@ console.log('routine and stale item helpers ok');
   }
   console.log('round 2 polish helpers ok');
 }
+
+{
+  // Round 4 fix tests: non-duplicating briefing, non-truncating callouts, pin avoidance, consistent severity counts
+  const leadEv = { id: 'lead-1', type: 'security', title: 'AP and CNN report flooding in Brevard', severity: 'moderate', confidence: 'Corroborated' };
+  const probeEv = { id: 'p-1', type: 'outage', title: 'Regions login page responding badly', severity: 'moderate', detail: { lane: 'probes', open: true } };
+  const wxEv = { id: 'wx-1', type: 'weather', title: 'Flood Warning', severity: 'severe', confidence: 'Official single source' };
+  const secEv = { id: 'sec-2', type: 'security', title: 'Senate hearing update', severity: 'moderate', confidence: 'Corroborated' };
+  const brief = B.selectBriefingItems([leadEv, probeEv, wxEv, secEv], 'lead-1', 2);
+  assert.strictEqual(brief.length, 2);
+  assert.ok(brief.every(e => e.id !== 'lead-1'));
+  assert.notStrictEqual(brief[0].type, brief[1].type);
+
+  assert.strictEqual(
+    B.mapCalloutText({ type: 'earthquake', title: 'M 5.3 earthquake', place: 'South Georgia Island region', detail: { magnitude: 5.3 } }),
+    'M 5.3 \u00b7 South Georgia Island'
+  );
+  assert.strictEqual(
+    B.mapCalloutText({ type: 'transport', title: 'Ground delay program at SFO', place: 'San Francisco International', detail: { airport_code: 'SFO', kind: 'Ground delay program' } }),
+    'SFO \u00b7 Ground delay'
+  );
+  assert.ok(!B.mapCalloutText({ type: 'storm', title: 'Tropical Cyclone Xavier', place: 'Tropical Cyclone Xavier' }).includes('\u2026'));
+
+  const pinObstacles = [
+    { x: 100, y: 100, r: 9 },
+    { x: 185, y: 100, r: 9 }
+  ];
+  const pinPlaced = B.placeMapCallouts([
+    { id: 'p1', rowId: 'p1', pinX: 100, pinY: 100, w: 96, h: 24, rank: 0, isSelected: false },
+    { id: 'p2', rowId: 'p2', pinX: 185, pinY: 100, w: 96, h: 24, rank: 1, isSelected: false }
+  ], 420, 220, undefined, pinObstacles);
+  assert.strictEqual(pinPlaced.length, 2);
+  for (const box of pinPlaced) {
+    for (const pin of pinObstacles) {
+      const pr = pin.r + 3;
+      const hitPin = box.boxX < pin.x + pr + 2 && box.boxX + box.w + 2 > pin.x - pr &&
+        box.boxY < pin.y + pr + 2 && box.boxY + box.h + 2 > pin.y - pr;
+      assert.strictEqual(hitPin, false, 'callout overlapped pin obstacle');
+    }
+  }
+
+  const sevSample = [
+    { id: '1', type: 'weather', severity: 'severe' },
+    { id: '2', type: 'aviation', severity: 'severe' },
+    { id: '3', type: 'earthquake', severity: 'moderate' }
+  ];
+  const counts4 = B.opsCounts(sevSample, { sources: [] });
+  assert.strictEqual(counts4.severeTotal, 2);
+  assert.strictEqual(counts4.severeHazards, 1);
+  assert.strictEqual(counts4.severeAirspace, 1);
+  assert.strictEqual(B.formatSevCount(sevSample), '2 severe');
+  assert.strictEqual(B.formatSevCount([{ severity: 'extreme' }, ...sevSample]), '1 extreme, 2 severe');
+  assert.strictEqual(B.formatSevCount({ extreme: 0, severe: 16, extremeTotal: 3 }), '16 severe');
+  console.log('round 4 polish helpers ok');
+}

@@ -564,6 +564,46 @@
       next: ranked.slice(1, 5).map(toStory)
     };
   }
+  function selectBriefingItems(events, leadId, maxCount) {
+    var list = Array.isArray(events) ? events : [];
+    var cap = maxCount == null ? 2 : Math.max(0, maxCount);
+    if (!cap || !list.length) return [];
+    var exId = (leadId && typeof leadId === 'object') ? leadId.id : leadId;
+    var exHeadline = (leadId && typeof leadId === 'object') ? leadId.headline : null;
+    var pool = list.filter(function (e) {
+      if (!e) return false;
+      if (exId && e.id === exId) return false;
+      if (!exId && exHeadline && e.title === exHeadline && e.confidence) return false;
+      return true;
+    });
+    if (!pool.length) return [];
+    var picked = [], seenIds = {}, seenTypes = {};
+    var tiers = [
+      function (e) {
+        if (e.type === 'headline' || e.type === 'statement') return false;
+        if (e.severity === 'extreme' || e.severity === 'severe') return true;
+        return (e.type === 'outage' || e.type === 'cyber') && (!e.detail || e.detail.open !== false);
+      },
+      function (e) { return e.confidence === 'Corroborated'; },
+      function (e) { return e.type !== 'headline' && e.type !== 'statement'; },
+      function () { return true; }
+    ];
+    [true, false].forEach(function (requireDistinctType) {
+      tiers.forEach(function (pred) {
+        if (picked.length >= cap) return;
+        for (var i = 0; i < pool.length && picked.length < cap; i++) {
+          var e = pool[i];
+          if (seenIds[e.id]) continue;
+          if (requireDistinctType && seenTypes[e.type]) continue;
+          if (!pred(e)) continue;
+          seenIds[e.id] = 1;
+          seenTypes[e.type] = 1;
+          picked.push(e);
+        }
+      });
+    });
+    return picked;
+  }
   function buildRecapItems(events, leadEvent) {
     var list = Array.isArray(events) ? events : [];
     var primary = leadEvent || list[0] || null;
@@ -615,13 +655,21 @@
     var hazSet = {}, trSet = {};
     GROUPS.hazards[1].forEach(function (t) { hazSet[t] = 1; });
     GROUPS.transport[1].forEach(function (t) { trSet[t] = 1; });
-    var severeHazards = 0, hazardsTotal = 0, probeFailing = 0, probeItems = 0, providerOutages = 0, outagesTotal = 0, airspace = 0, faaCount = 0;
+    var extremeTotal = 0, severeTotal = 0, moderateTotal = 0, minorTotal = 0;
+    var extremeHazards = 0, severeHazards = 0, hazardsTotal = 0;
+    var probeFailing = 0, probeItems = 0, providerOutages = 0, outagesTotal = 0;
+    var extremeAirspace = 0, severeAirspace = 0, airspace = 0, faaCount = 0;
     evs.forEach(function (e) {
       if (!e) return;
       var d = e.detail || {};
+      if (e.severity === 'extreme') extremeTotal++;
+      else if (e.severity === 'severe') severeTotal++;
+      else if (e.severity === 'moderate') moderateTotal++;
+      else minorTotal++;
       if (hazSet[e.type]) {
         hazardsTotal++;
-        if (e.severity === 'extreme' || e.severity === 'severe') severeHazards++;
+        if (e.severity === 'extreme') { extremeHazards++; severeHazards++; }
+        else if (e.severity === 'severe') severeHazards++;
       }
       if (e.type === 'outage' || e.type === 'cyber') {
         outagesTotal++;
@@ -638,6 +686,8 @@
       }
       if (trSet[e.type]) {
         airspace++;
+        if (e.severity === 'extreme') extremeAirspace++;
+        else if (e.severity === 'severe') severeAirspace++;
         if (e.source_id === 'atd-faa' || e.type === 'transport') faaCount++;
       }
     });
@@ -648,18 +698,39 @@
     }).length;
     return {
       total: evs.length,
+      extremeTotal: extremeTotal,
+      severeTotal: severeTotal,
+      moderateTotal: moderateTotal,
+      minorTotal: minorTotal,
+      extremeHazards: extremeHazards,
       severeHazards: severeHazards,
       hazardsTotal: hazardsTotal,
       probeFailing: probeFailing,
       probeItems: probeItems,
       providerOutages: providerOutages,
       outagesTotal: outagesTotal,
+      extremeAirspace: extremeAirspace,
+      severeAirspace: severeAirspace,
       airspace: airspace,
       faaCount: faaCount,
       feedsFresh: feedsTotal - feedsStale,
       feedsTotal: feedsTotal,
       feedsStale: feedsStale
     };
+  }
+  function formatSevCount(eventsOrCounts) {
+    var extreme = 0, severe = 0;
+    if (Array.isArray(eventsOrCounts)) {
+      eventsOrCounts.forEach(function (e) {
+        if (!e) return;
+        if (e.severity === 'extreme') extreme++;
+        else if (e.severity === 'severe') severe++;
+      });
+    } else if (eventsOrCounts && typeof eventsOrCounts === 'object') {
+      extreme = Number(eventsOrCounts.extreme != null ? eventsOrCounts.extreme : (eventsOrCounts.extremeTotal || 0)) || 0;
+      severe = Number(eventsOrCounts.severe != null ? eventsOrCounts.severe : (eventsOrCounts.severeTotal || 0)) || 0;
+    }
+    return extreme > 0 ? (extreme + ' extreme, ' + severe + ' severe') : (severe + ' severe');
   }
   function trimWholeWords(text, maxChars) {
     var s = cleanDc(String(text || '')).replace(/\s+/g, ' ').trim();
@@ -707,43 +778,70 @@
     }
     if (e.type === 'earthquake') {
       var mag = d.magnitude != null ? 'M ' + d.magnitude : 'Quake';
-      var qp = shortPlace;
-      if (qp.length > 24) {
+      var qp = shortPlace.replace(/\s+region$/i, '').trim();
+      if (qp.length > 20) {
         qp = qp.replace(/^\d+\s*km\s+[NESW]{1,3}\s+of\s+/i, '')
           .replace(/^northern\s+/i, 'N. ')
           .replace(/^southern\s+/i, 'S. ')
           .replace(/^eastern\s+/i, 'E. ')
           .replace(/^western\s+/i, 'W. ')
+          .replace(/^central\s+/i, 'C. ')
           .trim();
       }
-      if (qp.length > 26) qp = trimWholeWords(qp, 26);
+      if (qp.length > 28) {
+        qp = qp.replace(/\bPapua New Guinea\b/g, 'PNG');
+      }
+      if (qp.length > 36) qp = trimWholeWords(qp, 36);
       return mag + (qp ? ' \u00b7 ' + qp : '');
+    }
+    if (e.type === 'transport' && d.airport_code) {
+      var kind = cleanDc(String(d.kind || 'Delay')).replace(/\s+program$/i, '').trim();
+      return cleanDc(String(d.airport_code)) + (kind ? ' \u00b7 ' + kind : '');
+    }
+    if (e.type === 'storm') {
+      if (/^Tropical\s+Cyclone\s+/i.test(title) && title.length > 24) {
+        return title.replace(/^Tropical\s+Cyclone\s+/i, 'Cyclone ');
+      }
+      return title.length <= 40 ? title : trimWholeWords(title, 40);
     }
     if (e.type === 'smoke') {
       return d.plumes != null ? (d.plumes + ' smoke plumes') : 'Heavy smoke plumes';
     }
-    if (e.type === 'weather' || e.type === 'storm' || e.type === 'flood' || e.type === 'wildfire') {
-      if (shortPlace && (title + ' \u00b7 ' + shortPlace).length <= 34) {
+    if (e.type === 'weather' || e.type === 'flood' || e.type === 'wildfire') {
+      if (shortPlace && (title + ' \u00b7 ' + shortPlace).length <= 38) {
         return title + ' \u00b7 ' + shortPlace;
       }
-      return title.length <= 34 ? title : trimWholeWords(title, 34);
+      return title.length <= 40 ? title : trimWholeWords(title, 40);
     }
-    return title.length <= 34 ? title : trimWholeWords(title, 34);
+    return title.length <= 40 ? title : trimWholeWords(title, 40);
   }
-  function placeMapCallouts(candidates, boundsW, boundsH, maxCount) {
+  function placeMapCallouts(candidates, boundsW, boundsH, maxCount, pinObstacles) {
     if (!Array.isArray(candidates) || !boundsW || !boundsH) return [];
-    var cap = maxCount == null ? 5 : maxCount;
+    var cap = maxCount == null ? 6 : maxCount;
     if (cap <= 0) return [];
-    var pad = 6, margin = 6;
+    var pad = 4, margin = 5, pinMargin = 2;
     function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
-    function overlaps(a, b) {
-      return a.left < b.right + margin && a.right + margin > b.left &&
-        a.top < b.bottom + margin && a.bottom + margin > b.top;
+    function overlaps(a, b, gap) {
+      return a.left < b.right + gap && a.right + gap > b.left &&
+        a.top < b.bottom + gap && a.bottom + gap > b.top;
     }
     var sorted = candidates.slice().sort(function (a, b) {
       if (!!a.isSelected !== !!b.isSelected) return a.isSelected ? -1 : 1;
       return (a.rank != null ? a.rank : 999) - (b.rank != null ? b.rank : 999);
     });
+    var pinRects = [];
+    if (Array.isArray(pinObstacles) && pinObstacles.length) {
+      pinObstacles.forEach(function (p) {
+        if (!p || p.x == null || p.y == null) return;
+        var pr = Math.max(4, p.r || 7) + 1;
+        pinRects.push({ left: p.x - pr, top: p.y - pr, right: p.x + pr, bottom: p.y + pr });
+      });
+    } else {
+      sorted.forEach(function (c) {
+        if (!c || c.pinX < 0 || c.pinX > boundsW || c.pinY < 0 || c.pinY > boundsH) return;
+        pinRects.push({ left: c.pinX - 7, top: c.pinY - 7, right: c.pinX + 7, bottom: c.pinY + 7 });
+      });
+    }
     var placed = [], rects = [];
     for (var i = 0; i < sorted.length && placed.length < cap; i++) {
       var c = sorted[i];
@@ -751,18 +849,34 @@
       var w = Math.max(20, c.w || 80), h = Math.max(16, c.h || 22);
       var maxX = Math.max(pad, boundsW - w - pad), maxY = Math.max(pad, boundsH - h - pad);
       var positions = [
-        [c.pinX + 14, c.pinY - h / 2],
-        [c.pinX - w - 14, c.pinY - h / 2],
-        [c.pinX - w / 2, c.pinY - h - 14],
-        [c.pinX - w / 2, c.pinY + 14],
-        [clamp(c.pinX - w / 2, pad, maxX), c.pinY - h - 14],
-        [clamp(c.pinX - w / 2, pad, maxX), c.pinY + 14],
-        [clamp(c.pinX - w / 2, pad, maxX), c.pinY - h - 24],
-        [clamp(c.pinX - w / 2, pad, maxX), c.pinY + 24],
-        [clamp(c.pinX + 14, pad, maxX), clamp(c.pinY - h / 2, pad, maxY)],
-        [clamp(c.pinX - w - 14, pad, maxX), clamp(c.pinY - h / 2, pad, maxY)],
-        [clamp(c.pinX + 14, pad, maxX), clamp(c.pinY + 24, pad, maxY)],
-        [clamp(c.pinX - w - 14, pad, maxX), clamp(c.pinY + 24, pad, maxY)]
+        [c.pinX + 16, c.pinY - h / 2],
+        [c.pinX - w - 16, c.pinY - h / 2],
+        [c.pinX - w / 2, c.pinY - h - 16],
+        [c.pinX - w / 2, c.pinY + 16],
+        [c.pinX + 16, c.pinY - h - 14],
+        [c.pinX - w - 16, c.pinY - h - 14],
+        [c.pinX + 16, c.pinY + 14],
+        [c.pinX - w - 16, c.pinY + 14],
+        [clamp(c.pinX + 16, pad, maxX), clamp(c.pinY - h / 2, pad, maxY)],
+        [clamp(c.pinX - w - 16, pad, maxX), clamp(c.pinY - h / 2, pad, maxY)],
+        [clamp(c.pinX - w / 2, pad, maxX), clamp(c.pinY - h - 16, pad, maxY)],
+        [clamp(c.pinX - w / 2, pad, maxX), clamp(c.pinY + 16, pad, maxY)],
+        [clamp(c.pinX + 24, pad, maxX), clamp(c.pinY + 18, pad, maxY)],
+        [clamp(c.pinX - w - 24, pad, maxX), clamp(c.pinY + 18, pad, maxY)],
+        [clamp(c.pinX + 24, pad, maxX), clamp(c.pinY - h - 18, pad, maxY)],
+        [clamp(c.pinX - w - 24, pad, maxX), clamp(c.pinY - h - 18, pad, maxY)],
+        [clamp(c.pinX + 38, pad, maxX), clamp(c.pinY - h / 2, pad, maxY)],
+        [clamp(c.pinX - w - 38, pad, maxX), clamp(c.pinY - h / 2, pad, maxY)],
+        [clamp(c.pinX - w / 2, pad, maxX), clamp(c.pinY - h - 34, pad, maxY)],
+        [clamp(c.pinX - w / 2, pad, maxX), clamp(c.pinY + 34, pad, maxY)],
+        [clamp(c.pinX + 36, pad, maxX), clamp(c.pinY + 34, pad, maxY)],
+        [clamp(c.pinX - w - 36, pad, maxX), clamp(c.pinY + 34, pad, maxY)],
+        [clamp(c.pinX + 36, pad, maxX), clamp(c.pinY - h - 34, pad, maxY)],
+        [clamp(c.pinX - w - 36, pad, maxX), clamp(c.pinY - h - 34, pad, maxY)],
+        [clamp(c.pinX + 16, pad, maxX), clamp(c.pinY + 42, pad, maxY)],
+        [clamp(c.pinX + 52, pad, maxX), clamp(c.pinY - h / 2, pad, maxY)],
+        [clamp(c.pinX + 52, pad, maxX), clamp(c.pinY + 28, pad, maxY)],
+        [clamp(c.pinX - w - 52, pad, maxX), clamp(c.pinY + 28, pad, maxY)]
       ];
       for (var k = 0; k < positions.length; k++) {
         var bx = Math.round(positions[k][0]), by = Math.round(positions[k][1]);
@@ -770,7 +884,11 @@
         if (rect.left < pad || rect.right > boundsW - pad || rect.top < pad || rect.bottom > boundsH - pad) continue;
         var hit = false;
         for (var j = 0; j < rects.length; j++) {
-          if (overlaps(rect, rects[j])) { hit = true; break; }
+          if (overlaps(rect, rects[j], margin)) { hit = true; break; }
+        }
+        if (hit) continue;
+        for (var p = 0; p < pinRects.length; p++) {
+          if (overlaps(rect, pinRects[p], pinMargin)) { hit = true; break; }
         }
         if (hit) continue;
         placed.push({ id: c.id, rowId: c.rowId || c.id, pinX: c.pinX, pinY: c.pinY, boxX: bx, boxY: by, w: w, h: h });
@@ -831,7 +949,8 @@
     displaySource: displaySource, formatCoord: formatCoord, compactFacts: compactFacts,
     whatChangedLine: whatChangedLine, distinctPlace: distinctPlace, hasRevision: hasRevision, shortChangedTag: shortChangedTag,
     deriveLeadStory: deriveLeadStory,
-    buildRecapItems: buildRecapItems, streamFocusId: streamFocusId, opsCounts: opsCounts,
+    selectBriefingItems: selectBriefingItems,
+    buildRecapItems: buildRecapItems, streamFocusId: streamFocusId, opsCounts: opsCounts, formatSevCount: formatSevCount,
     isSnapshotFresh: isSnapshotFresh, itemFreshness: itemFreshness,
     trimWholeWords: trimWholeWords, packTickerItems: packTickerItems,
     mapCalloutText: mapCalloutText, placeMapCallouts: placeMapCallouts,

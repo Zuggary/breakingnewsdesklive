@@ -1,7 +1,7 @@
 /* Breaking News Desk service worker: offline support, same-origin files only. */
 (function () {
   "use strict";
-  var CACHE = "bnd-offline-v6";
+  var CACHE = "bnd-offline-v7";
   var FILES = ["./", "/about", "/privacy", "/data", "/corrections", "./tokens.css", "/tv", "/event",
                "./style.css", "./fonts/public-sans-latin-wght-normal.woff2", "./fonts/barlow-condensed-700.woff2", "./fonts/barlow-condensed-600.woff2", "./app.js", "./lib.js", "./sun.js", "./sun-overlay.js", "./favicon.svg",
                "./data/events.json", "./data/sources.json", "./data/world.json"];
