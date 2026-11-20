@@ -1,44 +1,5 @@
 [
   {
-    "id": "auto-25d8b7d9b2e9",
-    "title": "Axios and New York Times report Trump is weighing further strikes on Iran",
-    "place": "United States",
-    "time": "2026-11-19T02:08:58Z",
-    "expires": "2026-11-21T02:08:58Z",
-    "severity": "moderate",
-    "summary": "Axios reported, citing two sources with knowledge of the matter, that President Donald Trump was considering joint strikes on Iran with Israel; The New York Times separately cited officials briefed on discussions about further extensive strikes. A U.S. official told Axios that economic pressure meant major combat operations were unnecessary, while all options remained available to prevent Iran from obtaining a nuclear weapon. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Axios",
-        "intermediary": null,
-        "url": "https://www.axios.com/2026/11/19/trump-iran-israel-strikes-chemical-weapons",
-        "published": "2026-11-19T02:08:58Z",
-        "scope": "Two sources with knowledge of the matter; U.S. and Israeli sources and officials.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "The New York Times",
-        "intermediary": null,
-        "url": "https://www.nytimes.com/2026/11/18/us/politics/trump-israel-iran-war.html",
-        "published": "2026-11-19T02:08:58Z",
-        "scope": "U.S. and Israeli officials briefed on the discussions said Trump was weighing another round of extensive strikes.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Unidentified U.S. official",
-        "text": "The official told Axios that economic pressure meant Trump had no need for major combat operations, but all options remained available to prevent Iran from obtaining a nuclear weapon.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": [
-      "Reuters"
-    ]
-  },
-  {
     "id": "auto-be4ebb099579",
     "title": "AP reports mixed Asian markets and higher U.S. futures ahead of Anthropic debut",
     "place": "United States",
@@ -452,5 +413,53 @@
       }
     ],
     "carried_by": []
+  },
+  {
+    "id": "auto-10ccd315c747",
+    "title": "AP reports Iraqi security forces established headquarters near Jurf al-Sakhar",
+    "place": "United States",
+    "time": "2026-11-20T09:48:38Z",
+    "expires": "2026-11-22T09:48:38Z",
+    "severity": "moderate",
+    "summary": "Iraqi security forces established a command headquarters on the outskirts of Jurf al-Sakhar, the Associated Press reported. Armed forces spokesman Sabah al-Numan said forces had begun redeploying and the prime minister had authorized the headquarters to maintain security and enforce the law, according to The National. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/saudi-yemen-war-iran-iraq-november-20-2026-16c39c487a23b53b73c5eabb7f0fd57a",
+        "published": "2026-11-20T09:48:38Z",
+        "scope": "AP reported from Baghdad and published photographs of the security deployment.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "The National",
+        "intermediary": null,
+        "url": "https://www.thenationalnews.com/news/mena/2026/11/20/iraqi-security-forces-move-into-iran-backed-militia-stronghold-of-jurf-al-sakhar/",
+        "published": "2026-11-20T09:48:38Z",
+        "scope": "Cites remarks by government spokesman Sabah al-Numan at a media conference and an Iraq expert who spoke to The National.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "964media",
+        "intermediary": null,
+        "url": "https://en.964media.com/55647/",
+        "published": "2026-11-20T09:48:38Z",
+        "scope": "Reports remarks by security officials at a joint news conference, photos obtained by 964media, and a senior government official who spoke to the outlet.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Sabah al-Numan, spokesman for Iraq's commander-in-chief of the armed forces",
+        "text": "According to The National, al-Numan said forces had begun redeploying and the prime minister had given the headquarters full authority to maintain security and enforce the law in the area.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": [
+      "The Washington Post"
+    ]
   }
 ]
