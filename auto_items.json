@@ -1,62 +1,5 @@
 [
   {
-    "id": "auto-619ae340f612",
-    "title": "AP: Ueland pledges independence at Senate hearing on GAO nomination",
-    "place": "United States",
-    "time": "2026-11-19T20:03:28Z",
-    "expires": "2026-11-21T20:03:28Z",
-    "severity": "moderate",
-    "summary": "The Associated Press reported that comptroller general nominee Eric Ueland told senators he would act independently as Democrats questioned his independence. Government Executive reported that Ueland pledged to fulfill the office\u2019s responsibilities and call matters as he saw them. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "The Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/trump-gao-congress-watchdog-ueland-1540687c76f988f05afccf27762edf6e",
-        "published": "2026-11-19T20:03:28Z",
-        "scope": "Reported from the confirmation hearing and quoted Ueland and senators.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Government Executive",
-        "intermediary": null,
-        "url": "https://www.govexec.com/management/2026/11/trump-gao-pick-vows-oversee-administration/417341/",
-        "published": "2026-11-19T20:03:28Z",
-        "scope": "Reports testimony from the hearing, Ueland\u2019s remarks to reporters afterward, and a committee aide\u2019s account.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "FedScoop",
-        "intermediary": null,
-        "url": "https://fedscoop.com/eric-ueland-gao-nomination-senate-hearing/",
-        "published": "2026-11-19T20:03:28Z",
-        "scope": "Reports exchanges between Ueland and senators at the hearing and cites GAO reports.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "The Washington Sun",
-        "intermediary": null,
-        "url": "https://www.washingtonsun.com/congress/white-house-aide-gao-ueland-confirmation-hearing",
-        "published": "2026-11-19T20:03:28Z",
-        "scope": "Reports hearing testimony and remarks made to its reporter afterward by Ueland and senators, as well as an unnamed GAO employee\u2019s account.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Eric Ueland, nominee for comptroller general",
-        "text": "According to AP, Ueland told lawmakers he would act in a nonpartisan manner and fulfill the comptroller general\u2019s responsibilities.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": [
-      "The Washington Post"
-    ]
-  },
-  {
     "id": "auto-a9a6349cba1a",
     "title": "AP and CNN report flooding and water rescues in Florida\u2019s Brevard County",
     "place": "United States",
@@ -486,5 +429,65 @@
       "The Daily Beast",
       "Axios"
     ]
+  },
+  {
+    "id": "auto-56eb8bc99bb3",
+    "title": "Magnitude 6.7 earthquake shakes central Peru, AP reports, citing USGS",
+    "place": "United States",
+    "time": "2026-11-21T00:40:00Z",
+    "expires": "2026-11-23T00:40:00Z",
+    "severity": "moderate",
+    "summary": "A magnitude 6.7 earthquake shook central Peru, AP reported, citing the U.S. Geological Survey. Peru\u2019s National Institute of Civil Defense said no injuries or material damage had been reported at the time of its report, according to EFE. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/d9c0a1de6be970d6a5a36993c607f29f",
+        "published": "2026-11-21T00:40:00Z",
+        "scope": "Cites the U.S. Geological Survey and Peru\u2019s Geophysical Institute; also reports that residents in Lima rushed into the streets.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "El Comercio",
+        "intermediary": null,
+        "url": "https://elcomercio.pe/peru/junin/sismo-de-67-grados-en-vivo-epicentro-y-todo-lo-que-se-sabe-hasta-el-momento-junin-noticia/",
+        "published": "2026-11-21T00:40:00Z",
+        "scope": "Cites and reproduces the Geophysical Institute of Peru\u2019s seismic report.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "N+",
+        "intermediary": null,
+        "url": "https://www.nmas.com.mx/sociedad/temblor-hoy-20-de-noviembre-2026-sismo-de-magnitud-69-sacude-junin-peru/",
+        "published": "2026-11-21T00:40:00Z",
+        "scope": "Reports preliminary seismic data for the Jun\u00edn earthquake.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "EFE",
+        "intermediary": null,
+        "url": "https://www.infobae.com/america/agencias/2026/11/21/un-sismo-de-67-sacude-el-centro-de-peru-y-se-siente-en-lima-sin-danos-por-el-momento/",
+        "published": "2026-11-21T00:40:00Z",
+        "scope": "Cites Peru\u2019s National Institute of Civil Defense and Geophysical Institute; the article is carried by Infobae.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Peru\u2019s National Institute of Civil Defense",
+        "text": "According to EFE, the institute said no injuries or material damage had been reported at the time of its report.",
+        "verification": "attributed"
+      },
+      {
+        "who": "Peru\u2019s Geophysical Institute",
+        "text": "According to AP, the institute said no damage or casualties had been reported and there was no tsunami threat.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
   }
 ]
