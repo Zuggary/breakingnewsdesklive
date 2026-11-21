@@ -1,47 +1,5 @@
 [
   {
-    "id": "auto-0db7ea228665",
-    "title": "Russia says it struck Ukrainian infrastructure; Kyiv officials report bridge damage",
-    "place": "United States",
-    "time": "2026-11-20T07:35:34Z",
-    "expires": "2026-11-22T07:35:34Z",
-    "severity": "moderate",
-    "summary": "Reuters reported that Russia\u2019s Defence Ministry said its forces struck Ukrainian energy and transport infrastructure, defence industry facilities and vessels. AP reported that Kyiv authorities described damage to bridges and transport infrastructure. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Reuters",
-        "intermediary": null,
-        "url": "https://malaysia.news.yahoo.com/russia-says-hits-sea-vessels-073534922.html",
-        "published": "2026-11-20T07:35:34Z",
-        "scope": "Russia\u2019s Defence Ministry statement",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/433e18f00cbd37a2a9da94e60fce0e07",
-        "published": "2026-11-20T07:35:34Z",
-        "scope": "AP attributes its report on the Kyiv strikes to local authorities, the Kyiv City Military Administration, Mayor Vitali Klitschko and energy provider DTEK.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Russia\u2019s Defence Ministry",
-        "text": "The ministry said its forces struck Ukrainian infrastructure and vessels it said were used for military purposes.",
-        "verification": "attributed"
-      },
-      {
-        "who": "Vitali Klitschko, Kyiv mayor",
-        "text": "Klitschko said strikes damaged the Podilskyi and Darnitskyi bridges and hit the Southern Bridge, causing traffic closures and restrictions.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-10ccd315c747",
     "title": "AP reports Iraqi security forces established headquarters near Jurf al-Sakhar",
     "place": "United States",
@@ -522,6 +480,43 @@
       {
         "who": "Julien Thoeni, conference chair",
         "text": "According to Reuters, Thoeni described the agreement as a significant achievement for humanitarian disarmament.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
+  },
+  {
+    "id": "auto-985c5e79984a",
+    "title": "Reuters reports magnitude 6.8 earthquake in Banda Sea, citing GFZ",
+    "place": "United States",
+    "time": "2026-11-21T10:05:00Z",
+    "expires": "2026-11-23T10:05:00Z",
+    "severity": "moderate",
+    "summary": "Reuters, citing GFZ, reported a magnitude 6.8 earthquake northeast of Dili, Timor-Leste, at a depth of 117 km. RTM reported that METMalaysia measured the earthquake at magnitude 6.7 and said its initial assessment found no tsunami threat to Malaysia. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://new.streetinsider.com/Reuters/Magnitude%2B6.8%2Bearthquake%2Bstrikes%2BBanda%2BSea%2Bnear%2BTimor-Leste%2C%2BGFZ%2Bsays/27382885.html",
+        "published": "2026-11-21T10:05:00Z",
+        "scope": "German Research Centre for Geosciences (GFZ)",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "RTM",
+        "intermediary": null,
+        "url": "https://berita.rtm.gov.my/ringkasan-berita/?id=21141&kategori=nasional",
+        "published": "2026-11-21T10:05:00Z",
+        "scope": "Reports a statement from the Malaysian Meteorological Department (METMalaysia), which measured the earthquake at magnitude 6.7.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Malaysian Meteorological Department (METMalaysia)",
+        "text": "According to RTM, METMalaysia said its initial assessment found no tsunami threat to Malaysia.",
         "verification": "attributed"
       }
     ],
