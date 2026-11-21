@@ -1,79 +1,5 @@
 [
   {
-    "id": "auto-7a63815d0242",
-    "title": "Saudi-led coalition says it intercepted three Houthi missiles toward Riyadh",
-    "place": "United States",
-    "time": "2026-11-20T23:48:00Z",
-    "expires": "2026-11-22T23:48:00Z",
-    "severity": "moderate",
-    "summary": "The Saudi-led coalition said its air defenses intercepted and destroyed three ballistic missiles launched by the Houthis toward Riyadh. Reuters reported that its witness saw a projectile and heard a loud bang, while an AFP journalist reported hearing two explosions. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Al Jazeera",
-        "intermediary": null,
-        "url": "https://www.aljazeera.com/news/liveblog/2026/11/19/iran-war-live-houthis-escalate-attacks-on-saudi-capital",
-        "published": "2026-11-20T23:48:00Z",
-        "scope": "The Saudi-led coalition\u2019s statement",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Reuters",
-        "intermediary": null,
-        "url": "https://new.streetinsider.com/Reuters/Saudi%2BArabia%2Bsays%2Bit%2Bintercepts%2Bthree%2BHouthi%2Bmissiles%2Btargeting%2BRiyadh/27382715.html",
-        "published": "2026-11-20T23:48:00Z",
-        "scope": "Cites the Saudi-led coalition and a Reuters witness in Riyadh who saw a projectile and heard a loud bang.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "AFP",
-        "intermediary": null,
-        "url": "https://www.timesofisrael.com/liveblog_entry/saudi-led-coalition-reports-interception-of-3-houthi-missiles-headed-for-riyadh/",
-        "published": "2026-11-20T23:48:00Z",
-        "scope": "Cites the coalition's statement on X and an AFP journalist in Riyadh who heard two explosions.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Arab News",
-        "intermediary": null,
-        "url": "https://www.arabnews.com/saudi-arabia/coalition-air-defenses-intercept-3-houthi-ballistic-missiles-targeting-riyadh-3013264",
-        "published": "2026-11-20T23:48:00Z",
-        "scope": "Cites the coalition spokesman's announcement on X, Civil Defense alerts and witnesses who heard explosions.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Iran International",
-        "intermediary": null,
-        "url": "https://www.iranintl.com/en/202611201808",
-        "published": "2026-11-20T23:48:00Z",
-        "scope": "Attributes the interception announcement to coalition spokesperson Turki Al-Malki on X.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Saudi-led coalition",
-        "text": "The coalition said its air defenses intercepted and destroyed three ballistic missiles launched by the Houthis toward Riyadh.",
-        "verification": "attributed"
-      },
-      {
-        "who": "Saudi Civil Defense",
-        "text": "Civil Defense said it lifted the alert for Riyadh and that the danger had passed.",
-        "verification": "attributed"
-      },
-      {
-        "who": "Houthis",
-        "text": "The Houthis said on X that they were striking targets across Saudi Arabia, including Riyadh.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-56eb8bc99bb3",
     "title": "Magnitude 6.7 earthquake shakes central Peru, AP reports, citing USGS",
     "place": "United States",
@@ -499,6 +425,43 @@
       {
         "who": "National Weather Service Weather Prediction Center",
         "text": "Its November 21 forecast describes heavy rain and strong winds from northern California through the Pacific Northwest, with wet weather continuing through Thanksgiving.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
+  },
+  {
+    "id": "auto-dd726bd80f1b",
+    "title": "Bahrain\u2019s Interior Ministry says Iranian attack caused fire at civilian industrial facility",
+    "place": "United States",
+    "time": "2026-11-21T20:29:00Z",
+    "expires": "2026-11-23T20:29:00Z",
+    "severity": "moderate",
+    "summary": "Bahrain\u2019s Interior Ministry said an Iranian attack caused a fire and damage at a civilian industrial facility, according to ABC News and AFP. The ministry said civil defence was working to control the fire and preliminary reports indicated no injuries. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "ABC News",
+        "intermediary": null,
+        "url": "https://abcnews.com/amp/International/live-updates/iran-live-updates-tanker-attacked-strait-hormuz-ukmto?id=138171071",
+        "published": "2026-11-21T20:29:00Z",
+        "scope": "Bahrain's statement",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "AFP, via Bio Fuel Daily",
+        "intermediary": null,
+        "url": "https://www.vsatdaily.com/reports/261121200844.6hwim2ne.html",
+        "published": "2026-11-21T20:29:00Z",
+        "scope": "Bahrain's Interior Ministry and two residents who spoke to an AFP correspondent",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Bahrain Interior Ministry",
+        "text": "The ministry said civil defence was working to control the fire and preliminary reports indicated damage but no injuries.",
         "verification": "attributed"
       }
     ],
