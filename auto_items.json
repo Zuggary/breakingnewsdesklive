@@ -1,47 +1,5 @@
 [
   {
-    "id": "auto-0d3931f57d6c",
-    "title": "Intuit says it agreed to sell Mailchimp to Bending Spoons for about $3.68 billion",
-    "place": "United States",
-    "time": "2026-11-19T21:07:00Z",
-    "expires": "2026-11-21T21:07:00Z",
-    "severity": "moderate",
-    "summary": "Intuit said it agreed to sell Mailchimp to Bending Spoons for approximately $3.68 billion, with closing expected in early 2027 subject to regulatory approvals and other customary conditions. Bending Spoons confirmed the agreement and said Intuit would invest $368 million of the proceeds in newly issued Bending Spoons equity. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Reuters",
-        "intermediary": null,
-        "url": "https://www.investing.com/news/stock-market-news/intuit-to-sell-mailchimp-to-bending-spoons-for-368-billion-5039975",
-        "published": "2026-11-19T21:07:00Z",
-        "scope": "Intuit's announcement",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Dow Jones Newswires",
-        "intermediary": null,
-        "url": "https://www.marketscreener.com/news/bending-spoons-to-buy-mailchimp-raises-outlook-ce785ed2df8dfe26",
-        "published": "2026-11-19T21:07:00Z",
-        "scope": "Attributes the acquisition announcement to Bending Spoons; cites FactSet for analyst estimates.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Intuit",
-        "text": "Intuit said the sale would sharpen its focus on business customers and that it intended to use cash proceeds for share repurchases after closing.",
-        "verification": "attributed"
-      },
-      {
-        "who": "Bending Spoons",
-        "text": "Bending Spoons confirmed an agreement to acquire Mailchimp at an enterprise value of $3.68 billion and said Intuit would invest $368 million of the proceeds in newly issued Bending Spoons equity.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-99472c6d7fb6",
     "title": "White House official confirms to CBS News that national cyber director Sean Cairncross is leaving",
     "place": "United States",
@@ -506,6 +464,75 @@
       {
         "who": "Peru\u2019s Geophysical Institute",
         "text": "According to AP, the institute said no damage or casualties had been reported and there was no tsunami threat.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
+  },
+  {
+    "id": "auto-7e5eb16e3510",
+    "title": "Peru\u2019s Geophysical Institute reports magnitude 6.7 earthquake near Jun\u00edn",
+    "place": "United States",
+    "time": "2026-11-21T00:40:00Z",
+    "expires": "2026-11-23T00:40:00Z",
+    "severity": "moderate",
+    "summary": "Peru\u2019s Geophysical Institute reported a magnitude 6.7 earthquake northwest of Jun\u00edn at a depth of 129 km, and AP reported that it was felt in Lima. Andina attributed later reports of damage to homes and a hospital, road blockages and power cuts to civil defense chief Luis V\u00e1squez. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/peru-earthquake-andes-magnitude-67-d9c0a1de6be970d6a5a36993c607f29f",
+        "published": "2026-11-21T00:40:00Z",
+        "scope": "Cites the U.S. Geological Survey, Peru\u2019s Geophysical Institute and a local television interview with Carhuamayo\u2019s mayor.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://www.gmanetwork.com/news/topstories/world/1010281/magnitude-6-8-quake-in-peru-s-andean-region-sends-lima-residents-onto-streets/story/",
+        "published": "2026-11-21T00:40:00Z",
+        "scope": "Reuters cites the German Research Centre for Geosciences, Peru's Geophysical Institute, television footage and a Jun\u00edn council member's remarks to RPP. GMA News carries the Reuters report.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "RPP",
+        "intermediary": null,
+        "url": "https://rpp.pe/peru/actualidad/sismo-de-magnitud-67-junin-indeci-informa-reporte-de-danos-noticia-1718928",
+        "published": "2026-11-21T00:40:00Z",
+        "scope": "RPP reports remarks made to it by the head of Peru's civil defense agency and cites the Geophysical Institute's seismic report.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Agencia EFE",
+        "intermediary": null,
+        "url": "https://efe.com/mundo/2026-11-21/sismo-junin-peru/",
+        "published": "2026-11-21T00:40:00Z",
+        "scope": "EFE cites Peru's civil defense and geophysical agencies, statements by local officials to Peruvian media, and its own photographs from Lima.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Agencia Andina",
+        "intermediary": null,
+        "url": "https://andina.pe/ingles/noticia-peru-67magnitude-earthquake-in-junin-shook-homes-buildings-in-lima-and-callao-1100888.aspx",
+        "published": "2026-11-21T00:40:00Z",
+        "scope": "Andina cites Peru's Geophysical Institute and describes residents leaving buildings in Lima and Callao.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Peru\u2019s Geophysical Institute",
+        "text": "The institute reported a magnitude 6.7 earthquake at 7:09 p.m. local time, 30 km northwest of Jun\u00edn, at a depth of 129 km.",
+        "verification": "attributed"
+      },
+      {
+        "who": "Peru\u2019s civil defense chief Luis V\u00e1squez",
+        "text": "According to Andina, V\u00e1squez reported damage to homes and a hospital, road blockages and power cuts after initially reporting no damage.",
         "verification": "attributed"
       }
     ],
