@@ -1,63 +1,5 @@
 [
   {
-    "id": "auto-d81b28a90478",
-    "title": "Second judge blocks construction of Trump\u2019s proposed memorial arch, AP reports",
-    "place": "United States",
-    "time": "2026-11-20T18:24:17Z",
-    "expires": "2026-11-22T18:24:17Z",
-    "severity": "moderate",
-    "summary": "A second federal judge issued a preliminary injunction halting construction of President Donald Trump\u2019s proposed memorial arch near Arlington National Cemetery, according to AP. Bloomberg Law reports that Justice Department spokesperson Matthew Nies said the department plans to appeal the ruling. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/trump-arch-virginia-judge-brinkema-f7b9b0a0480481505038d007bf270cd9",
-        "published": "2026-11-20T18:24:17Z",
-        "scope": "Plaintiffs' lawyers who sued to challenge the project.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "NPR",
-        "intermediary": null,
-        "url": "https://www.knba.org/npr-news/2026-11-20/a-second-judge-blocks-trumps-arch-saying-its-unlikely-to-succeed-in-court",
-        "published": "2026-11-20T18:24:17Z",
-        "scope": "Democracy Forward, which represents the plaintiffs, confirmed the ruling in a statement shared with NPR.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "The Washington Post",
-        "intermediary": null,
-        "url": "https://www.washingtonpost.com/politics/2026/11/20/another-judge-blocks-trumps-arch-construction-second-blow-project/",
-        "published": "2026-11-20T18:24:17Z",
-        "scope": "Cites statements from parties to the lawsuit, including Democracy Forward, and a White House response.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Bloomberg Law",
-        "intermediary": null,
-        "url": "https://news.bloomberglaw.com/health-law-and-business/trumps-triumphal-arch-temporarily-blocked-by-another-judge",
-        "published": "2026-11-20T18:24:17Z",
-        "scope": "Reports the judge's decision and cites a Justice Department spokesperson on the department's appeal plans.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Justice Department spokesperson Matthew Nies",
-        "text": "The department plans to appeal the ruling, according to Bloomberg Law.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": [
-      "The Daily Beast",
-      "Axios"
-    ]
-  },
-  {
     "id": "auto-7a63815d0242",
     "title": "Saudi-led coalition says it intercepted three Houthi missiles toward Riyadh",
     "place": "United States",
@@ -511,6 +453,52 @@
       {
         "who": "Frederick County Sheriff Chuck Jenkins",
         "text": "Jenkins defended the county's ICE partnership as effective for public safety and said he did not regret his position, even if it may have cost him reelection, according to Maryland Matters.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
+  },
+  {
+    "id": "auto-a81421fc6d9e",
+    "title": "AccuWeather forecasts Pacific storms along the West Coast through Thanksgiving week",
+    "place": "United States",
+    "time": "2026-11-21T17:22:00Z",
+    "expires": "2026-11-23T17:22:00Z",
+    "severity": "moderate",
+    "summary": "AccuWeather meteorologists forecast a series of Pacific storms bringing rain, snow and wind to the U.S. West Coast through Thanksgiving week. The Weather Channel's meteorologists also describe possible multiple storms, while the National Weather Service Weather Prediction Center forecasts heavy rain and strong winds from northern California through the Pacific Northwest. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "AccuWeather",
+        "intermediary": null,
+        "url": "https://www.accuweather.com/en/weather-forecasts/barrage-of-storms-to-continue-hammering-west-coast-through-thanksgiving-week/1962298",
+        "published": "2026-11-21T17:22:00Z",
+        "scope": "AccuWeather meteorologists and the article's author, a senior meteorologist",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "The Weather Channel",
+        "intermediary": null,
+        "url": "https://weather.com/2026/11/20/holiday/thanksgiving/thanksgiving-travel-weather-forecast-us-storms",
+        "published": "2026-11-21T17:22:00Z",
+        "scope": "Its meteorologists describe computer forecast models indicating possible multiple storms before and during Thanksgiving.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "NPR",
+        "intermediary": null,
+        "url": "https://www.kuow.org/npr-news/2026-11-21/storms-expected-on-both-coasts-threatens-thanksgiving-travel",
+        "published": "2026-11-21T17:22:00Z",
+        "scope": "Reports National Weather Service forecasts and cites meteorologists and San Francisco Mayor Daniel Lurie.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "National Weather Service Weather Prediction Center",
+        "text": "Its November 21 forecast describes heavy rain and strong winds from northern California through the Pacific Northwest, with wet weather continuing through Thanksgiving.",
         "verification": "attributed"
       }
     ],
