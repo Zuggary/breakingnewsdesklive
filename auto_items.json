@@ -1,42 +1,5 @@
 [
   {
-    "id": "auto-3969074dd456",
-    "title": "Magnitude 4.4 earthquake shakes Los Angeles area near Commerce, news outlets report",
-    "place": "United States",
-    "time": "2026-11-20T12:10:00Z",
-    "expires": "2026-11-22T12:10:00Z",
-    "severity": "moderate",
-    "summary": "KABC and CBS News reported that a magnitude 4.4 earthquake struck near Commerce, California, citing the U.S. Geological Survey. KABC reported that the Los Angeles Fire Department entered earthquake alert mode and said personnel at its 106 neighborhood stations were surveying infrastructure and areas of concern. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "KABC",
-        "intermediary": null,
-        "url": "https://editions.geo.hosted.abcotvs.com/post/magnitude-42-earthquake-strikes-commerce-area-usgs-says/20058854/",
-        "published": "2026-11-20T12:10:00Z",
-        "scope": "Cites the U.S. Geological Survey, residents who felt the shaking, and a Los Angeles Fire Department statement.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "CBS News",
-        "intermediary": null,
-        "url": "https://www.cbsnews.com/news/earthquake-los-angeles-11-20-2026/",
-        "published": "2026-11-20T12:10:00Z",
-        "scope": "Cites the U.S. Geological Survey and its reports of people feeling the earthquake.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Los Angeles Fire Department",
-        "text": "According to KABC, the department said it entered earthquake alert mode and was surveying infrastructure and areas of concern through personnel at its 106 neighborhood fire stations.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-d81b28a90478",
     "title": "Second judge blocks construction of Trump\u2019s proposed memorial arch, AP reports",
     "place": "United States",
@@ -501,5 +464,56 @@
     "carried_by": [
       "Local 10"
     ]
+  },
+  {
+    "id": "auto-828b0617b69e",
+    "title": "AP review identifies sheriff races where immigration enforcement cooperation played a role in defeats",
+    "place": "United States",
+    "time": "2026-11-21T13:55:48Z",
+    "expires": "2026-11-23T13:55:48Z",
+    "severity": "moderate",
+    "summary": "The Associated Press reported that its review of about 250 sheriff elections identified several races in which cooperation with federal immigration enforcement played a role in a candidate's defeat. Maryland Matters separately reported on Frederick County Sheriff Chuck Jenkins' defeat, interviewing Jenkins and a local organizer about his immigration stance. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/immigration-sheriffs-elections-ice-agreements-0bca2d5add91614df4cbe1b92df8f5e4",
+        "published": "2026-11-21T13:55:48Z",
+        "scope": "AP reviewed about 250 sheriff elections and interviewed candidates, voters, activists and local officials.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Maryland Matters",
+        "intermediary": null,
+        "url": "https://thedailyrecord.com/2026/11/17/blue-wave-meets-blue-line-in-frederick-as-sheriffs-race-just-one-of-democrats-wins/",
+        "published": "2026-11-21T13:55:48Z",
+        "scope": "Interviewed Sheriff Chuck Jenkins and a local organizer about his defeat and the role of his immigration stance.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "WUNC News",
+        "intermediary": null,
+        "url": "https://www.wunc.org/politics/2026-11-04/alamance-county-voters-oust-sheriff-terry-johnson",
+        "published": "2026-11-21T13:55:48Z",
+        "scope": "Reported the Alamance County election result, Johnson's statement and his office's participation in the ICE agreement, drawing on its prior reporting.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Terry Johnson, outgoing Alamance County, North Carolina, sheriff",
+        "text": "Johnson told AP that immigration policy likely did not cause his defeat, citing his long tenure and the political environment for Republicans. He said he followed the law and protected public safety.",
+        "verification": "attributed"
+      },
+      {
+        "who": "Frederick County Sheriff Chuck Jenkins",
+        "text": "Jenkins defended the county's ICE partnership as effective for public safety and said he did not regret his position, even if it may have cost him reelection, according to Maryland Matters.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
   }
 ]
