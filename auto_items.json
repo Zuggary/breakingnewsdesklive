@@ -1,58 +1,5 @@
 [
   {
-    "id": "auto-a9a6349cba1a",
-    "title": "AP and CNN report flooding and water rescues in Florida\u2019s Brevard County",
-    "place": "United States",
-    "time": "2026-11-19T20:10:30Z",
-    "expires": "2026-11-21T20:10:30Z",
-    "severity": "moderate",
-    "summary": "Flooding prompted evacuations and water rescues in Florida\u2019s Brevard County on Thursday, according to AP and CNN. County spokesperson Don Walker told CNN that more than 50 water rescues had been conducted and rescues were continuing Thursday morning. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/extreme-weather-flooding-florida-california-storms-11c05b72dad87373b5632c0f4bb322f5",
-        "published": "2026-11-19T20:10:30Z",
-        "scope": "AP cites residents, the National Weather Service, local authorities and the Florida Division of Emergency Management.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "CNN",
-        "intermediary": null,
-        "url": "https://kesq.com/cnn-weather-environment/2026/11/19/severe-flooding-hits-parts-of-coastal-florida-from-over-a-foot-of-rain-and-a-lot-more-is-incoming/",
-        "published": "2026-11-19T20:10:30Z",
-        "scope": "Brevard County spokesperson Don Walker told CNN that more than 50 water rescues had been conducted; the report also cites the Weather Prediction Center.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "WFTV",
-        "intermediary": null,
-        "url": "https://www.wftv.com/news/local/flash-flood-warning-issued-parts-brevard-county/NBMPY4TREZE2HAUIRZSS3S7YBY/?outputType=amp",
-        "published": "2026-11-19T20:10:30Z",
-        "scope": "WFTV reports flash flood warnings and Doppler radar rainfall estimates for Brevard County.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "City of Palm Bay",
-        "text": "AP reported that the city ordered mandatory evacuations for some Palm Bay Estates residents, helped residents by boat and opened shelters.",
-        "verification": "attributed"
-      },
-      {
-        "who": "Brevard County spokesperson Don Walker",
-        "text": "Walker told CNN that more than 50 water rescues had been conducted and that rescues were continuing Thursday morning.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": [
-      "Audacy WTIC"
-    ]
-  },
-  {
     "id": "auto-0d3931f57d6c",
     "title": "Intuit says it agreed to sell Mailchimp to Bending Spoons for about $3.68 billion",
     "place": "United States",
@@ -429,6 +376,80 @@
       "The Daily Beast",
       "Axios"
     ]
+  },
+  {
+    "id": "auto-7a63815d0242",
+    "title": "Saudi-led coalition says it intercepted three Houthi missiles toward Riyadh",
+    "place": "United States",
+    "time": "2026-11-20T23:48:00Z",
+    "expires": "2026-11-22T23:48:00Z",
+    "severity": "moderate",
+    "summary": "The Saudi-led coalition said its air defenses intercepted and destroyed three ballistic missiles launched by the Houthis toward Riyadh. Reuters reported that its witness saw a projectile and heard a loud bang, while an AFP journalist reported hearing two explosions. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Al Jazeera",
+        "intermediary": null,
+        "url": "https://www.aljazeera.com/news/liveblog/2026/11/19/iran-war-live-houthis-escalate-attacks-on-saudi-capital",
+        "published": "2026-11-20T23:48:00Z",
+        "scope": "The Saudi-led coalition\u2019s statement",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://new.streetinsider.com/Reuters/Saudi%2BArabia%2Bsays%2Bit%2Bintercepts%2Bthree%2BHouthi%2Bmissiles%2Btargeting%2BRiyadh/27382715.html",
+        "published": "2026-11-20T23:48:00Z",
+        "scope": "Cites the Saudi-led coalition and a Reuters witness in Riyadh who saw a projectile and heard a loud bang.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "AFP",
+        "intermediary": null,
+        "url": "https://www.timesofisrael.com/liveblog_entry/saudi-led-coalition-reports-interception-of-3-houthi-missiles-headed-for-riyadh/",
+        "published": "2026-11-20T23:48:00Z",
+        "scope": "Cites the coalition's statement on X and an AFP journalist in Riyadh who heard two explosions.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Arab News",
+        "intermediary": null,
+        "url": "https://www.arabnews.com/saudi-arabia/coalition-air-defenses-intercept-3-houthi-ballistic-missiles-targeting-riyadh-3013264",
+        "published": "2026-11-20T23:48:00Z",
+        "scope": "Cites the coalition spokesman's announcement on X, Civil Defense alerts and witnesses who heard explosions.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Iran International",
+        "intermediary": null,
+        "url": "https://www.iranintl.com/en/202611201808",
+        "published": "2026-11-20T23:48:00Z",
+        "scope": "Attributes the interception announcement to coalition spokesperson Turki Al-Malki on X.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Saudi-led coalition",
+        "text": "The coalition said its air defenses intercepted and destroyed three ballistic missiles launched by the Houthis toward Riyadh.",
+        "verification": "attributed"
+      },
+      {
+        "who": "Saudi Civil Defense",
+        "text": "Civil Defense said it lifted the alert for Riyadh and that the danger had passed.",
+        "verification": "attributed"
+      },
+      {
+        "who": "Houthis",
+        "text": "The Houthis said on X that they were striking targets across Saudi Arabia, including Riyadh.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
   },
   {
     "id": "auto-56eb8bc99bb3",
