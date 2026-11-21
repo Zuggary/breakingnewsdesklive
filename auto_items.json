@@ -1,71 +1,5 @@
 [
   {
-    "id": "auto-2d58afbd9ed3",
-    "title": "Reuters: Lawmakers warn Iran war funding dispute could complicate government funding deal",
-    "place": "United States",
-    "time": "2026-11-20T11:01:00Z",
-    "expires": "2026-11-22T11:01:00Z",
-    "severity": "moderate",
-    "summary": "Reuters reported that lawmakers from both parties warned disagreements over Iran war funding and President Donald Trump's defense spending request could impede a government funding deal beyond December 11. Sen. Michael Bennet's office said he would oppose appropriations packages that fund the war and urged the Senate to restrict that spending. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Reuters",
-        "intermediary": null,
-        "url": "https://www.devdiscourse.com/article/international/4009973-congress-struggles-to-avert-us-shutdown-as-iran-war-divides-lawmakers",
-        "published": "2026-11-20T11:01:00Z",
-        "scope": "Named lawmakers from both parties, including Senator Mike Rounds, who spoke to Reuters.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "The Washington Post",
-        "intermediary": null,
-        "url": "https://www.washingtonpost.com/politics/2026/11/11/one-month-shutdown-congress-is-far-deal-fund-government/",
-        "published": "2026-11-20T11:01:00Z",
-        "scope": "Reports statements from Senate appropriator Patty Murray and House Appropriations Committee Chairman Tom Cole, including Cole's response when asked about restrictions on Iran war funding.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Axios",
-        "intermediary": null,
-        "url": "https://www.axios.com/2026/11/19/government-shutdown-funding-iran-democrat",
-        "published": "2026-11-20T11:01:00Z",
-        "scope": "Quotes multiple House Democrats and identifies an interview with Rep. Yassamin Ansari.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Roll Call",
-        "intermediary": null,
-        "url": "https://rollcall.com/2026/11/12/democrats-mulling-iran-war-funding-cutoff-strategy/",
-        "published": "2026-11-20T11:01:00Z",
-        "scope": "Quotes lawmakers and a joint senators' statement; cites sources familiar with administration discussions about a stopgap bill.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Bloomberg",
-        "intermediary": null,
-        "url": "https://businessmirror.com.ph/2026/11/10/shutdown-risks-emerge-as-democrats-consider-ways-to-end-iran-war/",
-        "published": "2026-11-20T11:01:00Z",
-        "scope": "Reports an emailed statement from Sen. Patty Murray and comments from Rep. Rosa DeLauro; also attributes separate interviews to other publications.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Sen. Michael Bennet's office",
-        "text": "Bennet's office said he would oppose appropriations packages that fund the Iran war and urged the Senate to restrict that spending; it noted that government funding expires December 11.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": [
-      "MarketScreener"
-    ]
-  },
-  {
     "id": "auto-3969074dd456",
     "title": "Magnitude 4.4 earthquake shakes Los Angeles area near Commerce, news outlets report",
     "place": "United States",
@@ -519,5 +453,53 @@
       }
     ],
     "carried_by": []
+  },
+  {
+    "id": "auto-682f0fb56a06",
+    "title": "AP: Joel Webbon outlines plans to seek political influence and elected offices",
+    "place": "United States",
+    "time": "2026-11-21T12:54:56Z",
+    "expires": "2026-11-23T12:54:56Z",
+    "severity": "moderate",
+    "summary": "Joel Webbon told The Associated Press he plans to build political influence and seek elected offices after Republicans\u2019 midterm losses. According to the supplied AP report, the White House did not respond to its request for comment. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/trump-webbon-christian-nationalist-maga-theocracy-republicans-9c5e34308609af945f4e738d03c30257",
+        "published": "2026-11-21T12:54:56Z",
+        "scope": "Reporter attended Webbon's conference and interviewed Webbon, attendees and researchers.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "The Atlantic",
+        "intermediary": null,
+        "url": "https://www.theatlantic.com/politics/2026/11/christian-nationalism-trump-elections/689373/",
+        "published": "2026-11-21T12:54:56Z",
+        "scope": "Ali Breland reports speaking directly with Webbon about his plan after the midterms, and also cites conversations with Nick Fuentes and a scholar.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "CNN",
+        "intermediary": null,
+        "url": "https://kesq.com/news/national-politics/cnn-us-politics/2026/11/15/in-newly-blue-texas-far-right-christian-nationalists-gather-to-plan-a-future-after-trump/",
+        "published": "2026-11-21T12:54:56Z",
+        "scope": "Donie O\u2019Sullivan reports from Irving on the conference and quotes Webbon\u2019s speech. The linked article carries CNN\u2019s reporting.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "White House",
+        "text": "According to AP, the White House did not respond to its request for comment.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": [
+      "Local 10"
+    ]
   }
 ]
