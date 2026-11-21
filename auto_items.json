@@ -1,51 +1,5 @@
 [
   {
-    "id": "auto-cf25e3c98898",
-    "title": "Senate passes permitting bill 62\u201333, CBS News reports; House approval still required",
-    "place": "United States",
-    "time": "2026-11-20T03:18:00Z",
-    "expires": "2026-11-22T03:18:00Z",
-    "severity": "moderate",
-    "summary": "CBS News reported that the Senate voted 62\u201333 to pass a bipartisan bill intended to speed permitting for energy and infrastructure projects; Axios independently reported the vote and said House approval remained necessary. CBS reported that a spokesperson said earlier in November that House Minority Leader Hakeem Jeffries supported permitting reform but considered the Senate legislation deficient in several areas. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "CBS News",
-        "intermediary": null,
-        "url": "https://www.cbsnews.com/news/senate-bipartisan-permitting-reform-bill-energy-baaja-trump/",
-        "published": "2026-11-20T03:18:00Z",
-        "scope": "Reports the Senate vote and quotes senators and a spokesperson.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Axios",
-        "intermediary": null,
-        "url": "https://www.axios.com/2026/11/20/senate-passes-energy-permitting-bill",
-        "published": "2026-11-20T03:18:00Z",
-        "scope": "Independently reports the Senate vote and describes the bill's provisions.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "The Washington Post",
-        "intermediary": null,
-        "url": "https://www.washingtonpost.com/climate-environment/2026/11/19/senate-votes-weaken-environmental-laws-speed-up-energy-projects/",
-        "published": "2026-11-20T03:18:00Z",
-        "scope": "Reports the Senate vote and identifies senators who supported or opposed the measure.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "House Minority Leader Hakeem Jeffries, through a spokesperson",
-        "text": "CBS News reported that the spokesperson said earlier in November that Jeffries supported permitting reform but considered the Senate legislation deficient in several areas.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-0db7ea228665",
     "title": "Russia says it struck Ukrainian infrastructure; Kyiv officials report bridge damage",
     "place": "United States",
@@ -531,6 +485,43 @@
       {
         "who": "Frederico Meyer, Brazil's ambassador",
         "text": "He said technology was advancing faster than diplomacy, according to AP.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
+  },
+  {
+    "id": "auto-7e079edc5594",
+    "title": "Reuters and AP report agreement to pursue an international instrument on autonomous weapons",
+    "place": "United States",
+    "time": "2026-11-21T05:35:00Z",
+    "expires": "2026-11-23T05:35:00Z",
+    "severity": "moderate",
+    "summary": "Countries at UN weapons talks in Geneva agreed to work toward an international instrument on lethal autonomous weapons over two years, Reuters and AP reported. Whether the instrument would be legally binding remained undecided, the outlets reported. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://new.streetinsider.com/Reuters/States%2Bagree%2Bto%C2%A0UN%2Btalks%2Baiming%2Bto%2Bregulate%2B%27killer%2Brobots%27%2Bby%2B2028/27382859.html",
+        "published": "2026-11-21T05:35:00Z",
+        "scope": "Reporting from Geneva, including remarks by the meeting's chair and a diplomat involved in the talks; published here by StreetInsider.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/ebe057d2a47cde53100970c8f648e7fa",
+        "published": "2026-11-21T05:35:00Z",
+        "scope": "Reporting from Geneva, including remarks by Brazil's ambassador and accounts from advocacy groups.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Julien Thoeni, conference chair",
+        "text": "According to Reuters, Thoeni described the agreement as a significant achievement for humanitarian disarmament.",
         "verification": "attributed"
       }
     ],
