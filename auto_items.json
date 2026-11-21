@@ -1,44 +1,5 @@
 [
   {
-    "id": "auto-99472c6d7fb6",
-    "title": "White House official confirms to CBS News that national cyber director Sean Cairncross is leaving",
-    "place": "United States",
-    "time": "2026-11-19T22:12:23Z",
-    "expires": "2026-11-21T22:12:23Z",
-    "severity": "moderate",
-    "summary": "White House national cyber director Sean Cairncross is leaving his post, a White House official told CBS News. Axios also reported his departure, citing its sources. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Axios",
-        "intermediary": null,
-        "url": "https://www.axios.com/2026/11/19/trump-national-cyber-director-sean-cairncross-leaving",
-        "published": "2026-11-19T22:12:23Z",
-        "scope": "Sources; Reuters and the Daily Beast attribute details of the departure to Axios.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "CBS News",
-        "intermediary": null,
-        "url": "https://www.cbsnews.com/news/white-house-national-cyber-director-sean-cairncross-leaving/",
-        "published": "2026-11-19T22:12:23Z",
-        "scope": "A White House official.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "White House official",
-        "text": "Confirmed to CBS News that Cairncross will leave his position.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": [
-      "Reuters"
-    ]
-  },
-  {
     "id": "auto-cf25e3c98898",
     "title": "Senate passes permitting bill 62\u201333, CBS News reports; House approval still required",
     "place": "United States",
@@ -533,6 +494,43 @@
       {
         "who": "Peru\u2019s civil defense chief Luis V\u00e1squez",
         "text": "According to Andina, V\u00e1squez reported damage to homes and a hospital, road blockages and power cuts after initially reporting no damage.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
+  },
+  {
+    "id": "auto-f02d5141be58",
+    "title": "AP: Countries agree to pursue possible autonomous weapons agreement by 2028",
+    "place": "United States",
+    "time": "2026-11-21T04:56:00Z",
+    "expires": "2026-11-23T04:56:00Z",
+    "severity": "moderate",
+    "summary": "Countries at a UN weapons conference in Geneva agreed to work toward a possible agreement on lethal autonomous weapons by 2028 without committing to binding rules, AP reported. Brazil's ambassador, Frederico Meyer, said technology was advancing faster than diplomacy, according to AP. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://www.brecorder.com/news/40450103/states-agree-to-un-talks-aiming-to-regulate-killer-robots-by-2028",
+        "published": "2026-11-21T04:56:00Z",
+        "scope": "A diplomat who attended the talks and the outcome of the conference; the article is carried by Business Recorder.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/un-drones-robots-un-lethal-ai-weapons-ebe057d2a47cde53100970c8f648e7fa",
+        "published": "2026-11-21T04:56:00Z",
+        "scope": "Conference outcome and comments from Brazil's ambassador.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Frederico Meyer, Brazil's ambassador",
+        "text": "He said technology was advancing faster than diplomacy, according to AP.",
         "verification": "attributed"
       }
     ],
