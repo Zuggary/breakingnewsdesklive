@@ -1,42 +1,5 @@
 [
   {
-    "id": "auto-dd726bd80f1b",
-    "title": "Bahrain\u2019s Interior Ministry says Iranian attack caused fire at civilian industrial facility",
-    "place": "United States",
-    "time": "2026-11-21T20:29:00Z",
-    "expires": "2026-11-23T20:29:00Z",
-    "severity": "moderate",
-    "summary": "Bahrain\u2019s Interior Ministry said an Iranian attack caused a fire and damage at a civilian industrial facility, according to ABC News and AFP. The ministry said civil defence was working to control the fire and preliminary reports indicated no injuries. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "ABC News",
-        "intermediary": null,
-        "url": "https://abcnews.com/amp/International/live-updates/iran-live-updates-tanker-attacked-strait-hormuz-ukmto?id=138171071",
-        "published": "2026-11-21T20:29:00Z",
-        "scope": "Bahrain's statement",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "AFP, via Bio Fuel Daily",
-        "intermediary": null,
-        "url": "https://www.vsatdaily.com/reports/261121200844.6hwim2ne.html",
-        "published": "2026-11-21T20:29:00Z",
-        "scope": "Bahrain's Interior Ministry and two residents who spoke to an AFP correspondent",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Bahrain Interior Ministry",
-        "text": "The ministry said civil defence was working to control the fire and preliminary reports indicated damage but no injuries.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-9571a5fbcb06",
     "title": "IG Metall plans 24-hour strike at 19 northern German companies, Reuters reports",
     "place": "United States",
@@ -365,6 +328,75 @@
       {
         "who": "Anthropic, Goldman Sachs and Morgan Stanley",
         "text": "Declined to comment to Reuters.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
+  },
+  {
+    "id": "auto-d84619c89ccc",
+    "title": "Atlantic reports Pentagon directive limits support for congressional visits without Hegseth approval",
+    "place": "United States",
+    "time": "2026-11-22T12:00:00Z",
+    "expires": "2026-11-24T12:00:00Z",
+    "severity": "moderate",
+    "summary": "The Atlantic reported that a March 3 Pentagon memo restricted military support for congressional visits to the U.S. Central Command area without Defense Secretary Pete Hegseth's approval. AP reported that Pentagon spokesman Joel Valdez linked the denial of support for Senator Chris Murphy's visit to the directive and said continuing regional operations made the policy necessary in October. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "The Atlantic",
+        "intermediary": null,
+        "url": "https://www.theatlantic.com/national-security/2026/11/iran-war-pentagon-information-access/689524/",
+        "published": "2026-11-22T12:00:00Z",
+        "scope": "A March 3 memo reviewed by the reporter and a person familiar with a senator's attempted visit.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/c3653612100f15c0c4de86daffc08677",
+        "published": "2026-11-22T12:00:00Z",
+        "scope": "Reports the March 3 directive's wording and cites Pentagon spokesman Joel Valdez on its application to Senator Chris Murphy and its continued necessity in October.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "The Guardian",
+        "intermediary": null,
+        "url": "https://www.theguardian.com/us-news/2026/oct/08/chris-murphy-pete-hegseth-iran-war-costs",
+        "published": "2026-11-22T12:00:00Z",
+        "scope": "Cites a senior Pentagon official who provided the Guardian a statement linking the denial of support for Murphy's base visit to Hegseth's March 3 directive.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Military Times",
+        "intermediary": null,
+        "url": "https://www.navytimes.com/news/pentagon-congress/2026/10/08/pentagon-barred-qatar-base-access-to-hide-iran-war-damage-us-senator-claims/",
+        "published": "2026-11-22T12:00:00Z",
+        "scope": "Cites a senior Defense Department official who told Military Times that the denial of support for Murphy's visit followed the March 3 directive.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://www.internazionale.it/ultime-notizie-reuters/2026/10/06/us-senator-murphy-says-pentagon-denied-him-access-to-us-base-in-qatar",
+        "published": "2026-11-22T12:00:00Z",
+        "scope": "Reuters reporting carried by Internazionale cites Murphy's remarks to journalists and an emailed statement from a senior Pentagon official about the March 3 directive.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Pentagon spokesman Joel Valdez",
+        "text": "AP reported that Valdez said Murphy was denied access under Hegseth's regional travel directive and that continuing regional operations made the policy necessary in October.",
+        "verification": "attributed"
+      },
+      {
+        "who": "Pentagon spokesperson",
+        "text": "The Atlantic reported that a spokesperson declined to provide an on-the-record comment for its article.",
         "verification": "attributed"
       }
     ],
