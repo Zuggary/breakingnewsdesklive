@@ -1,42 +1,5 @@
 [
   {
-    "id": "auto-7a54f7808d44",
-    "title": "AP and TSN report installer shortages delaying window repairs in Ukraine",
-    "place": "United States",
-    "time": "2026-11-22T05:00:13Z",
-    "expires": "2026-11-24T05:00:13Z",
-    "severity": "moderate",
-    "summary": "The Associated Press reports that shortages of skilled window installers are delaying repairs to Ukrainian homes damaged by Russian attacks. TSN quotes production manager Ihor Sydorenko and parliamentary committee deputy chair Dmytro Kysylevskyi describing installer shortages and repair delays. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/russia-ukraine-war-broken-windows-economy-reconstruction-a031073d553cafcfa916164b1184e5ad",
-        "published": "2026-11-22T05:00:13Z",
-        "scope": "Interviews with a Kyiv resident, an installer and the executive director of a Ukrainian window manufacturers' association, plus on-the-ground observations and World Bank data.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "TSN",
-        "intermediary": null,
-        "url": "https://tsn.ua/exclusive/naydorozche-sklo-v-yevropi-ta-ochikuvannia-misiatsiamy-chomu-v-ukrayini-vynyk-vikonnyy-defitst-3198255.html",
-        "published": "2026-11-22T05:00:13Z",
-        "scope": "TSN quotes window production manager Ihor Sydorenko and Ukrainian parliamentary committee deputy chair Dmytro Kysylevskyi about installer shortages and repair delays.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Dmytro Kysylevskyi, deputy chair of Ukraine\u2019s parliamentary committee on economic development",
-        "text": "TSN quotes Kysylevskyi confirming shortages of qualified window installers and surveyors, citing broader skilled-trade shortages and mobilization. He said there was no immediate universal solution and suggested temporary coverings while residents await windows.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-9f0c195c83d9",
     "title": "Witnesses report drones and explosions around Khartoum, news agencies say",
     "place": "United States",
@@ -510,6 +473,45 @@
       {
         "who": "Chuck Hubbard",
         "text": "According to WRAL, Hubbard said Foxx conceded by phone following the recount and thanked her for her service and commitment to a smooth transition.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": [
+      "The Washington Post"
+    ]
+  },
+  {
+    "id": "auto-f1ac305b8f50",
+    "title": "AP projects Democrats at 258 or more House seats after calling North Carolina race for Hubbard",
+    "place": "United States",
+    "time": "2026-11-22T18:07:01Z",
+    "expires": "2026-11-24T18:07:01Z",
+    "severity": "moderate",
+    "summary": "The Associated Press called North Carolina\u2019s 5th Congressional District for Democrat Chuck Hubbard over Republican Rep. Virginia Foxx, putting Democrats\u2019 projected House total at at least 258 seats. CNN separately reported Foxx\u2019s concession, citing Foxx and a Democratic Congressional Campaign Committee spokesperson. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/democrats-house-majority-election-2026-congress-721096a4d9ba2cd68683692361798cdb",
+        "published": "2026-11-22T18:07:01Z",
+        "scope": "AP\u2019s own election race call and seat tally.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "CNN",
+        "intermediary": null,
+        "url": "https://keyt.com/politics/cnn-us-politics/2026/11/22/republican-chair-of-the-house-rules-committee-loses-reelection-in-democrats-largest-majority-this-century/",
+        "published": "2026-11-22T18:07:01Z",
+        "scope": "CNN reports Foxx's concession based on Foxx and a Democratic Congressional Campaign Committee spokesperson.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Rep. Virginia Foxx",
+        "text": "According to AP, Foxx said she called Hubbard to concede after the recount and expressed support for the peaceful transition of elected office.",
         "verification": "attributed"
       }
     ],
