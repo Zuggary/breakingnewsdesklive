@@ -1,53 +1,5 @@
 [
   {
-    "id": "auto-682f0fb56a06",
-    "title": "AP: Joel Webbon outlines plans to seek political influence and elected offices",
-    "place": "United States",
-    "time": "2026-11-21T12:54:56Z",
-    "expires": "2026-11-23T12:54:56Z",
-    "severity": "moderate",
-    "summary": "Joel Webbon told The Associated Press he plans to build political influence and seek elected offices after Republicans\u2019 midterm losses. According to the supplied AP report, the White House did not respond to its request for comment. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/trump-webbon-christian-nationalist-maga-theocracy-republicans-9c5e34308609af945f4e738d03c30257",
-        "published": "2026-11-21T12:54:56Z",
-        "scope": "Reporter attended Webbon's conference and interviewed Webbon, attendees and researchers.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "The Atlantic",
-        "intermediary": null,
-        "url": "https://www.theatlantic.com/politics/2026/11/christian-nationalism-trump-elections/689373/",
-        "published": "2026-11-21T12:54:56Z",
-        "scope": "Ali Breland reports speaking directly with Webbon about his plan after the midterms, and also cites conversations with Nick Fuentes and a scholar.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "CNN",
-        "intermediary": null,
-        "url": "https://kesq.com/news/national-politics/cnn-us-politics/2026/11/15/in-newly-blue-texas-far-right-christian-nationalists-gather-to-plan-a-future-after-trump/",
-        "published": "2026-11-21T12:54:56Z",
-        "scope": "Donie O\u2019Sullivan reports from Irving on the conference and quotes Webbon\u2019s speech. The linked article carries CNN\u2019s reporting.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "White House",
-        "text": "According to AP, the White House did not respond to its request for comment.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": [
-      "Local 10"
-    ]
-  },
-  {
     "id": "auto-828b0617b69e",
     "title": "AP review identifies sheriff races where immigration enforcement cooperation played a role in defeats",
     "place": "United States",
@@ -473,6 +425,43 @@
       {
         "who": "Israeli military",
         "text": "The military said it deployed soldiers and police to four locations and condemned the acts, according to AFP.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
+  },
+  {
+    "id": "auto-3de31faa3ab7",
+    "title": "Reuters and IFR report limits on bankers\u2019 participation in Anthropic IPO process",
+    "place": "United States",
+    "time": "2026-11-22T11:01:00Z",
+    "expires": "2026-11-24T11:01:00Z",
+    "severity": "moderate",
+    "summary": "Reuters reported, citing people familiar with the matter, that Anthropic limited the size of some banks\u2019 IPO teams. IFR separately cited a syndicate banker describing communications limited to a handful of bankers and reported confidentiality requirements concerning teams working on OpenAI\u2019s IPO. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://www.livemint.com/companies/like-spacex-anthropic-ran-an-unusual-ipo-process-chafing-some-bankers-11795345268760.html",
+        "published": "2026-11-22T11:01:00Z",
+        "scope": "Several people familiar with the matter and people close to the process; Reuters also reviewed an email.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "IFR",
+        "intermediary": null,
+        "url": "https://www.ifre.com/equities/2505731/anthropic-takes-to-stormy-waters-with-us100bn-sink-or-swim-ipo",
+        "published": "2026-11-22T11:01:00Z",
+        "scope": "A banker in the underwriting syndicate described communications being limited to a handful of bankers. IFR also reported that Anthropic requested nondisclosure agreements to restrict information sharing with teams working on OpenAI\u2019s IPO; it did not report the six-month non-compete request.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Anthropic, Goldman Sachs and Morgan Stanley",
+        "text": "Declined to comment to Reuters.",
         "verification": "attributed"
       }
     ],
