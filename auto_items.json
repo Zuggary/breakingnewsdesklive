@@ -1,65 +1,5 @@
 [
   {
-    "id": "auto-56eb8bc99bb3",
-    "title": "Magnitude 6.7 earthquake shakes central Peru, AP reports, citing USGS",
-    "place": "United States",
-    "time": "2026-11-21T00:40:00Z",
-    "expires": "2026-11-23T00:40:00Z",
-    "severity": "moderate",
-    "summary": "A magnitude 6.7 earthquake shook central Peru, AP reported, citing the U.S. Geological Survey. Peru\u2019s National Institute of Civil Defense said no injuries or material damage had been reported at the time of its report, according to EFE. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/d9c0a1de6be970d6a5a36993c607f29f",
-        "published": "2026-11-21T00:40:00Z",
-        "scope": "Cites the U.S. Geological Survey and Peru\u2019s Geophysical Institute; also reports that residents in Lima rushed into the streets.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "El Comercio",
-        "intermediary": null,
-        "url": "https://elcomercio.pe/peru/junin/sismo-de-67-grados-en-vivo-epicentro-y-todo-lo-que-se-sabe-hasta-el-momento-junin-noticia/",
-        "published": "2026-11-21T00:40:00Z",
-        "scope": "Cites and reproduces the Geophysical Institute of Peru\u2019s seismic report.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "N+",
-        "intermediary": null,
-        "url": "https://www.nmas.com.mx/sociedad/temblor-hoy-20-de-noviembre-2026-sismo-de-magnitud-69-sacude-junin-peru/",
-        "published": "2026-11-21T00:40:00Z",
-        "scope": "Reports preliminary seismic data for the Jun\u00edn earthquake.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "EFE",
-        "intermediary": null,
-        "url": "https://www.infobae.com/america/agencias/2026/11/21/un-sismo-de-67-sacude-el-centro-de-peru-y-se-siente-en-lima-sin-danos-por-el-momento/",
-        "published": "2026-11-21T00:40:00Z",
-        "scope": "Cites Peru\u2019s National Institute of Civil Defense and Geophysical Institute; the article is carried by Infobae.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Peru\u2019s National Institute of Civil Defense",
-        "text": "According to EFE, the institute said no injuries or material damage had been reported at the time of its report.",
-        "verification": "attributed"
-      },
-      {
-        "who": "Peru\u2019s Geophysical Institute",
-        "text": "According to AP, the institute said no damage or casualties had been reported and there was no tsunami threat.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-7e5eb16e3510",
     "title": "Peru\u2019s Geophysical Institute reports magnitude 6.7 earthquake near Jun\u00edn",
     "place": "United States",
@@ -466,5 +406,53 @@
       }
     ],
     "carried_by": []
+  },
+  {
+    "id": "auto-9571a5fbcb06",
+    "title": "IG Metall plans 24-hour strike at 19 northern German companies, Reuters reports",
+    "place": "United States",
+    "time": "2026-11-21T23:01:00Z",
+    "expires": "2026-11-23T23:01:00Z",
+    "severity": "moderate",
+    "summary": "IG Metall said it would call 23,000 workers at 19 northern German companies to a 24-hour strike on Monday over pay, Reuters reported. NDR reported that Nordmetall negotiator Lena Str\u00f6bele called the escalation unnecessary and damaging and urged the union to resume negotiations. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://uk.marketscreener.com/news/german-car-and-shipyard-workers-set-to-strike-as-ig-metall-union-extends-walkout-ce785ed3de80f02c",
+        "published": "2026-11-21T23:01:00Z",
+        "scope": "IG Metall statement and a named union negotiator; Reuters report syndicated by MarketScreener.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "NDR",
+        "intermediary": null,
+        "url": "https://www.ndr.de/nachrichten/schleswig-holstein/ig-metall-plant-24-stunden-warnstreik-im-norden%2Cigmetall-170.html",
+        "published": "2026-11-21T23:01:00Z",
+        "scope": "Reports the announcement by IG Metall K\u00fcste district leader Daniel Friedrich, union statements, comments from workers and an employers' association statement.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Deutsche Presse-Agentur (dpa)",
+        "intermediary": null,
+        "url": "https://www.sueddeutsche.de/wirtschaft/tarife-metaller-warnstreiks-im-norden-werden-fortgesetzt-dpa.urn-newsml-dpa-com-20090101-261121-930-31807",
+        "published": "2026-11-21T23:01:00Z",
+        "scope": "Attributes the planned stoppages and participation figures to IG Metall K\u00fcste. S\u00fcddeutsche Zeitung identifies the article as an unedited dpa newswire report.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Nordmetall",
+        "text": "NDR reported that negotiator Lena Str\u00f6bele urged IG Metall to resume negotiations and described the escalation as unnecessary and damaging. Spokesman Alexander Luckow said employers would not consider improving their offer while the union refused further talks.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": [
+      "Yahoo Finance"
+    ]
   }
 ]
