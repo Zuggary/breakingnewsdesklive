@@ -1,51 +1,5 @@
 [
   {
-    "id": "auto-e81f7a668c56",
-    "title": "Reuters reports Democrats are preparing an agenda for their first 100 days in the congressional majority",
-    "place": "United States",
-    "time": "2026-11-21T11:00:00Z",
-    "expires": "2026-11-23T11:00:00Z",
-    "severity": "moderate",
-    "summary": "Reuters reported that congressional Democrats are preparing a legislative agenda for their first 100 days in the majority, with an announcement likely in early December after the Senate leadership contest. AP separately reported on agenda discussions at a private Democratic caucus luncheon, without confirming that timing. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Reuters",
-        "intermediary": null,
-        "url": "https://www.investing.com/news/politics-news/democrats-won-big-in-the-midterms-so-now-what-5043382",
-        "published": "2026-11-21T11:00:00Z",
-        "scope": "Lawmakers and aides, interviews with members of Congress, and public government figures; article republished by Investing.com.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/senate-democrats-van-hollen-schumer-5cc345ebec174e39debd10ded01a32b0",
-        "published": "2026-11-21T11:00:00Z",
-        "scope": "Reports on Schumer\u2019s presentation at a private caucus luncheon and interviews Democratic senators; it does not independently confirm Reuters\u2019 expected announcement date.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Politico",
-        "intermediary": null,
-        "url": "https://www.politico.com/newsletters/inside-congress/2026/11/13/cvh-vs-schumer-means-rough-november-for-dems-01164480",
-        "published": "2026-11-21T11:00:00Z",
-        "scope": "Reports that Senate Democrats began discussing their agenda and cites two people granted anonymity to describe private discussions about the leadership election; it does not independently confirm Reuters\u2019 expected announcement date.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Hakeem Jeffries, House Democratic leader",
-        "text": "AP reported that Jeffries said Democrats would unite behind restoring Affordable Care Act tax breaks, reversing Medicaid cuts, holding votes against the Iran war and undoing President Trump\u2019s tariffs.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-682f0fb56a06",
     "title": "AP: Joel Webbon outlines plans to seek political influence and elected offices",
     "place": "United States",
@@ -481,5 +435,47 @@
     "carried_by": [
       "The Washington Post"
     ]
+  },
+  {
+    "id": "auto-035ca066233f",
+    "title": "Israeli police say they are investigating fires and vandalism targeting Palestinian property in West Bank",
+    "place": "United States",
+    "time": "2026-11-22T09:24:10Z",
+    "expires": "2026-11-24T09:24:10Z",
+    "severity": "moderate",
+    "summary": "AP reported that Israeli police said they had opened an investigation into fires and graffiti targeting Palestinian property in the occupied West Bank. A local activist told AFP that Israeli settlers were responsible, while the Israeli military said it deployed soldiers and police to four locations and condemned the acts. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/8d1680a23d592667db1ce1969b55b4f2",
+        "published": "2026-11-22T09:24:10Z",
+        "scope": "Israeli police, a statement by opposition leader Gadi Eisenkot, and images on social media.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "AFP via Arab News",
+        "intermediary": null,
+        "url": "https://arabnews.maestronewsroom.com/middle-east/israel-investigates-west-bank-fires-blamed-on-settlers-3013496",
+        "published": "2026-11-22T09:24:10Z",
+        "scope": "Israeli army and police statements and an interview with a local activist.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Israeli police",
+        "text": "Police said they had opened an investigation into the fires and graffiti, according to AP.",
+        "verification": "attributed"
+      },
+      {
+        "who": "Israeli military",
+        "text": "The military said it deployed soldiers and police to four locations and condemned the acts, according to AFP.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
   }
 ]
