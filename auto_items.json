@@ -1,53 +1,5 @@
 [
   {
-    "id": "auto-9571a5fbcb06",
-    "title": "IG Metall plans 24-hour strike at 19 northern German companies, Reuters reports",
-    "place": "United States",
-    "time": "2026-11-21T23:01:00Z",
-    "expires": "2026-11-23T23:01:00Z",
-    "severity": "moderate",
-    "summary": "IG Metall said it would call 23,000 workers at 19 northern German companies to a 24-hour strike on Monday over pay, Reuters reported. NDR reported that Nordmetall negotiator Lena Str\u00f6bele called the escalation unnecessary and damaging and urged the union to resume negotiations. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Reuters",
-        "intermediary": null,
-        "url": "https://uk.marketscreener.com/news/german-car-and-shipyard-workers-set-to-strike-as-ig-metall-union-extends-walkout-ce785ed3de80f02c",
-        "published": "2026-11-21T23:01:00Z",
-        "scope": "IG Metall statement and a named union negotiator; Reuters report syndicated by MarketScreener.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "NDR",
-        "intermediary": null,
-        "url": "https://www.ndr.de/nachrichten/schleswig-holstein/ig-metall-plant-24-stunden-warnstreik-im-norden%2Cigmetall-170.html",
-        "published": "2026-11-21T23:01:00Z",
-        "scope": "Reports the announcement by IG Metall K\u00fcste district leader Daniel Friedrich, union statements, comments from workers and an employers' association statement.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Deutsche Presse-Agentur (dpa)",
-        "intermediary": null,
-        "url": "https://www.sueddeutsche.de/wirtschaft/tarife-metaller-warnstreiks-im-norden-werden-fortgesetzt-dpa.urn-newsml-dpa-com-20090101-261121-930-31807",
-        "published": "2026-11-21T23:01:00Z",
-        "scope": "Attributes the planned stoppages and participation figures to IG Metall K\u00fcste. S\u00fcddeutsche Zeitung identifies the article as an unedited dpa newswire report.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Nordmetall",
-        "text": "NDR reported that negotiator Lena Str\u00f6bele urged IG Metall to resume negotiations and described the escalation as unnecessary and damaging. Spokesman Alexander Luckow said employers would not consider improving their offer while the union refused further talks.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": [
-      "Yahoo Finance"
-    ]
-  },
-  {
     "id": "auto-7a54f7808d44",
     "title": "AP and TSN report installer shortages delaying window repairs in Ukraine",
     "place": "United States",
@@ -511,5 +463,58 @@
       }
     ],
     "carried_by": []
+  },
+  {
+    "id": "auto-dec6ab72815c",
+    "title": "AP reports Hubbard won North Carolina House race after recount; WRAL reports Foxx conceded",
+    "place": "United States",
+    "time": "2026-11-22T18:07:01Z",
+    "expires": "2026-11-24T18:07:01Z",
+    "severity": "moderate",
+    "summary": "The Associated Press reported that Democrat Chuck Hubbard defeated Republican Rep. Virginia Foxx after a North Carolina recount, bringing Democrats' elected House total to at least 258 seats. WRAL reported that Foxx conceded and said she had called Hubbard to congratulate him. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/721096a4d9ba2cd68683692361798cdb",
+        "published": "2026-11-22T18:07:01Z",
+        "scope": "AP election results and its race call following the recount.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "WRAL",
+        "intermediary": null,
+        "url": "https://www.wral.com/news/nccapitol/virginia-foxx-concedes-november-2026/",
+        "published": "2026-11-22T18:07:01Z",
+        "scope": "Reports Foxx's and Hubbard's statements about the concession following the recount.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "WXII 12",
+        "intermediary": null,
+        "url": "https://www.wxii12.com/article/virginia-foxx-concedes-recount-north-carolina-5th-congressional-district/74501474",
+        "published": "2026-11-22T18:07:01Z",
+        "scope": "Reports Foxx's statement conceding the race after the recount.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Rep. Virginia Foxx",
+        "text": "According to WRAL, Foxx said she called Hubbard to congratulate him and wished him well representing the district.",
+        "verification": "attributed"
+      },
+      {
+        "who": "Chuck Hubbard",
+        "text": "According to WRAL, Hubbard said Foxx conceded by phone following the recount and thanked her for her service and commitment to a smooth transition.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": [
+      "The Washington Post"
+    ]
   }
 ]
