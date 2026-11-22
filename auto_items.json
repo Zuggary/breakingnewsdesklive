@@ -1,42 +1,5 @@
 [
   {
-    "id": "auto-985c5e79984a",
-    "title": "Reuters reports magnitude 6.8 earthquake in Banda Sea, citing GFZ",
-    "place": "United States",
-    "time": "2026-11-21T10:05:00Z",
-    "expires": "2026-11-23T10:05:00Z",
-    "severity": "moderate",
-    "summary": "Reuters, citing GFZ, reported a magnitude 6.8 earthquake northeast of Dili, Timor-Leste, at a depth of 117 km. RTM reported that METMalaysia measured the earthquake at magnitude 6.7 and said its initial assessment found no tsunami threat to Malaysia. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Reuters",
-        "intermediary": null,
-        "url": "https://new.streetinsider.com/Reuters/Magnitude%2B6.8%2Bearthquake%2Bstrikes%2BBanda%2BSea%2Bnear%2BTimor-Leste%2C%2BGFZ%2Bsays/27382885.html",
-        "published": "2026-11-21T10:05:00Z",
-        "scope": "German Research Centre for Geosciences (GFZ)",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "RTM",
-        "intermediary": null,
-        "url": "https://berita.rtm.gov.my/ringkasan-berita/?id=21141&kategori=nasional",
-        "published": "2026-11-21T10:05:00Z",
-        "scope": "Reports a statement from the Malaysian Meteorological Department (METMalaysia), which measured the earthquake at magnitude 6.7.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Malaysian Meteorological Department (METMalaysia)",
-        "text": "According to RTM, METMalaysia said its initial assessment found no tsunami threat to Malaysia.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-e81f7a668c56",
     "title": "Reuters reports Democrats are preparing an agenda for their first 100 days in the congressional majority",
     "place": "United States",
@@ -447,5 +410,76 @@
       }
     ],
     "carried_by": []
+  },
+  {
+    "id": "auto-7b364c20ee2c",
+    "title": "AP reports suspected settler arson in West Bank; Israeli police say investigation opened",
+    "place": "United States",
+    "time": "2026-11-22T09:24:10Z",
+    "expires": "2026-11-24T09:24:10Z",
+    "severity": "moderate",
+    "summary": "The Associated Press reported that Gadi Eisenkot condemned overnight arson attacks on Palestinian property in the occupied West Bank that settlers are suspected of carrying out. Israeli police said they opened an investigation into arson, graffiti and property damage at four locations, according to Ynetnews. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/mideast-houthis-west-bank-november-22-2026-8d1680a23d592667db1ce1969b55b4f2",
+        "published": "2026-11-22T09:24:10Z",
+        "scope": "Eisenkot's public statement and images posted on social media",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Ynetnews",
+        "intermediary": null,
+        "url": "https://www.ynetnews.com/article/sjzfnxejqe",
+        "published": "2026-11-22T09:24:10Z",
+        "scope": "Quotes Eisenkot and Ben-Gvir, reports statements by the Israeli military and police, and interviews a Kafr Malik resident and the head of the Deir as-Sudan local council.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "The Times of Israel",
+        "intermediary": null,
+        "url": "https://www.timesofisrael.com/liveblog_entry/eisenkot-condemns-overnight-west-bank-arson-attacks-as-jewish-terrorism-urges-crackdown/",
+        "published": "2026-11-22T09:24:10Z",
+        "scope": "Quotes Eisenkot's post on X and attributes the accounts of the attacks to Palestinian media reports.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "The Jerusalem Post",
+        "intermediary": null,
+        "url": "https://www.jpost.com/israel-news/politics-and-diplomacy/article-915677",
+        "published": "2026-11-22T09:24:10Z",
+        "scope": "Quotes statements by Eisenkot, Ben-Gvir and other Israeli politicians.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Anadolu Agency",
+        "intermediary": null,
+        "url": "https://aa.com.tr/en/middle-east/israeli-prime-minister-designate-calls-occupier-attacks-in-west-bank-jewish-terrorism-/4133469",
+        "published": "2026-11-22T09:24:10Z",
+        "scope": "Attributes Eisenkot's comments to his post on X.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Israel Police",
+        "text": "According to Ynetnews, police said they opened an investigation into arson, graffiti and property damage at four locations and were preparing to gather evidence and witness statements under military protection.",
+        "verification": "attributed"
+      },
+      {
+        "who": "Israel Defense Forces",
+        "text": "According to Ynetnews, the military said soldiers and Border Police were dispatched to four locations after reports of arson and graffiti, and condemned the incidents as disrupting public order, stability and security operations.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": [
+      "The Washington Post"
+    ]
   }
 ]
