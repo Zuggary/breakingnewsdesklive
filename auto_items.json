@@ -1,51 +1,5 @@
 [
   {
-    "id": "auto-a81421fc6d9e",
-    "title": "AccuWeather forecasts Pacific storms along the West Coast through Thanksgiving week",
-    "place": "United States",
-    "time": "2026-11-21T17:22:00Z",
-    "expires": "2026-11-23T17:22:00Z",
-    "severity": "moderate",
-    "summary": "AccuWeather meteorologists forecast a series of Pacific storms bringing rain, snow and wind to the U.S. West Coast through Thanksgiving week. The Weather Channel's meteorologists also describe possible multiple storms, while the National Weather Service Weather Prediction Center forecasts heavy rain and strong winds from northern California through the Pacific Northwest. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "AccuWeather",
-        "intermediary": null,
-        "url": "https://www.accuweather.com/en/weather-forecasts/barrage-of-storms-to-continue-hammering-west-coast-through-thanksgiving-week/1962298",
-        "published": "2026-11-21T17:22:00Z",
-        "scope": "AccuWeather meteorologists and the article's author, a senior meteorologist",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "The Weather Channel",
-        "intermediary": null,
-        "url": "https://weather.com/2026/11/20/holiday/thanksgiving/thanksgiving-travel-weather-forecast-us-storms",
-        "published": "2026-11-21T17:22:00Z",
-        "scope": "Its meteorologists describe computer forecast models indicating possible multiple storms before and during Thanksgiving.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "NPR",
-        "intermediary": null,
-        "url": "https://www.kuow.org/npr-news/2026-11-21/storms-expected-on-both-coasts-threatens-thanksgiving-travel",
-        "published": "2026-11-21T17:22:00Z",
-        "scope": "Reports National Weather Service forecasts and cites meteorologists and San Francisco Mayor Daniel Lurie.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "National Weather Service Weather Prediction Center",
-        "text": "Its November 21 forecast describes heavy rain and strong winds from northern California through the Pacific Northwest, with wet weather continuing through Thanksgiving.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-dd726bd80f1b",
     "title": "Bahrain\u2019s Interior Ministry says Iranian attack caused fire at civilian industrial facility",
     "place": "United States",
@@ -484,6 +438,43 @@
       {
         "who": "Department of Homeland Security spokesperson",
         "text": "DHS told Axios that the purchase price was determined through the standard federal appraisal process using independent appraisers and a replacement-cost method.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
+  },
+  {
+    "id": "auto-a8be69e4c4b2",
+    "title": "The Atlantic reports HHS could release an ultra-processed food definition as soon as next week",
+    "place": "United States",
+    "time": "2026-11-22T13:00:00Z",
+    "expires": "2026-11-24T13:00:00Z",
+    "severity": "moderate",
+    "summary": "The Atlantic, citing people familiar with the plans, reported that HHS could release a federal definition of ultra-processed food as soon as next week; Politico separately reported renewed efforts to finalize it without specifying a release date. An HHS spokesperson told Politico that work on the definition had not stalled. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "The Atlantic",
+        "intermediary": null,
+        "url": "https://www.theatlantic.com/health/2026/11/ultra-processed-food-definition-wiles-means-kennedy/689536/",
+        "published": "2026-11-22T13:00:00Z",
+        "scope": "Several people with knowledge of the release plan; the broader account draws on interviews with eight current and former officials involved in the process and a draft definition obtained by the outlet.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Politico",
+        "intermediary": null,
+        "url": "https://www.politico.com/news/2026/11/13/ultraprocessed-food-policy-gains-new-momentum-under-miller-a-maha-ally-01163831",
+        "published": "2026-11-22T13:00:00Z",
+        "scope": "Two people familiar with the policy discussions, granted anonymity to discuss ongoing conversations, described a renewed post-election effort to finalize the definition. The report did not specify a release date.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "U.S. Department of Health and Human Services",
+        "text": "An HHS spokesperson told Politico that work on the definition had not stalled.",
         "verification": "attributed"
       }
     ],
