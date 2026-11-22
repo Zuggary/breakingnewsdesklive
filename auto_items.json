@@ -1,42 +1,5 @@
 [
   {
-    "id": "auto-7e079edc5594",
-    "title": "Reuters and AP report agreement to pursue an international instrument on autonomous weapons",
-    "place": "United States",
-    "time": "2026-11-21T05:35:00Z",
-    "expires": "2026-11-23T05:35:00Z",
-    "severity": "moderate",
-    "summary": "Countries at UN weapons talks in Geneva agreed to work toward an international instrument on lethal autonomous weapons over two years, Reuters and AP reported. Whether the instrument would be legally binding remained undecided, the outlets reported. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Reuters",
-        "intermediary": null,
-        "url": "https://new.streetinsider.com/Reuters/States%2Bagree%2Bto%C2%A0UN%2Btalks%2Baiming%2Bto%2Bregulate%2B%27killer%2Brobots%27%2Bby%2B2028/27382859.html",
-        "published": "2026-11-21T05:35:00Z",
-        "scope": "Reporting from Geneva, including remarks by the meeting's chair and a diplomat involved in the talks; published here by StreetInsider.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/ebe057d2a47cde53100970c8f648e7fa",
-        "published": "2026-11-21T05:35:00Z",
-        "scope": "Reporting from Geneva, including remarks by Brazil's ambassador and accounts from advocacy groups.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Julien Thoeni, conference chair",
-        "text": "According to Reuters, Thoeni described the agreement as a significant achievement for humanitarian disarmament.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-985c5e79984a",
     "title": "Reuters reports magnitude 6.8 earthquake in Banda Sea, citing GFZ",
     "place": "United States",
@@ -385,6 +348,54 @@
       }
     ],
     "carried_by": []
+  },
+  {
+    "id": "auto-9f0c195c83d9",
+    "title": "Witnesses report drones and explosions around Khartoum, news agencies say",
+    "place": "United States",
+    "time": "2026-11-22T08:05:00Z",
+    "expires": "2026-11-24T08:05:00Z",
+    "severity": "moderate",
+    "summary": "Witnesses told AFP and Anadolu Agency of drone activity around Khartoum, with Anadolu reporting explosions and anti-aircraft fire. Ultra Sudan separately cited military sources and eyewitnesses describing explosions and anti-aircraft fire across the capital area. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "AFP",
+        "intermediary": null,
+        "url": "https://www.nampa.org/text/23072462",
+        "published": "2026-11-22T08:05:00Z",
+        "scope": "Witnesses in and around Khartoum.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Anadolu Agency",
+        "intermediary": null,
+        "url": "https://www.aa.com.tr/en/middle-east/sudanese-army-intercepts-drones-over-khartoum-witnesses-say/4133351",
+        "published": "2026-11-22T08:05:00Z",
+        "scope": "Witnesses told Anadolu about drones, explosions and anti-aircraft fire in Khartoum. The report describes one drone crashing in a residential street without exploding; it does not confirm the destruction of homes.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Ultra Sudan",
+        "intermediary": null,
+        "url": "https://ultrasudan.ultrasawt.com/%D8%A7%D9%84%D8%AF%D8%B9%D9%85-%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B9-%D8%AA%D9%87%D8%A7%D8%AC%D9%85-%D8%A7%D9%84%D8%AE%D8%B1%D8%B7%D9%88%D9%85-%D8%A8%D9%85%D8%B3%D9%8A%D8%B1%D8%A7%D8%AA-%D8%A7%D9%86%D9%82%D8%B6%D8%A7%D8%B6%D9%8A%D8%A9-%D9%88%D8%A7%D9%84%D8%AC%D9%8A%D8%B4-%D9%8A%D8%AA%D8%B5%D8%AF%D9%89-%D9%84%D9%87%D8%A7/%D8%B9%D9%84%D8%A7%D8%A1-%D8%A7%D9%84%D8%AF%D9%8A%D9%86-%D9%85%D8%B6%D9%88%D9%8A/%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1",
+        "published": "2026-11-22T08:05:00Z",
+        "scope": "Military sources and eyewitnesses told Ultra Sudan that the attack began around 2:15 a.m. and explosions and anti-aircraft fire were heard across the capital area.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Sudanese army and Rapid Support Forces",
+        "text": "Neither immediately commented on the incident, according to Anadolu Agency.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": [
+      "Arab News"
+    ]
   },
   {
     "id": "auto-8c07096ca3dd",
