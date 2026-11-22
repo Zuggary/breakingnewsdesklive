@@ -1,56 +1,5 @@
 [
   {
-    "id": "auto-828b0617b69e",
-    "title": "AP review identifies sheriff races where immigration enforcement cooperation played a role in defeats",
-    "place": "United States",
-    "time": "2026-11-21T13:55:48Z",
-    "expires": "2026-11-23T13:55:48Z",
-    "severity": "moderate",
-    "summary": "The Associated Press reported that its review of about 250 sheriff elections identified several races in which cooperation with federal immigration enforcement played a role in a candidate's defeat. Maryland Matters separately reported on Frederick County Sheriff Chuck Jenkins' defeat, interviewing Jenkins and a local organizer about his immigration stance. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/immigration-sheriffs-elections-ice-agreements-0bca2d5add91614df4cbe1b92df8f5e4",
-        "published": "2026-11-21T13:55:48Z",
-        "scope": "AP reviewed about 250 sheriff elections and interviewed candidates, voters, activists and local officials.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Maryland Matters",
-        "intermediary": null,
-        "url": "https://thedailyrecord.com/2026/11/17/blue-wave-meets-blue-line-in-frederick-as-sheriffs-race-just-one-of-democrats-wins/",
-        "published": "2026-11-21T13:55:48Z",
-        "scope": "Interviewed Sheriff Chuck Jenkins and a local organizer about his defeat and the role of his immigration stance.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "WUNC News",
-        "intermediary": null,
-        "url": "https://www.wunc.org/politics/2026-11-04/alamance-county-voters-oust-sheriff-terry-johnson",
-        "published": "2026-11-21T13:55:48Z",
-        "scope": "Reported the Alamance County election result, Johnson's statement and his office's participation in the ICE agreement, drawing on its prior reporting.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Terry Johnson, outgoing Alamance County, North Carolina, sheriff",
-        "text": "Johnson told AP that immigration policy likely did not cause his defeat, citing his long tenure and the political environment for Republicans. He said he followed the law and protected public safety.",
-        "verification": "attributed"
-      },
-      {
-        "who": "Frederick County Sheriff Chuck Jenkins",
-        "text": "Jenkins defended the county's ICE partnership as effective for public safety and said he did not regret his position, even if it may have cost him reelection, according to Maryland Matters.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-a81421fc6d9e",
     "title": "AccuWeather forecasts Pacific storms along the West Coast through Thanksgiving week",
     "place": "United States",
@@ -462,6 +411,79 @@
       {
         "who": "Anthropic, Goldman Sachs and Morgan Stanley",
         "text": "Declined to comment to Reuters.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
+  },
+  {
+    "id": "auto-f625fea1661a",
+    "title": "Axios reports Democrats plan more scrutiny of immigration detention purchases",
+    "place": "United States",
+    "time": "2026-11-22T12:00:42Z",
+    "expires": "2026-11-24T12:00:42Z",
+    "severity": "moderate",
+    "summary": "Axios reports that Democratic lawmakers plan greater scrutiny of federal immigration detention purchases, including ICE's $495 million purchase of a Minnesota facility. A DHS spokesperson told Axios that the price was determined through the standard federal appraisal process using independent appraisers and a replacement-cost method. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Axios",
+        "intermediary": null,
+        "url": "https://www.axios.com/2026/11/22/ice-detention-centers-price-cost",
+        "published": "2026-11-22T12:00:42Z",
+        "scope": "Interviews with lawmakers and former government officials, state and local records, Government Accountability Office reports, and a DHS statement; Axios credits KARE 11 for the earlier Minnesota sale offer.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "The Washington Post",
+        "intermediary": null,
+        "url": "https://www.washingtonpost.com/politics/2026/11/13/democrats-target-costly-dhs-prison-purchase-part-broad-immigration-probes/",
+        "published": "2026-11-22T12:00:42Z",
+        "scope": "Reports on Senator Maggie Hassan's letters to DHS and CoreCivic and a statement from Representative Bennie Thompson; credits KARE 11 for the earlier Minnesota offer.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Minnesota Star Tribune",
+        "intermediary": null,
+        "url": "https://www.startribune.com/senator-maggie-hassan-dhs-corecivic-appleton-jail/601922501",
+        "published": "2026-11-22T12:00:42Z",
+        "scope": "Reports Hassan's letter and statement and a DHS response to its questions about the investigation.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://www.streetinsider.com/Reuters/Democratic%2BUS%2Bsenator%2Bprobes%2BCoreCivic%2Bsale%2Bof%2BICE%2Bfacility%2Bin%2BMinnesota/27341296.html",
+        "published": "2026-11-22T12:00:42Z",
+        "scope": "Cites Hassan's office and her letters, and sought comment from CoreCivic and DHS.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "KARE 11",
+        "intermediary": null,
+        "url": "https://www.kfyrtv.com/2026/11/21/congress-demands-answers-ices-495-million-appleton-prison-purchase/",
+        "published": "2026-11-22T12:00:42Z",
+        "scope": "Reports a congressional letter and statements from its sponsors, and cites KARE 11's own investigation and interview with Minnesota's corrections commissioner. The linked article is a republication of KARE's reporting.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "The Daily Beast",
+        "intermediary": null,
+        "url": "https://www.thedailybeast.com/shocking-twist-exposed-in-500m-dhs-splurge-on-new-ice-prison-in-appleton-minnesota",
+        "published": "2026-11-22T12:00:42Z",
+        "scope": "Its investigations unit interviewed Minnesota's corrections commissioner and obtained comments from Hassan, CoreCivic and DHS; it cites Hassan's office for the announced investigation.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Department of Homeland Security spokesperson",
+        "text": "DHS told Axios that the purchase price was determined through the standard federal appraisal process using independent appraisers and a replacement-cost method.",
         "verification": "attributed"
       }
     ],
