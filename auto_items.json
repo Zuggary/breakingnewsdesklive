@@ -1,74 +1,5 @@
 [
   {
-    "id": "auto-7e5eb16e3510",
-    "title": "Peru\u2019s Geophysical Institute reports magnitude 6.7 earthquake near Jun\u00edn",
-    "place": "United States",
-    "time": "2026-11-21T00:40:00Z",
-    "expires": "2026-11-23T00:40:00Z",
-    "severity": "moderate",
-    "summary": "Peru\u2019s Geophysical Institute reported a magnitude 6.7 earthquake northwest of Jun\u00edn at a depth of 129 km, and AP reported that it was felt in Lima. Andina attributed later reports of damage to homes and a hospital, road blockages and power cuts to civil defense chief Luis V\u00e1squez. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/peru-earthquake-andes-magnitude-67-d9c0a1de6be970d6a5a36993c607f29f",
-        "published": "2026-11-21T00:40:00Z",
-        "scope": "Cites the U.S. Geological Survey, Peru\u2019s Geophysical Institute and a local television interview with Carhuamayo\u2019s mayor.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Reuters",
-        "intermediary": null,
-        "url": "https://www.gmanetwork.com/news/topstories/world/1010281/magnitude-6-8-quake-in-peru-s-andean-region-sends-lima-residents-onto-streets/story/",
-        "published": "2026-11-21T00:40:00Z",
-        "scope": "Reuters cites the German Research Centre for Geosciences, Peru's Geophysical Institute, television footage and a Jun\u00edn council member's remarks to RPP. GMA News carries the Reuters report.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "RPP",
-        "intermediary": null,
-        "url": "https://rpp.pe/peru/actualidad/sismo-de-magnitud-67-junin-indeci-informa-reporte-de-danos-noticia-1718928",
-        "published": "2026-11-21T00:40:00Z",
-        "scope": "RPP reports remarks made to it by the head of Peru's civil defense agency and cites the Geophysical Institute's seismic report.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Agencia EFE",
-        "intermediary": null,
-        "url": "https://efe.com/mundo/2026-11-21/sismo-junin-peru/",
-        "published": "2026-11-21T00:40:00Z",
-        "scope": "EFE cites Peru's civil defense and geophysical agencies, statements by local officials to Peruvian media, and its own photographs from Lima.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Agencia Andina",
-        "intermediary": null,
-        "url": "https://andina.pe/ingles/noticia-peru-67magnitude-earthquake-in-junin-shook-homes-buildings-in-lima-and-callao-1100888.aspx",
-        "published": "2026-11-21T00:40:00Z",
-        "scope": "Andina cites Peru's Geophysical Institute and describes residents leaving buildings in Lima and Callao.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Peru\u2019s Geophysical Institute",
-        "text": "The institute reported a magnitude 6.7 earthquake at 7:09 p.m. local time, 30 km northwest of Jun\u00edn, at a depth of 129 km.",
-        "verification": "attributed"
-      },
-      {
-        "who": "Peru\u2019s civil defense chief Luis V\u00e1squez",
-        "text": "According to Andina, V\u00e1squez reported damage to homes and a hospital, road blockages and power cuts after initially reporting no damage.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-f02d5141be58",
     "title": "AP: Countries agree to pursue possible autonomous weapons agreement by 2028",
     "place": "United States",
@@ -454,5 +385,42 @@
     "carried_by": [
       "Yahoo Finance"
     ]
+  },
+  {
+    "id": "auto-7a54f7808d44",
+    "title": "AP and TSN report installer shortages delaying window repairs in Ukraine",
+    "place": "United States",
+    "time": "2026-11-22T05:00:13Z",
+    "expires": "2026-11-24T05:00:13Z",
+    "severity": "moderate",
+    "summary": "The Associated Press reports that shortages of skilled window installers are delaying repairs to Ukrainian homes damaged by Russian attacks. TSN quotes production manager Ihor Sydorenko and parliamentary committee deputy chair Dmytro Kysylevskyi describing installer shortages and repair delays. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Associated Press",
+        "intermediary": null,
+        "url": "https://apnews.com/article/russia-ukraine-war-broken-windows-economy-reconstruction-a031073d553cafcfa916164b1184e5ad",
+        "published": "2026-11-22T05:00:13Z",
+        "scope": "Interviews with a Kyiv resident, an installer and the executive director of a Ukrainian window manufacturers' association, plus on-the-ground observations and World Bank data.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "TSN",
+        "intermediary": null,
+        "url": "https://tsn.ua/exclusive/naydorozche-sklo-v-yevropi-ta-ochikuvannia-misiatsiamy-chomu-v-ukrayini-vynyk-vikonnyy-defitst-3198255.html",
+        "published": "2026-11-22T05:00:13Z",
+        "scope": "TSN quotes window production manager Ihor Sydorenko and Ukrainian parliamentary committee deputy chair Dmytro Kysylevskyi about installer shortages and repair delays.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Dmytro Kysylevskyi, deputy chair of Ukraine\u2019s parliamentary committee on economic development",
+        "text": "TSN quotes Kysylevskyi confirming shortages of qualified window installers and surveyors, citing broader skilled-trade shortages and mobilization. He said there was no immediate universal solution and suggested temporary coverings while residents await windows.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
   }
 ]
