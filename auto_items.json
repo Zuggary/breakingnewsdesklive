@@ -1,42 +1,5 @@
 [
   {
-    "id": "auto-f02d5141be58",
-    "title": "AP: Countries agree to pursue possible autonomous weapons agreement by 2028",
-    "place": "United States",
-    "time": "2026-11-21T04:56:00Z",
-    "expires": "2026-11-23T04:56:00Z",
-    "severity": "moderate",
-    "summary": "Countries at a UN weapons conference in Geneva agreed to work toward a possible agreement on lethal autonomous weapons by 2028 without committing to binding rules, AP reported. Brazil's ambassador, Frederico Meyer, said technology was advancing faster than diplomacy, according to AP. The desk has not confirmed it.",
-    "sources": [
-      {
-        "source": "Reuters",
-        "intermediary": null,
-        "url": "https://www.brecorder.com/news/40450103/states-agree-to-un-talks-aiming-to-regulate-killer-robots-by-2028",
-        "published": "2026-11-21T04:56:00Z",
-        "scope": "A diplomat who attended the talks and the outcome of the conference; the article is carried by Business Recorder.",
-        "verification": "attributed",
-        "kind": "outlet"
-      },
-      {
-        "source": "Associated Press",
-        "intermediary": null,
-        "url": "https://apnews.com/article/un-drones-robots-un-lethal-ai-weapons-ebe057d2a47cde53100970c8f648e7fa",
-        "published": "2026-11-21T04:56:00Z",
-        "scope": "Conference outcome and comments from Brazil's ambassador.",
-        "verification": "attributed",
-        "kind": "outlet"
-      }
-    ],
-    "responses": [
-      {
-        "who": "Frederico Meyer, Brazil's ambassador",
-        "text": "He said technology was advancing faster than diplomacy, according to AP.",
-        "verification": "attributed"
-      }
-    ],
-    "carried_by": []
-  },
-  {
     "id": "auto-7e079edc5594",
     "title": "Reuters and AP report agreement to pursue an international instrument on autonomous weapons",
     "place": "United States",
@@ -418,6 +381,57 @@
       {
         "who": "Dmytro Kysylevskyi, deputy chair of Ukraine\u2019s parliamentary committee on economic development",
         "text": "TSN quotes Kysylevskyi confirming shortages of qualified window installers and surveyors, citing broader skilled-trade shortages and mobilization. He said there was no immediate universal solution and suggested temporary coverings while residents await windows.",
+        "verification": "attributed"
+      }
+    ],
+    "carried_by": []
+  },
+  {
+    "id": "auto-8c07096ca3dd",
+    "title": "Zelenskiy says 14 people out of contact after Russian drone strike on Kyiv region apartment building",
+    "place": "United States",
+    "time": "2026-11-22T08:59:00Z",
+    "expires": "2026-11-24T08:59:00Z",
+    "severity": "moderate",
+    "summary": "Reuters reported that Ukrainian President Volodymyr Zelenskiy said 14 people were out of contact and might be under rubble after a Russian drone struck an apartment building in the Kyiv region. Ukrainian National News separately cited Ukraine\u2019s State Emergency Service as saying up to eight people might be trapped and nine had been evacuated. The desk has not confirmed it.",
+    "sources": [
+      {
+        "source": "Reuters",
+        "intermediary": null,
+        "url": "https://wdez.com/2026/11/22/at-least-14-people-missing-after-russian-drone-hit-building-in-kyiv-region-zelenskiy-says/",
+        "published": "2026-11-22T08:59:00Z",
+        "scope": "Zelenskiy's post on X, local officials and emergency-service footage; Reuters reporting by Pavel Polityuk.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Ukrainian National News",
+        "intermediary": null,
+        "url": "https://unn.ua/en/news/russian-attack-on-the-kyiv-region-8-people-may-be-trapped-underneath-the-state-emergency-service",
+        "published": "2026-11-22T08:59:00Z",
+        "scope": "Cites a post by Ukraine\u2019s State Emergency Service, which said eight people might be trapped and nine had been evacuated.",
+        "verification": "attributed",
+        "kind": "outlet"
+      },
+      {
+        "source": "Fakty",
+        "intermediary": null,
+        "url": "https://fakty.ua/482706-zhilye-mnogoetazhki-razrusheny-v-vyshgorode-i-dymere-pod-kievom-v-rezultate-nochnogo-obstrela-pod-zavalami-lyudi-foto-video",
+        "published": "2026-11-22T08:59:00Z",
+        "scope": "Cites Kyiv regional administration head Tymur Tkachenko and Ukraine\u2019s State Emergency Service; reports an earlier estimate of seven people potentially trapped.",
+        "verification": "attributed",
+        "kind": "outlet"
+      }
+    ],
+    "responses": [
+      {
+        "who": "Ukrainian President Volodymyr Zelenskiy",
+        "text": "He said part of a five-story building had collapsed, nine people had been evacuated and the fire had been contained.",
+        "verification": "attributed"
+      },
+      {
+        "who": "Ukraine\u2019s State Emergency Service",
+        "text": "It said a section of the building was destroyed, two people were injured and search and rescue operations were ongoing.",
         "verification": "attributed"
       }
     ],
