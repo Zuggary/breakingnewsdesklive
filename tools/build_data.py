@@ -21,6 +21,7 @@ from tools.lib import (REGIONS, region_of, score_event, summarize, STATE_CENTROI
                        iso_utc, parse_time, haversine_km)
 
 FIXTURE_MODE = False
+FIXTURE_NOW = datetime(2026, 11, 19, 12, 0, tzinfo=timezone.utc)  # BN1: fixture builds use this fixed clock so the dated fixtures never age out of the 168 h window
 FIXTURE_DIR = None
 OUT_DIR = None
 UA = "breakingnewsdesklive/1.0 (+https://breakingnewsdesklive.com; independent alert aggregator)"
@@ -763,7 +764,7 @@ def build(fixtures=None, now=None, out_dir=None):
     global FIXTURE_MODE, FIXTURE_DIR
     FIXTURE_MODE = bool(fixtures)
     FIXTURE_DIR = fixtures
-    now = now or datetime.now(timezone.utc)
+    now = now or (FIXTURE_NOW if FIXTURE_MODE else datetime.now(timezone.utc))
     events, status = [], []
     for src in SOURCES:
         rec = {"id": src["id"], "update": src.get("update", ""), "url": src["url"].split("{")[0].split("?")[0], "name": src["name"], "page": src["page"], "licence": src["licence"], "terms": src["terms"],
@@ -965,7 +966,7 @@ def main():
     global OUT_DIR
     OUT_DIR = a.out
     os.makedirs(a.out, exist_ok=True)
-    now = datetime.now(timezone.utc)
+    now = FIXTURE_NOW if a.fixtures else datetime.now(timezone.utc)
     if killswitch.global_stop(ROOT_DIR):
         print("KILL switch is on: publishing nothing new, keeping the last good files", file=sys.stderr)
         return 0
